@@ -30,3 +30,13 @@ target/
 .classpath
 .project
 .settings/
+
+# VS Code
+.vscode/
+
+# WSL
+*:Zone.Identifier
+
+# IntelliJ
+.idea/
+*.iml
