@@ -1,5 +1,3 @@
 package simple.domain.employee;
 
-public class Employee {
-
-}
+public class Employee {}

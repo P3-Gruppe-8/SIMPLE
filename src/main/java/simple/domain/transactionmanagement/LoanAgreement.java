@@ -1,5 +1,3 @@
 package simple.domain.transactionmanagement;
 
-public class LoanAgreement {
-    
-}
+public class LoanAgreement {}

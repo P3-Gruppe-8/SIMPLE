@@ -1,5 +1,3 @@
 package simple.domain.transactionmanagement;
 
-public class Transaction {
-    
-}
+public class Transaction {}
