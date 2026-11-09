@@ -7,18 +7,16 @@ import simple.Main;
 
 public class Server {
 
-  private static final Logger log = LoggerFactory.getLogger(Main.class);
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
-  public static void start(int port) {
+    public static void start(int port) {
+        Javalin app = Javalin.create(config -> {
+            config.requestLogger.http(
+                    (ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
+            config.routes.get("/", ctx -> ctx.result("Hello World"));
+        });
 
-    Javalin.create(
-            config -> {
-              config.requestLogger.http((ctx, ms) ->
-                  log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
-              config.routes.get("/", ctx -> ctx.result("Hello World"));
-            })
-        .start(port);
-
-    log.info("Server started on port {}", port);
-  }
+        app.start(port);
+        log.info("Server started on port {}", port);
+    }
 }
