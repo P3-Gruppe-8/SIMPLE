@@ -5,12 +5,11 @@ CREATE TABLE it_staffs (
     username VARCHAR(50) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL
-
     );
 
 CREATE TABLE admins (
     admin_id SERIAL PRIMARY KEY,
-    password_hash TEXT NOT NULL
+    password_hash TEXT NOT NULL,
 
     FOREIGN KEY (it_staff_id)
         REFERENCES it_staffs(it_staff_id)
@@ -18,14 +17,14 @@ CREATE TABLE admins (
 
 CREATE TABLE offices (
     office_id SERIAL PRIMARY KEY,
-    office_address VARCHAR(200) NOT NULL,
+    office_address VARCHAR(500) NOT NULL,
     office_name VARCHAR(50) NOT NULL
 
     );
 
 CREATE TABLE shelves (
-    shelf_id SERIAL PRIMARY KEY,
-    room VARCHAR(50),
+    shelf_name VARCHAR(50) PRIMARY KEY,
+    room_name VARCHAR(50),
     
     FOREIGN KEY (office_id)
             REFERENCES offices(office_id)
@@ -36,7 +35,7 @@ CREATE TABLE descriptors (
     descriptor_id SERIAL PRIMARY KEY,
     descriptor_name VARCHAR(50) NOT NULL,
     is_loanable BOOLEAN NOT NULL,
-    quantity INTEGER NOT NULL,
+    quantity INTEGER NOT NULL
     
     );
 
