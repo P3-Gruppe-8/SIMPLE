@@ -1,4 +1,4 @@
-package dk.p3;
+package simple;
 
 /**
  * Hello world!

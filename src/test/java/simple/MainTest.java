@@ -1,4 +1,4 @@
-package dk.p3;
+package simple;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
