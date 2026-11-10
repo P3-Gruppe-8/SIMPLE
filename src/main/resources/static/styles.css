@@ -3,8 +3,8 @@ body {
     display: flex;
     margin: 0;
     padding: 0;
-    height: 100svh;
-    width: 100dvw;
+    min-height: 100vh;
+    min-width: 100vw;
     flex-direction: column;
     overflow: hidden;
 }
@@ -92,7 +92,47 @@ body {
 }
 
 main {
+    display: flex;
     flex-grow: 1;
+}
+
+.mainButtonContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.buttonContainer1 {
+    display: flex;
+    flex-grow: 1;
+    padding: 0.8em;
+    gap: 0.8em;
+    justify-content: space-evenly;
+}
+
+.buttonContainer2 {
+    display: flex;
+    flex-grow: 1;
+    padding: 0.8em;
+    padding-top: 0;
+    gap: 0.8em;
+    justify-content: space-evenly;
+}
+
+.buttonContainer3 {
+    display: flex;
+    flex-grow: 0.5;
+    padding: 0.8em;
+    padding-top: 0;
+    gap: 0.8em;
+    justify-content: space-evenly;
+}
+
+.mainButton1 {
+    flex-grow: 1;
+    padding: 5px;
+    text-align: center;
+    font-size: 2em;
 }
 
 footer,
@@ -109,7 +149,7 @@ header {
 
 .bottombar button {
     height: 86%;
-    font-size: 26px;
+    font-size: 2em;
     margin: 5px;
     outline: none !important;
 }
@@ -117,9 +157,19 @@ header {
 button.back {
     width: 30%;
     background-color: red;
+    border: none;
+}
+
+button.back:hover {
+    background-color: rgb(201, 0, 0);
 }
 
 button.alerts {
     width: 70%;
     background-color: #ffbf00;
+    border: none;
+}
+
+button.alerts:hover {
+    background-color: #d7a200;
 }
