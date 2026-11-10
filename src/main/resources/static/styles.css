@@ -92,45 +92,31 @@ body {
 }
 
 main {
-    display: flex;
-    flex-grow: 1;
-}
-
-.mainButtonContainer1 {
+    --space: 0.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    gap: var(--space);
+    padding: var(--space);
 }
 
-.buttonContainer1 {
+.button-row {
     display: flex;
     flex-grow: 1;
-    padding: 0.8em;
-    gap: 0.8em;
     justify-content: space-evenly;
+    gap: var(--space);
 }
 
-.buttonContainer2 {
-    display: flex;
-    flex-grow: 1;
-    padding: 0.8em;
-    padding-top: 0;
-    gap: 0.8em;
-    justify-content: space-evenly;
+.height-one-fifth {
+    height: 20%;
 }
 
-.buttonContainer3 {
-    display: flex;
-    flex-grow: 0.5;
-    padding: 0.8em;
-    padding-top: 0;
-    gap: 0.8em;
-    justify-content: space-evenly;
+.height-two-fifths {
+    height: 40%;
 }
 
-.mainButton1 {
+.menu-button {
     flex: 1;
-    padding: 5px;
     min-width: 0;
     min-height: 0;
     border-radius: 25px;
@@ -139,24 +125,11 @@ main {
     text-align: center;
     text-wrap: balance;
     font-weight: bold;
-    font-size: 2em;
-}
-.mainButton1:hover {
-    background-color: lightgrey;
+    font-size: clamp(1.5rem, 7vw, 4rem);
+    overflow-wrap: anywhere;
 }
 
-.mainButton2 {
-    flex: 1;
-    padding: 5px;
-    border-radius: 25px;
-    border: 5px solid black;
-    background-color: whitesmoke;
-    text-align: center;
-    text-wrap: wrap;
-    font-weight: bold;
-    font-size: 2em;
-}
-.mainButton1:hover {
+.menu-button:hover {
     background-color: lightgrey;
 }
 
