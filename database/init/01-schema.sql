@@ -35,7 +35,8 @@ CREATE TABLE descriptors (
     descriptor_id SERIAL PRIMARY KEY,
     descriptor_name VARCHAR(50) NOT NULL,
     is_loanable BOOLEAN NOT NULL,
-    quantity INTEGER NOT NULL
+    quantity INTEGER NOT NULL,
+    info_field VARCHAR(500)
     
     );
 
@@ -51,7 +52,7 @@ CREATE TABLE loanables (
     loanable_id SERIAL PRIMARY KEY,
     loanable_barcode VARCHAR(50) NOT NULL,
     unit_number INTEGER NOT NULL,
-    info_field VARCHAR(500),
+    info_field VARCHAR(800),
 
     FOREIGN KEY (descriptor_id)
             REFERENCES descriptors(descriptor_id),
@@ -69,4 +70,26 @@ CREATE TABLE descriptor_shelves (
     
     );
 
+CREATE TABLE loan_agreements (
+    loan_id SERIAL PRIMARY KEY,
+    loan_time TIMESTAMPTZ NOT NULL,
+    expected_return_date DATE NOT NULL,
+    actual_return_time TIMESTAMPTZ,
+    borrower VARCHAR(50) NOT NULL,
+    note VARCHAR(500),
 
+    FOREIGN KEY (loanable_id)
+            REFERENCES loanables(loanable_id)
+    );
+
+
+CREATE TABLE stock_alert (
+    stock_alert_id SERIAL PRIMARY KEY,
+    urgency INTEGER NOT NULL,
+    active BOOLEAN NOT NULL,
+    muted BOOLEAN NOT NULL,
+    min_quantity INTEGER NOT NULL,
+
+    FOREIGN KEY (descriptor_id)
+            REFERENCES descriptors(descriptor_id)
+    );
