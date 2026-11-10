@@ -1,0 +1,80 @@
+<!doctype html>
+<head>
+    <title>SSE Experiment</title>
+</head>
+<body>
+    <form id="message-form">
+        <input name="myMessage" type="text" autocomplete="off" />
+        <button type="submit">Send</button>
+    </form>
+    <div id="status" class="status">Connecting...</div>
+    <ul id="messages"></ul>
+
+    <script>
+        const form = document.getElementById("message-form");
+        const input = form.elements.myMessage;
+        const messages = document.getElementById("messages");
+
+        let watcher = null;
+        let events = null;
+        let lastSeen = Date.now();
+        const statusEl = document.getElementById("status");
+
+        const resetWatcher = () => {
+            clearTimeout(watcher);
+            watcher = setTimeout(connect, 45 * 1000); // 45 seconds
+        };
+
+        const heard = () => {
+            lastSeen = Date.now();
+            renderStatus();
+            resetWatcher();
+        };
+
+        const connect = () => {
+            // drop old connection and create a new one
+            if (events) events.close();
+            events = new EventSource("/sse");
+
+            // dont reconnect until hearbeat no longer received
+            events.addEventListener("ping", heard);
+
+            // add messages to html list (for proof of concept)
+            events.onmessage = (event) => {
+                const item = document.createElement("li");
+                item.textContent = event.data;
+                messages.appendChild(item);
+                heard();
+            };
+
+            resetWatcher();
+        };
+
+        const renderStatus = () => {
+            if (lastSeen === null) {
+                statusEl.textContent = "Connecting...";
+                return;
+            }
+            const secs = Math.round((Date.now() - lastSeen) / 1000);
+            const stale = secs > 45; // same threshold as the watchdog
+            const age = secs < 60 ? `${secs}s` : `${Math.floor(secs / 60)}m`;
+
+            statusEl.textContent = stale
+                ? `Disconnected, last contact ${age} ago`
+                : `Connected, last contact ${age} ago`;
+            statusEl.classList.toggle("stale", stale);
+        };
+
+        connect();
+        setInterval(renderStatus, 1000);
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
+
+            await fetch("/message", { method: "POST", body: text });
+            input.value = "";
+        });
+    </script>
+</body>
