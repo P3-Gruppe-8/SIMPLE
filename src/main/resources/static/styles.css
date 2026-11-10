@@ -96,7 +96,7 @@ main {
     flex-grow: 1;
 }
 
-.mainButtonContainer {
+.mainButtonContainer1 {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -131,8 +131,37 @@ main {
 .mainButton1 {
     flex-grow: 1;
     padding: 5px;
+    min-width: 0;
+    min-height: 0;
+    max-width: 48.5%;
+    max-height: 100%;
+    border-radius: 25px;
+    border: 5px solid black;
+    background-color: whitesmoke;
     text-align: center;
+    text-wrap: wrap;
+    font-weight: bold;
     font-size: 2em;
+}
+.mainButton1:hover {
+    background-color: lightgrey;
+}
+
+.mainButton2 {
+    flex-grow: 1;
+    padding: 5px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 25px;
+    border: 5px solid black;
+    background-color: whitesmoke;
+    text-align: center;
+    text-wrap: wrap;
+    font-weight: bold;
+    font-size: 2em;
+}
+.mainButton1:hover {
+    background-color: lightgrey;
 }
 
 footer,
@@ -150,6 +179,7 @@ header {
 .bottombar button {
     height: 86%;
     font-size: 2em;
+    font-weight: bold;
     margin: 5px;
     outline: none !important;
 }
