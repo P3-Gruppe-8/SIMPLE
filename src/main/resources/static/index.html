@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>NOWACO SIMPLE</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="icon" href="nowaco-logo.png" type="image/png" />
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <ol>
+                    <li class="navbar-element">
+                        <img src="nowaco-logo.png" />
+                    </li>
+                    <li class="navbar-element">
+                        <div class="mode-switch" id="modeSwitch">
+                            <div class="mode-slider"></div>
+                            <button
+                                class="mode-option active"
+                                data-mode="supply"
+                            >
+                                Supply Mode
+                            </button>
+                            <button class="mode-option" data-mode="loan">
+                                Loan Mode
+                            </button>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </header>
+        <main>
+            <div class="button-row height-two-fifths">
+                <button class="menu-button">Register Item Type</button>
+                <button class="menu-button">Delete Item Type</button>
+            </div>
+
+            <div class="button-row height-two-fifths">
+                <button class="menu-button">Count Inventory</button>
+                <button class="menu-button">Edit Item Type Locations</button>
+            </div>
+
+            <div class="button-row height-one-fifth">
+                <button class="menu-button">Item Details</button>
+            </div>
+        </main>
+        <footer class="bottombar">
+            <button class="back">Back</button>
+            <button class="alerts">Alerts</button>
+        </footer>
+        <script src="script.js"></script>
+    </body>
+</html>
