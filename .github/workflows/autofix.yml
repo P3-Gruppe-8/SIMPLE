@@ -1,0 +1,28 @@
+name: autofix.ci # needed to securely identify the workflow
+
+on:
+    pull_request:
+    push:
+        branches: ["main"]
+permissions:
+    contents: read
+
+jobs:
+    autofix:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Set up JDK 25
+              uses: actions/setup-java@v5
+              with:
+                  java-version: "25"
+                  distribution: "temurin"
+                  cache: maven
+
+            - name: Apply Spotless
+              run: ./mvnw -B spotless:apply
+
+            - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a
+              with:
+                  commit-message: "chore: formatting"

@@ -2,14 +2,9 @@ package simple;
 
 import simple.presentation.Server;
 
-/**
- * Hello world!
- *
- */
+/** Hello world! */
 public class Main {
-
     public static void main(String[] args) {
         Server.start(7070);
-
     }
 }

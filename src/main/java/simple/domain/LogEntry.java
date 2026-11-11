@@ -1,5 +1,3 @@
 package simple.domain;
 
-public class LogEntry {
-    
-}
+public class LogEntry {}

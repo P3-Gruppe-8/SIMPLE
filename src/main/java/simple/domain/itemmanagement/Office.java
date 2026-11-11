@@ -1,5 +1,3 @@
 package simple.domain.itemmanagement;
 
-public class Office {
-
-}
+public class Office {}
