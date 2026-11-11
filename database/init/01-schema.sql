@@ -4,15 +4,16 @@ CREATE TABLE it_staffs (
     it_staff_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL
+    last_name VARCHAR(50) NOT NULL,
+
+    office_id INTEGER NOT NULL REFERENCES offices(office_id) ON DELETE CASCADE
     );
 
 CREATE TABLE admins (
     admin_id SERIAL PRIMARY KEY,
     password_hash TEXT NOT NULL,
 
-    FOREIGN KEY (it_staff_id)
-        REFERENCES it_staffs(it_staff_id)
+    it_staff_id INTEGER NOT NULL REFERENCES it_staffs(it_staff_id) ON DELETE CASCADE
     );
 
 CREATE TABLE offices (
@@ -26,8 +27,7 @@ CREATE TABLE shelves (
     shelf_name VARCHAR(50) PRIMARY KEY,
     room_name VARCHAR(50),
     
-    FOREIGN KEY (office_id)
-            REFERENCES offices(office_id)
+    office_id INTEGER NOT NULL REFERENCES offices(office_id) ON DELETE CASCADE
     
     );
 
@@ -44,8 +44,7 @@ CREATE TABLE descriptor_barcodes (
     barcode_id SERIAL PRIMARY KEY,
     barcode_key VARCHAR(50) NOT NULL,
     
-    FOREIGN KEY (descriptor_id)
-            REFERENCES descriptors(descriptor_id)
+    descriptor_id INTEGER NOT NULL REFERENCES descriptors(descriptor_id) ON DELETE CASCADE
     );
 
 CREATE TABLE loanables (
@@ -54,17 +53,15 @@ CREATE TABLE loanables (
     unit_number INTEGER NOT NULL,
     info_field VARCHAR(800),
 
-    FOREIGN KEY (descriptor_id)
-            REFERENCES descriptors(descriptor_id),
+    descriptor_id INTEGER NOT NULL REFERENCES descriptors(descriptor_id) ON DELETE CASCADE,
 
-    FOREIGN KEY (shelf_id)
-            REFERENCES shelves(shelf_id),
+    shelf_id INTEGER NOT NULL DEFAULT 'NOT ON SHELF' REFERENCES shelves(shelf_id) ON DELETE SET DEFAULT 
     
     );
 
 CREATE TABLE descriptor_shelves (
-    descriptor_id INTEGER NOT NULL REFERENCES descriptors(descriptor_id),
-    shelf_id INTEGER NOT NULL REFERENCES shelves(shelf_id),
+    descriptor_id INTEGER NOT NULL REFERENCES descriptors(descriptor_id) ON DELETE CASCADE,
+    shelf_id INTEGER NOT NULL REFERENCES shelves(shelf_id) ON DELETE CASCADE,
 
     PRIMARY KEY (descriptor_id, shelf_id)
     
@@ -74,12 +71,11 @@ CREATE TABLE loan_agreements (
     loan_id SERIAL PRIMARY KEY,
     loan_time TIMESTAMPTZ NOT NULL,
     expected_return_date DATE NOT NULL,
-    actual_return_time TIMESTAMPTZ,
+    actual_return_time TIMESTAMPTZ DEFAULT NULL,
     borrower VARCHAR(50) NOT NULL,
     note VARCHAR(500),
 
-    FOREIGN KEY (loanable_id)
-            REFERENCES loanables(loanable_id)
+    loanable_id INTEGER NOT NULL REFERENCES loanables(loanable_id) ON DELETE CASCADE
     );
 
 
@@ -90,6 +86,26 @@ CREATE TABLE stock_alert (
     muted BOOLEAN NOT NULL,
     min_quantity INTEGER NOT NULL,
 
-    FOREIGN KEY (descriptor_id)
-            REFERENCES descriptors(descriptor_id)
+    descriptor_id INTEGER NOT NULL REFERENCES descriptors(descriptor_id) ON DELETE CASCADE
+    );
+
+CREATE TABLE loan_alert (
+    loan_alert_id SERIAL PRIMARY KEY,
+    urgency INTEGER NOT NULL,
+    active BOOLEAN NOT NULL,
+    muted BOOLEAN NOT NULL,
+
+    loan_id INTEGER NOT NULL REFERENCES loan_agreements(loan_id) ON DELETE CASCADE
+    );
+
+CREATE TABLE log_entries (
+    entry_id SERIAL PRIMARY KEY,
+    entry_type VARCHAR(50) NOT NULL,
+    entry_time TIMESTAMPTZ NOT NULL,
+    descriptor VARCHAR(50),
+    actor VARCHAR(50),
+    borower VARCHAR(50),
+    info VARCHAR(500),
+
+    office_id INTEGER NOT NULL REFERENCES offices(office_id)
     );
