@@ -7,6 +7,9 @@ body {
     width: 100vw;
     flex-direction: column;
     overflow: hidden;
+    font-family: "Nunito", sans-serif;
+    font-weight: black;
+    font-style: normal;
 }
 
 .navbar {
@@ -90,9 +93,9 @@ body {
     transition: color 0.3s ease;
 }
 
-/* Fix android weird square highlight */
 button {
-    -webkit-tap-highlight-color: transparent;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent; /* removes the weird highlight on android */
 }
 
 /* No focus ring after tapping */
