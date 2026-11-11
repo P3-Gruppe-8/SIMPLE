@@ -1,5 +1,3 @@
 package simple.domain.alert;
 
-public class InactivityAlert extends Alert{
-    
-}
+public class InactivityAlert extends Alert {}

@@ -1,5 +1,3 @@
 package simple.domain.itemmanagement;
 
-public class Descriptor {
-    
-}
+public class Descriptor {}

@@ -1,9 +1,9 @@
 package simple.presentation;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import simple.Main;
 
 public class Server {
@@ -19,7 +19,7 @@ public class Server {
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
         }).start(port);
 
+        app.start(port);
         log.info("Server started on port {}", port);
     }
-
 }

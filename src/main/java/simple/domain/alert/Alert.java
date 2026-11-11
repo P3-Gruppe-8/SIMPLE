@@ -1,5 +1,3 @@
 package simple.domain.alert;
 
-public abstract class Alert {
-
-}
+public abstract class Alert {}
