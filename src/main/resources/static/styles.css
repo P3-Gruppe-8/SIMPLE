@@ -33,7 +33,9 @@ body {
     height: 100%;
     width: 100%;
     justify-content: space-between;
-    margin: 2%;
+    gap: 2vw;
+    padding: 0 2vw;
+    box-sizing: border-box;
 }
 
 .navbar-element {
@@ -47,21 +49,23 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    width: 320px;
+    width: min(320px, 65vw);
     height: 80%;
     padding: 5px;
     background-color: #142644;
     border-radius: 14px;
     box-sizing: border-box;
+    container-type: inline-size;
 }
 
 .mode-slider {
     position: absolute;
-    width: calc(50% - 3px);
-    height: 92.5%;
-    left: 3px;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: calc(50% - 5px);
     background-color: #3b65b1;
-    border-radius: 12.95px;
+    border-radius: 10px;
     transition: transform 0.3s ease;
 }
 
@@ -72,15 +76,28 @@ body {
 .mode-option {
     position: relative;
     z-index: 1;
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
     height: 100%;
+    padding: 0 4px;
     border: none;
     background: transparent;
     color: #a5b0c0;
-    font-size: 22px;
+    font-size: clamp(0.7rem, 6.8cqw, 22px);
+    white-space: nowrap;
     font-weight: 600;
     cursor: pointer;
     transition: color 0.3s ease;
+}
+
+/* Fix android weird square highlight */
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* No focus ring after tapping */
+.mode-option:focus:not(:focus-visible) {
+    outline: none;
 }
 
 .mode-option.active {
@@ -231,7 +248,7 @@ button.alerts {
 }
 
 .alerts .button-label {
-    font-size: 3rem;
+    font-size: clamp(1rem, 80cqh, 3rem);
 }
 
 .alerts .button-icon {
