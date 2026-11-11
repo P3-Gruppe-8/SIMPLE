@@ -57,6 +57,15 @@
             <importOrder />
           </java>
         </configuration>
+        <executions>
+          <execution>
+            <id>install-git-hook</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>install-git-pre-push-hook</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
