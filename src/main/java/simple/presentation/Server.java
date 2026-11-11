@@ -13,11 +13,12 @@ public class Server {
     public static void start(int port) {
 
         Javalin.create(config -> {
-            config.requestLogger
-                    .http((ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
-            config.staticFiles.add("/static", Location.CLASSPATH);
-            config.routes.get("/", ctx -> ctx.redirect("index.html"));
-        }).start(port);
+                    config.requestLogger.http((ctx, ms) ->
+                            log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
+                    config.staticFiles.add("/static", Location.CLASSPATH);
+                    config.routes.get("/", ctx -> ctx.redirect("index.html"));
+                })
+                .start(port);
 
         app.start(port);
         log.info("Server started on port {}", port);
