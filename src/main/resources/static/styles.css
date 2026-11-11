@@ -95,43 +95,83 @@ main {
     --space: 0.5rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1 1 0;
+    min-height: 0;
     gap: var(--space);
     padding: var(--space);
 }
 
 .button-row {
     display: flex;
-    flex-grow: 1;
+    min-height: 0;
     justify-content: space-evenly;
     gap: var(--space);
 }
 
 .height-one-fifth {
-    height: 20%;
+    flex: 1 1 0;
 }
 
 .height-two-fifths {
-    height: 40%;
+    flex: 2 1 0;
 }
 
 .menu-button {
-    flex: 1;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
     border-radius: 25px;
     border: 5px solid black;
     background-color: whitesmoke;
-    text-align: center;
-    text-wrap: balance;
-    font-weight: bold;
-    font-size: clamp(0.1rem, 7vw, 4rem);
-    overflow-wrap: anywhere;
-    color: black;
+    container-type: size;
 }
 
 .menu-button:hover {
     background-color: lightgrey;
+}
+
+.button-label {
+    margin: 0;
+    flex-shrink: 0;
+    line-height: 1.1;
+    height: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-wrap: balanced;
+    font-weight: bold;
+    font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
+    overflow-wrap: anywhere;
+    color: black;
+}
+
+.button-icon {
+    flex: 0 0 auto;
+    height: 38cqh;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+}
+
+.height-one-fifth .menu-button {
+    flex-direction: row;
+}
+
+.height-one-fifth .button-label {
+    height: auto;
+    font-size: clamp(1rem, min(50cqh, 9cqw), 6rem);
+}
+
+.height-one-fifth .button-icon {
+    height: 80cqh;
 }
 
 footer,
@@ -140,17 +180,19 @@ header {
 }
 
 .bottombar {
+    --space: 0.4rem;
     display: flex;
     height: 11vh;
     background-color: #000000;
     align-items: center;
+    gap: var(--space);
+    padding: 0 var(--space);
 }
 
 .bottombar button {
     height: 86%;
     font-size: 2em;
     font-weight: bold;
-    margin: 5px;
     outline: none !important;
 }
 
@@ -158,16 +200,38 @@ button.back {
     width: 30%;
     background-color: red;
     border: none;
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button.back:hover {
     background-color: rgb(201, 0, 0);
 }
 
+.back .button-icon {
+    height: 100cqh;
+}
+
 button.alerts {
     width: 70%;
     background-color: #ffbf00;
     border: none;
+    flex-direction: row;
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.alerts .button-label {
+    font-size: 3rem;
+}
+
+.alerts .button-icon {
+    height: 70cqh;
 }
 
 button.alerts:hover {

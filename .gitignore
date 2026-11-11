@@ -43,3 +43,6 @@ target/
 
 # Environment
 .env
+
+# macOS
+.DS_Store
