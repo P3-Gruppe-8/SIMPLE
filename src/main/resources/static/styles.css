@@ -127,6 +127,7 @@ main {
     font-weight: bold;
     font-size: clamp(1.5rem, 7vw, 4rem);
     overflow-wrap: anywhere;
+    color: black;
 }
 
 .menu-button:hover {
