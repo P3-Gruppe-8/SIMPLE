@@ -158,7 +158,6 @@ main {
     border-radius: 25px;
     outline: 5px solid black;
     border: 5px outset black;
-    background-color: whitesmoke;
     container-type: size;
     background-color: whitesmoke;
     background: linear-gradient(to bottom, whitesmoke, rgb(225, 225, 225));
@@ -166,6 +165,11 @@ main {
 
 .menu-button:hover {
     background-color: rgb(234, 234, 234);
+    background: linear-gradient(
+        to bottom,
+        rgb(208, 208, 208),
+        rgb(180, 180, 180)
+    );
 }
 
 .button-label {
@@ -237,7 +241,7 @@ button.back {
 }
 
 button.back:hover {
-    background-color: rgb(201, 0, 0);
+    background-color: rgb(198, 0, 0);
 }
 
 .back .button-icon {
@@ -265,5 +269,5 @@ button.alerts {
 }
 
 button.alerts:hover {
-    background-color: #d7a200;
+    background-color: #d19d00;
 }
