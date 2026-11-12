@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "Nunito";
+    font-weight: 200 1000;
+    src: url("fonts/nunito.woff2") format("woff2");
+}
+
 html,
 body {
     display: flex;
@@ -8,7 +14,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     font-family: "Nunito", sans-serif;
-    font-weight: black;
+    font-weight: 800;
     font-style: normal;
 }
 
@@ -90,13 +96,13 @@ body {
     color: #a5b0c0;
     font-size: clamp(0.7rem, 6.8cqw, 22px);
     white-space: nowrap;
-    font-weight: 600;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 button {
     font-family: inherit;
+    font-weight: inherit;
     -webkit-tap-highlight-color: transparent; /* removes the weird highlight on android */
 }
 
@@ -172,7 +178,6 @@ main {
     justify-content: center;
     text-align: center;
     text-wrap: balanced;
-    font-weight: bold;
     font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
     overflow-wrap: anywhere;
     color: black;
@@ -218,7 +223,6 @@ header {
 .bottombar button {
     height: 86%;
     font-size: 2em;
-    font-weight: bold;
     outline: none !important;
 }
 
