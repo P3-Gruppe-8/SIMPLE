@@ -40,3 +40,6 @@ target/
 # IntelliJ
 .idea/
 *.iml
+
+# Environment
+.env

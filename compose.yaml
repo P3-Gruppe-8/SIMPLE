@@ -1,0 +1,23 @@
+services:
+    postgres:
+        image: postgres:16
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: dbs
+            POSTGRES_USER: ${DB_USER:-dbs}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+        ports:
+            - "127.0.0.1:5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+    adminer:
+        image: adminer:latest
+        restart: unless-stopped
+        ports:
+            - "127.0.0.1:8080:8080"
+        depends_on:
+            - postgres
+
+volumes:
+    postgres_data:
