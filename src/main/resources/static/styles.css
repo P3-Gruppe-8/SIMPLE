@@ -129,11 +129,11 @@ main {
     overflow: hidden;
     border-radius: 25px;
     outline: 5px solid black;
-    border: 7px outset black;
+    border: 5px outset black;
     background-color: whitesmoke;
     container-type: size;
     background-color: whitesmoke;
-    background: linear-gradient(to bottom, whitesmoke, lightgrey);
+    background: linear-gradient(to bottom, whitesmoke, rgb(225, 225, 225));
 }
 
 .menu-button:hover {
