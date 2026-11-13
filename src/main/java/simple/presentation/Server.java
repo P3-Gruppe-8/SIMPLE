@@ -5,6 +5,7 @@ import io.javalin.http.staticfiles.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
+import simple.dataaccess.jdbc.jdbctest;
 
 public class Server {
 
@@ -21,5 +22,7 @@ public class Server {
 
         app.start(port);
         log.info("Server started on port {}", port);
+
+        jdbctest hej = new jdbctest();
     }
 }
