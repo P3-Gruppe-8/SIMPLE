@@ -2,9 +2,6 @@ const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
 const alertButton = document.getElementById;
 
-let showNewAlerts = true;
-let alertTestVariable = false;
-
 modeOptions.forEach((button) => {
     button.addEventListener("click", () => {
         modeOptions.forEach((option) => {
@@ -200,14 +197,20 @@ let dummyAlertArray = [
     },
 ];
 
+let showNewAlerts = false;
+let alertTestVariable = false;
+
 function showAlertView(alertView, showBack) {
     showView(alertView, showBack);
     hideById("alertButton");
+    showById("newAlerts");
 
     if (!showNewAlerts) {
+        hideById("newAlerts");
     }
+    showNewAlerts = false;
 }
 
-function recieveAlerts(alertArray) {
-    alertViewVisited = false;
-}
+function recieveAlerts(alertArray) {}
+
+function updateAlertBoxes(alertBoxes) {}
