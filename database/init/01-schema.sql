@@ -26,10 +26,10 @@ CREATE TABLE shelves (
     shelf_id SERIAL PRIMARY KEY,
     shelf_name VARCHAR(50) NOT NULL,
     room_name VARCHAR(50),
-    
+
     office_id INTEGER NOT NULL REFERENCES offices(office_id) ON DELETE CASCADE,
     UNIQUE (office_id, shelf_name)
-    
+
     );
 
 CREATE TABLE descriptors (
@@ -51,11 +51,11 @@ CREATE TABLE descriptor_barcodes (
 
     descriptor_id INTEGER NOT NULL,
     office_id INTEGER NOT NULL,
-    
+
     FOREIGN KEY (descriptor_id, office_id)
         REFERENCES descriptors(descriptor_id, office_id)
         ON DELETE CASCADE,
-    
+
     -- Barcodes til en descriptor er unik for kontoret
     UNIQUE (office_id, barcode_key)
     );
@@ -77,7 +77,7 @@ CREATE TABLE descriptor_shelves (
     shelf_id INTEGER NOT NULL REFERENCES shelves(shelf_id) ON DELETE CASCADE,
 
     PRIMARY KEY (descriptor_id, shelf_id)
-    
+
     );
 
 CREATE TABLE loan_agreements (
