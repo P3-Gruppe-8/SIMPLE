@@ -1,7 +1,8 @@
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
+const alertButton = document.getElementById;
 
-let alertViewVisited = false;
+let showNewAlerts = true;
 let alertTestVariable = false;
 
 modeOptions.forEach((button) => {
@@ -48,9 +49,6 @@ function showView(id, showBack) {
     } else {
         hideById("backButton");
     }
-    document.getElementById(id).style = "display: flex;";
-
-    // Alert view functionality
 }
 
 function hideBack() {
@@ -62,6 +60,10 @@ function showBack() {
 }
 
 function previousView() {
+    if (viewHistory[viewHistory.length - 1] === "alertView") {
+        showById("alertButton");
+    }
+
     let previousViewId = viewHistory[viewHistory.length - 2];
     showView(previousViewId);
     if (previousViewId === "defaultView") {
@@ -86,6 +88,7 @@ function logOut() {
 addEventListener("keydown", (e) => {
     console.log(e.key);
 });
+
 // Alerts ---------------------
 let currentTime = new Date().toString();
 
@@ -152,8 +155,11 @@ let dummyAlertArray = [
     },
 ];
 
-function alertViewIsVisited() {
-    if (alertViewVisited) {
+function showAlertView(alertView, showBack) {
+    showView(alertView, showBack);
+    hideById("alertButton");
+
+    if (!showNewAlerts) {
     }
 }
 
