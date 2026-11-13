@@ -1,6 +1,5 @@
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
-const alertButton = document.getElementById;
 
 modeOptions.forEach((button) => {
     button.addEventListener("click", () => {
@@ -20,14 +19,22 @@ modeOptions.forEach((button) => {
     });
 });
 
+function hide(element) {
+    element.classList.add("invisible");
+}
+
+function show(element) {
+    element.classList.remove("invisible");
+}
+
 function hideById(id) {
     let element = document.getElementById(id);
-    element.classList.add("invisible");
+    hide(element);
 }
 
 function showById(id) {
     let element = document.getElementById(id);
-    element.classList.remove("invisible");
+    show(element);
 }
 
 let viewHistory = [];
@@ -37,7 +44,7 @@ function showView(id, showBack) {
     viewHistory.push(id);
     let views = document.getElementsByClassName("view");
     for (const view of views) {
-        view.classList.add("invisible");
+        hide(view);
     }
     showById(id);
     hideById("logoutButton");
@@ -46,33 +53,14 @@ function showView(id, showBack) {
     } else {
         hideById("backButton");
     }
-    document.getElementById(id).style = "display: flex;";
-
-    // Alert view functionality
-}
-
-function hideBack() {
-    document.getElementById("backButton").style = "display: none;";
-}
-
-function showBack() {
-    document.getElementById("backButton").style = "display: flex;";
-}
-
-function hideBack() {
-    document.getElementById("backButton").style = "display: none;";
-}
-
-function showBack() {
-    document.getElementById("backButton").style = "display: flex;";
 }
 
 function previousView() {
-    if (viewHistory[viewHistory.length - 1] === "alertView") {
+    if (viewHistory.at(-1) === "alertView") {
         showById("alertButton");
     }
 
-    let previousViewId = viewHistory[viewHistory.length - 2];
+    let previousViewId = viewHistory.at(-2);
     showView(previousViewId);
     if (previousViewId === "defaultView" && loggedInAs) {
         showById("logoutButton");
@@ -84,6 +72,8 @@ function previousView() {
 let loggedInAs = null;
 
 function logIn(staffId) {
+    if (!["defaultView", "loanModeLogInScreen"].includes(viewHistory.at(-1)))
+        return;
     loggedInAs = staffId;
     hideById("scanIdPrompt");
     showById("moreOptions");
