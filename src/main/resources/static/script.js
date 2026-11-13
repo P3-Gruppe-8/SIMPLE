@@ -1,7 +1,8 @@
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
+const alertButton = document.getElementById;
 
-let alertViewVisited = false;
+let showNewAlerts = true;
 let alertTestVariable = false;
 
 modeOptions.forEach((button) => {
@@ -112,7 +113,6 @@ addEventListener("keydown", (e) => {
         buffer += e.key;
     }
 });
-<<<<<<< HEAD
 
 const validIds = ["5741000134894"];
 
@@ -122,7 +122,6 @@ function onScan(buffer) {
         logIn(buffer);
     }
 }
-=======
 // Alerts ---------------------
 let currentTime = new Date().toString();
 
@@ -197,4 +196,3 @@ function alertViewIsVisited() {
 function recieveAlerts(alertArray) {
     alertViewVisited = false;
 }
->>>>>>> dd6f603 (Stash changes)

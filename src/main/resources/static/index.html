@@ -73,8 +73,8 @@
 
             <!-- Alert view -->
             <div class="view" id="alertView">
-                <div class="alert-row-new"></div>
-                <div class="alert-row-old"></div>
+                <div id="newAlerts" class="alert-row-new">New Alerts</div>
+                <div id="oldAlerts" class="alert-row-old">Old Alerts</div>
             </div>
 
             <!-- After pressing "more options" in supply mode -->
@@ -133,7 +133,11 @@
             >
                 <p>Log out</p>
             </button>
-            <button class="alerts raised">
+            <button
+                class="alerts raised"
+                id="alertButton"
+                onclick="showAlertView('alertView', true)"
+            >
                 <img src="bell-solid-full.svg" class="button-icon" />
                 <p class="button-label">Alerts</p>
             </button>
