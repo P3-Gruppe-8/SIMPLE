@@ -32,10 +32,43 @@
         </header>
         <main>
             <!-- The default view -->
-            <div class="view" id="defaultView">
-                <button onclick="showView('detailedSupply')">
-                    Supply mode!!!??
-                </button>
+            <div class="view button-col" id="defaultView">
+                <div class="button-row height-two-fifths">
+                    <button class="menu-button raised default-option">
+                        <img
+                            src="share-from-square-solid-full.svg"
+                            class="button-icon"
+                        />
+                        <p class="button-label">Write Off</p>
+                    </button>
+                </div>
+
+                <div class="button-row height-two-fifths">
+                    <button class="menu-button raised">
+                        <img
+                            src="box-open-solid-full.svg"
+                            class="button-icon"
+                        />
+                        <p class="button-label">Restock</p>
+                    </button>
+                </div>
+
+                <div class="button-row height-one-fifth">
+                    <button
+                        onclick="showView('detailedSupply', true)"
+                        id="moreOptions"
+                        class="menu-button raised invisible"
+                    >
+                        <img src="bars-solid-full.svg" class="button-icon" />
+                        <p class="button-label">More options</p>
+                    </button>
+                    <button id="scanIdPrompt" class="menu-button">
+                        <img src="id-card-solid-full.svg" class="button-icon" />
+                        <p class="button-label detailed">
+                            Scan ID for more options...
+                        </p>
+                    </button>
+                </div>
             </div>
 
             <!-- After pressing "more options" in supply mode -->
@@ -86,6 +119,13 @@
                 id="backButton"
             >
                 <img src="back-arrow.png" class="button-icon" />
+            </button>
+            <button
+                onclick="logOut()"
+                class="back raised invisible"
+                id="logoutButton"
+            >
+                <p>Log out</p>
             </button>
             <button class="alerts raised">
                 <img src="bell-solid-full.svg" class="button-icon" />

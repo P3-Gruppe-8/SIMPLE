@@ -18,6 +18,10 @@ body {
     font-style: normal;
 }
 
+.invisible {
+    display: none !important;
+}
+
 .navbar {
     display: flex;
     background-color: #1d345c;
@@ -193,13 +197,25 @@ main {
     color: black;
 }
 
+.button-label.detailed {
+    font-size: clamp(0.7rem, min(10cqw, 20cqh), 1.5rem);
+    font-weight: 600;
+    color: gray;
+    margin: 0 0 0 10px;
+}
+
 .button-icon {
     flex: 0 0 auto;
-    height: 38cqh;
+    height: 45cqh;
     max-width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: contain;
     display: block;
+}
+
+.default-option {
+    --face: #6a9fdc;
+    --edge: #3a699f;
 }
 
 .height-one-fifth .menu-button {
