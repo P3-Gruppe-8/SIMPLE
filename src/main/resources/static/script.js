@@ -75,6 +75,8 @@ function previousView() {
 let loggedInAs = null;
 
 function logIn(staffId) {
+    if (!["defaultView", "loanModeLogInScreen"].includes(viewHistory.at(-1)))
+        return;
     loggedInAs = staffId;
     hideById("scanIdPrompt");
     showById("moreOptions");
