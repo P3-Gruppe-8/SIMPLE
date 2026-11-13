@@ -19,28 +19,56 @@ modeOptions.forEach((button) => {
     });
 });
 
-let viewHistory = [];
-showView("defaultView");
+function hideById(id) {
+    let element = document.getElementById(id);
+    element.classList.add("invisible");
+}
 
-function showView(id) {
+function showById(id) {
+    let element = document.getElementById(id);
+    element.classList.remove("invisible");
+}
+
+let viewHistory = [];
+showView("defaultView", false);
+
+function showView(id, showBack) {
     viewHistory.push(id);
     let views = document.getElementsByClassName("view");
     for (const view of views) {
-        view.style = "display: none;";
+        view.classList.add("invisible");
     }
-    document.getElementById(id).style = "display: flex;";
-}
-
-function hideBack() {
-    document.getElementById("backButton").style = "display: none;";
-}
-
-function showBack() {
-    document.getElementById("backButton").style = "display: flex;";
+    showById(id);
+    hideById("logoutButton");
+    if (showBack) {
+        showById("backButton");
+    } else {
+        hideById("backButton");
+    }
 }
 
 function previousView() {
-    showView(viewHistory[viewHistory.length - 2]);
+    let previousViewId = viewHistory[viewHistory.length - 2];
+    showView(previousViewId);
+    if (previousViewId === "defaultView") {
+        showById("logoutButton");
+    }
     viewHistory.pop();
     viewHistory.pop();
 }
+
+function logIn() {
+    hideById("scanIdPrompt");
+    showById("moreOptions");
+    showById("logoutButton");
+}
+
+function logOut() {
+    showById("scanIdPrompt");
+    hideById("moreOptions");
+    hideById("logoutButton");
+}
+
+addEventListener("keydown", (e) => {
+    console.log(e.key);
+});
