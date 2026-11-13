@@ -8,7 +8,8 @@ public class Databaseconnection {
     private String uname = System.getenv("DB_USER");
     private String pass = System.getenv("DB_PASSWORD");
 
-    public Databaseconnection() {};
+    public Databaseconnection() {}
+    ;
 
     public Connection getDbConnection() throws SQLException {
         return DriverManager.getConnection(url, uname, pass);
