@@ -1,6 +1,9 @@
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
 
+let alertViewVisited = false;
+let alertTestVariable = false;
+
 modeOptions.forEach((button) => {
     button.addEventListener("click", () => {
         modeOptions.forEach((option) => {
@@ -45,6 +48,17 @@ function showView(id, showBack) {
     } else {
         hideById("backButton");
     }
+    document.getElementById(id).style = "display: flex;";
+
+    // Alert view functionality
+}
+
+function hideBack() {
+    document.getElementById("backButton").style = "display: none;";
+}
+
+function showBack() {
+    document.getElementById("backButton").style = "display: flex;";
 }
 
 function previousView() {
@@ -98,6 +112,7 @@ addEventListener("keydown", (e) => {
         buffer += e.key;
     }
 });
+<<<<<<< HEAD
 
 const validIds = ["5741000134894"];
 
@@ -107,3 +122,79 @@ function onScan(buffer) {
         logIn(buffer);
     }
 }
+=======
+// Alerts ---------------------
+let currentTime = new Date().toString();
+
+let dummyAlertArray = [
+    {
+        alertType: "stockAlert",
+        urgency: "INFO",
+        descriptor: "Printer_Cartridge",
+        minQuantity: 10,
+        currQuantity: 30,
+    },
+    {
+        alertType: "stockAlert",
+        urgency: "WARNING",
+        descriptor: "Printer_Cartridge",
+        minQuantity: 10,
+        currQuantity: 20,
+    },
+    {
+        alertType: "stockAlert",
+        urgency: "CRITICAL",
+        descriptor: "Printer_Cartridge",
+        minQuantity: 10,
+        currQuantity: 5,
+    },
+    {
+        alertType: "loanAlert",
+        urgency: "INFO",
+        returnDate: "Today",
+        currentDate: currentTime,
+        loanable: "Laptop 5",
+        borrower: "LTB",
+    },
+    {
+        alertType: "loanAlert",
+        urgency: "WARNING",
+        returnDate: "Yesterday",
+        currentDate: currentTime,
+        loanable: "Laptop 5",
+        borrower: "LTB",
+    },
+    {
+        alertType: "loanAlert",
+        urgency: "CRITICAL",
+        returnDate: "1 week ago",
+        currentDate: currentTime,
+        loanable: "Laptop 5",
+        borrower: "LTB",
+    },
+    {
+        alertType: "inactivityAlert",
+        urgency: "INFO",
+        alertInfo: "Write off has not been used in 3 days",
+    },
+    {
+        alertType: "inactivityAlert",
+        urgency: "WARNING",
+        alertInfo: "Write off has not been used in 1 week",
+    },
+    {
+        alertType: "inactivityAlert",
+        urgency: "CRITICAL",
+        alertInfo: "Write off has not been used in 3 weeks",
+    },
+];
+
+function alertViewIsVisited() {
+    if (alertViewVisited) {
+    }
+}
+
+function recieveAlerts(alertArray) {
+    alertViewVisited = false;
+}
+>>>>>>> dd6f603 (Stash changes)
