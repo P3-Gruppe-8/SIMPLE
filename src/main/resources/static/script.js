@@ -57,6 +57,8 @@ function setMode(id) {
         showView("defaultView");
         if (loggedInAs) {
             showById("logoutButton");
+            showById("moreOptions");
+            hideById("scanIdPrompt");
         }
     } else if (id === "loanMode") {
         if (loggedInAs) {
