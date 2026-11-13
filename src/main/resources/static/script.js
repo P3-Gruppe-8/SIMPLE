@@ -42,12 +42,13 @@ function showById(id) {
 }
 
 let loggedInAs = null;
+
+// the first view of each mode is a "root view"
+const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
 let viewHistory = [];
 setMode("supplyMode");
-showView("defaultView", false);
 
 function setMode(id) {
-    viewHistory.length = 0; // clear the history, we dont want the back button taking you to other modes
     let modes = document.getElementsByClassName("mode");
     for (const mode of modes) {
         hide(mode);
@@ -56,32 +57,38 @@ function setMode(id) {
     if (id === "supplyMode") {
         showView("defaultView");
         if (loggedInAs) {
-            showById("logoutButton");
             showById("moreOptions");
             hideById("scanIdPrompt");
         }
     } else if (id === "loanMode") {
         if (loggedInAs) {
             showView("loanModeHomeScreen");
-            showById("logoutButton");
         } else {
             showView("loanModeLogInScreen");
         }
     }
 }
 
-function showView(id, showBack) {
+function showView(id) {
+    let isRootView = rootViews.includes(id);
+    if (isRootView) {
+        viewHistory.length = 0; // start over
+    }
     viewHistory.push(id);
     let views = document.getElementsByClassName("view");
     for (const view of views) {
         hide(view);
     }
     showById(id);
-    hideById("logoutButton");
-    if (showBack) {
-        showById("backButton");
-    } else {
+    if (isRootView) {
         hideById("backButton");
+    } else {
+        showById("backButton");
+    }
+    if (isRootView && loggedInAs) {
+        showById("logoutButton");
+    } else {
+        hideById("logoutButton");
     }
 }
 
@@ -91,13 +98,9 @@ function previousView() {
         showById("modeSwitch");
     }
 
-    let previousViewId = viewHistory.at(-2);
+    viewHistory.pop(); // the view we are leaving
+    let previousViewId = viewHistory.pop(); // showView pushes it back on
     showView(previousViewId);
-    if (previousViewId === "defaultView" && loggedInAs) {
-        showById("logoutButton");
-    }
-    viewHistory.pop();
-    viewHistory.pop();
 }
 
 function logIn(staffId) {
@@ -107,10 +110,10 @@ function logIn(staffId) {
     if (currentView === "defaultView") {
         hideById("scanIdPrompt");
         showById("moreOptions");
+        showById("logoutButton");
     } else if (currentView === "loanModeLogInScreen") {
         showView("loanModeHomeScreen");
     }
-    showById("logoutButton");
 }
 
 function logOut() {
@@ -223,8 +226,8 @@ let dummyAlertArray = [
     },
 ];
 
-function showAlertView(alertView, showBack) {
-    showView(alertView, showBack);
+function showAlertView(alertView) {
+    showView(alertView);
     hideById("alertButton");
     hideById("modeSwitch");
 
