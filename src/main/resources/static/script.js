@@ -62,7 +62,19 @@ function showBack() {
     document.getElementById("backButton").style = "display: flex;";
 }
 
+function hideBack() {
+    document.getElementById("backButton").style = "display: none;";
+}
+
+function showBack() {
+    document.getElementById("backButton").style = "display: flex;";
+}
+
 function previousView() {
+    if (viewHistory[viewHistory.length - 1] === "alertView") {
+        showById("alertButton");
+    }
+
     let previousViewId = viewHistory[viewHistory.length - 2];
     showView(previousViewId);
     if (previousViewId === "defaultView" && loggedInAs) {
@@ -188,8 +200,11 @@ let dummyAlertArray = [
     },
 ];
 
-function alertViewIsVisited() {
-    if (alertViewVisited) {
+function showAlertView(alertView, showBack) {
+    showView(alertView, showBack);
+    hideById("alertButton");
+
+    if (!showNewAlerts) {
     }
 }
 
