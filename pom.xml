@@ -92,9 +92,7 @@
         <configuration>
           <java>
             <toggleOffOn />
-            <palantirJavaFormat>
-              <version>2.50.0</version>
-            </palantirJavaFormat>
+            <palantirJavaFormat />
             <removeUnusedImports />
             <importOrder />
           </java>
