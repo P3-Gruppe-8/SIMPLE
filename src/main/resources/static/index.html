@@ -18,11 +18,11 @@
                             <div class="mode-slider"></div>
                             <button
                                 class="mode-option active"
-                                data-mode="supply"
+                                data-mode="supplyMode"
                             >
                                 Supply Mode
                             </button>
-                            <button class="mode-option" data-mode="loan">
+                            <button class="mode-option" data-mode="loanMode">
                                 Loan Mode
                             </button>
                         </div>
@@ -31,90 +31,115 @@
             </nav>
         </header>
         <main>
-            <!-- The default view -->
-            <div class="view button-col" id="defaultView">
-                <div class="button-row height-two-fifths">
-                    <button class="menu-button raised default-option">
-                        <img
-                            src="share-from-square-solid-full.svg"
-                            class="button-icon"
-                        />
-                        <p class="button-label">Write Off</p>
-                    </button>
+            <div class="mode" id="supplyMode">
+                <!-- The default view -->
+                <div class="view button-col" id="defaultView">
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised default-option">
+                            <img
+                                src="share-from-square-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Write Off</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="box-open-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Restock</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button
+                            onclick="showView('detailedSupply', true)"
+                            id="moreOptions"
+                            class="menu-button raised invisible"
+                        >
+                            <img
+                                src="bars-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">More options</p>
+                        </button>
+                        <button id="scanIdPrompt" class="menu-button">
+                            <img
+                                src="id-card-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label detailed">
+                                Scan ID for more options...
+                            </p>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="button-row height-two-fifths">
-                    <button class="menu-button raised">
-                        <img
-                            src="box-open-solid-full.svg"
-                            class="button-icon"
-                        />
-                        <p class="button-label">Restock</p>
-                    </button>
+                <!-- Alert view -->
+                <div class="view" id="alertView">
+                    <div id="newAlerts" class="alert-row-new">New Alerts</div>
+                    <div id="oldAlerts" class="alert-row-old">Old Alerts</div>
                 </div>
 
-                <div class="button-row height-one-fifth">
-                    <button
-                        onclick="showView('detailedSupply', true)"
-                        id="moreOptions"
-                        class="menu-button raised invisible"
-                    >
-                        <img src="bars-solid-full.svg" class="button-icon" />
-                        <p class="button-label">More options</p>
-                    </button>
-                    <button id="scanIdPrompt" class="menu-button">
-                        <img src="id-card-solid-full.svg" class="button-icon" />
-                        <p class="button-label detailed">
-                            Scan ID for more options...
-                        </p>
-                    </button>
+                <!-- After pressing "more options" in supply mode -->
+                <div class="view button-col" id="detailedSupply">
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="plus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Register Item Type</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="minus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Delete Item Type</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="list-check-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Count Inventory</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="right-left-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Edit Item Type Locations</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button class="menu-button raised">
+                            <img
+                                src="circle-info-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Item Details</p>
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <!-- Alert view -->
-            <div class="view" id="alertView">
-                <div id="newAlerts" class="alert-row-new">New Alerts</div>
-                <div id="oldAlerts" class="alert-row-old">Old Alerts</div>
-            </div>
-
-            <!-- After pressing "more options" in supply mode -->
-            <div class="view button-col" id="detailedSupply">
-                <div class="button-row height-two-fifths">
-                    <button class="menu-button raised">
-                        <img src="plus-solid-full.svg" class="button-icon" />
-                        <p class="button-label">Register Item Type</p>
-                    </button>
-                    <button class="menu-button raised">
-                        <img src="minus-solid-full.svg" class="button-icon" />
-                        <p class="button-label">Delete Item Type</p>
-                    </button>
+            <div class="mode" id="loanMode">
+                <div class="view login-prompt" id="loanModeLogInScreen">
+                    <img src="id-card-solid-full.svg" class="button-icon" />
+                    <p class="button-label">Scan ID to proceed...</p>
                 </div>
-
-                <div class="button-row height-two-fifths">
-                    <button class="menu-button raised">
-                        <img
-                            src="list-check-solid-full.svg"
-                            class="button-icon"
-                        />
-                        <p class="button-label">Count Inventory</p>
-                    </button>
-                    <button class="menu-button raised">
-                        <img
-                            src="right-left-solid-full.svg"
-                            class="button-icon"
-                        />
-                        <p class="button-label">Edit Item Type Locations</p>
-                    </button>
-                </div>
-
-                <div class="button-row height-one-fifth">
-                    <button class="menu-button raised">
-                        <img
-                            src="circle-info-solid-full.svg"
-                            class="button-icon"
-                        />
-                        <p class="button-label">Item Details</p>
-                    </button>
+                <div class="view button-col" id="loanModeHomeScreen">
+                    <div class="button-row">
+                        <button class="menu-button raised">Hiiii</button>
+                    </div>
                 </div>
             </div>
         </main>

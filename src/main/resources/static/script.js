@@ -12,13 +12,14 @@ modeOptions.forEach((button) => {
 
         button.classList.add("active");
 
-        if (button.dataset.mode === "loan") {
+        if (button.dataset.mode === "loanMode") {
             modeSwitch.classList.add("loan");
         } else {
             modeSwitch.classList.remove("loan");
         }
 
-        console.log("Selected mode:", button.dataset.mode);
+        console.log(button.dataset.mode);
+        setMode(button.dataset.mode);
     });
 });
 
@@ -40,8 +41,32 @@ function showById(id) {
     show(element);
 }
 
+let loggedInAs = null;
 let viewHistory = [];
+setMode("supplyMode");
 showView("defaultView", false);
+
+function setMode(id) {
+    viewHistory.length = 0; // clear the history, we dont want the back button taking you to other modes
+    let modes = document.getElementsByClassName("mode");
+    for (const mode of modes) {
+        hide(mode);
+    }
+    showById(id);
+    if (id === "supplyMode") {
+        showView("defaultView");
+        if (loggedInAs) {
+            showById("logoutButton");
+        }
+    } else if (id === "loanMode") {
+        if (loggedInAs) {
+            showView("loanModeHomeScreen");
+            showById("logoutButton");
+        } else {
+            showView("loanModeLogInScreen");
+        }
+    }
+}
 
 function showView(id, showBack) {
     viewHistory.push(id);
@@ -61,6 +86,7 @@ function showView(id, showBack) {
 function previousView() {
     if (viewHistory.at(-1) === "alertView") {
         showById("alertButton");
+        showById("modeSwitch");
     }
 
     let previousViewId = viewHistory.at(-2);
@@ -72,22 +98,28 @@ function previousView() {
     viewHistory.pop();
 }
 
-let loggedInAs = null;
-
 function logIn(staffId) {
-    if (!["defaultView", "loanModeLogInScreen"].includes(viewHistory.at(-1)))
-        return;
+    const currentView = viewHistory.at(-1);
+    if (!["defaultView", "loanModeLogInScreen"].includes(currentView)) return;
     loggedInAs = staffId;
-    hideById("scanIdPrompt");
-    showById("moreOptions");
+    if (currentView === "defaultView") {
+        hideById("scanIdPrompt");
+        showById("moreOptions");
+    } else if (currentView === "loanModeLogInScreen") {
+        showView("loanModeHomeScreen");
+    }
     showById("logoutButton");
 }
 
 function logOut() {
+    const currentView = viewHistory.at(-1);
     loggedInAs = null;
     showById("scanIdPrompt");
     hideById("moreOptions");
     hideById("logoutButton");
+    if (currentView === "loanModeHomeScreen") {
+        showView("loanModeLogInScreen");
+    }
 }
 
 // scanners type a whole barcode in a few ms
@@ -99,7 +131,7 @@ const MIN_BARCODE_LENGTH = 3;
 let lastKeyTime = Date.now();
 let buffer = "";
 
-addEventListener("keydown", (e) => {
+window.addEventListener("keydown", (e) => {
     const currentTime = Date.now();
     if (currentTime - lastKeyTime > SCAN_KEY_GAP_MS) {
         buffer = "";
@@ -119,7 +151,6 @@ addEventListener("keydown", (e) => {
 const validIds = ["5741000134894"];
 
 function onScan(buffer) {
-    console.log(`Got barcode ${buffer}`);
     if (validIds.includes(buffer)) {
         logIn(buffer);
     }
@@ -193,6 +224,7 @@ let dummyAlertArray = [
 function showAlertView(alertView, showBack) {
     showView(alertView, showBack);
     hideById("alertButton");
+    hideById("modeSwitch");
 
     if (!showNewAlerts) {
     }
