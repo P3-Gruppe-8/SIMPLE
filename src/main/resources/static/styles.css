@@ -202,7 +202,7 @@ main {
 
 .height-one-fifth .button-label {
     height: auto;
-    font-size: clamp(1rem, min(50cqh, 9cqw), 6rem);
+    font-size: clamp(1rem, min(50cqh, 9cqw), 3rem);
 }
 
 .height-one-fifth .button-icon {
