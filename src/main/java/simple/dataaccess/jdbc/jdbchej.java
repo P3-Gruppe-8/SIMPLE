@@ -11,14 +11,12 @@ public class jdbchej {
         Databaseconnection db = new Databaseconnection();
 
         try {
-            System.out.println("HJE MED DIG HVOR ER Du AOSÆFNMAÆDFM 2");
             Connection conn = db.getDbConnection();
-            System.out.println("HJE MED DIG HVOR ER DU DFSDF 4");
             Statement st = conn.createStatement();
-            System.out.println("HJE MED DIG HVOR ER DU FDFD F 5");
-            String sql = "INSERT INTO offices (office_address, office_name) VALUES ('Allern', 'STATE PROPERTY')";
-            ResultSet hej = st.executeQuery(sql);
-            System.out.println(hej);
+            String sql = "INSERT INTO offices (office_address, office_name) VALUES ('APPLE', 'ER SKRALD')";
+            int kebab = st.executeUpdate(sql);
+            System.out.println(kebab);
+            
 
         } catch (SQLException e) {
             System.out.println(e);
