@@ -132,6 +132,13 @@ button:focus:not(:focus-visible) {
 }
 
 main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.button-col {
     --space: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -245,10 +252,10 @@ button.back {
 }
 
 button.alerts {
-    width: 70%;
     --face: #f5b800;
     --edge: #a67c00;
     flex-direction: row;
+    flex-grow: 1;
     container-type: size;
     display: flex;
     align-items: center;
