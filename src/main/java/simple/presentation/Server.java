@@ -22,6 +22,10 @@ public class Server {
                 var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
                 ctx.result("Successfully registered " + itemDetails.name());
             });
+            config.routes.post("/writeOff", ctx -> {
+                var itemDetails = ctx.bodyAsClass(WriteOffRequest.class);
+                ctx.result("Wrote off " + itemDetails.amount() + " " + itemDetails.barcode() + "s");
+            });
         });
 
         app.start(port);
