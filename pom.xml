@@ -81,9 +81,9 @@
               </filters>
             </configuration>
           </execution>
-      </executions>
-    </plugin>
-    <plugin>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>3.11.0</version>
@@ -95,15 +95,6 @@
             <importOrder />
           </java>
         </configuration>
-        <executions>
-          <execution>
-            <id>install-git-hook</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>install-git-pre-push-hook</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
