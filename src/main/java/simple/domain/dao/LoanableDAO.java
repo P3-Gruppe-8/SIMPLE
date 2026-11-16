@@ -6,8 +6,6 @@ import simple.domain.itemmanagement.Loanable;
 
 public interface LoanableDAO {
 
-    public Optional<Loanable> findById(int id);
-
     public Optional<Loanable> findByRFID(String RFID);
 
     public Optional<Loanable> findByUnitName(int unitNumber, Descriptor descriptor);
