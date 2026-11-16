@@ -10,6 +10,10 @@ disableEnterToSubmit();
 
 addBarcodeListener((barcode) => {
     console.log(`Got barcode ${barcode}`);
+    // an open dialog has the user's attention; don't log in or write off behind it
+    if (document.querySelector("dialog[open]")) {
+        return;
+    }
     if (loginIds.includes(barcode)) {
         logIn(barcode);
     }
