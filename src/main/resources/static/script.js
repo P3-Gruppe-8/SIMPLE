@@ -153,7 +153,7 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-const validIds = ["5741000134894"];
+const validIds = ["5741000134894", "5741000142899"]; // booster med sukker, booster uden sukker.....
 
 function onScan(buffer) {
     if (validIds.includes(buffer)) {
