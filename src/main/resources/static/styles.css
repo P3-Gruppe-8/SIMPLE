@@ -104,6 +104,28 @@ body {
     transition: color 0.3s ease;
 }
 
+.login-prompt {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    background-color: #6a9fdc;
+    justify-content: center;
+    align-items: center;
+    container-type: size;
+}
+
+.login-prompt .button-icon {
+    height: min(25cqh, 25cqw);
+}
+
+.login-prompt .button-label {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: auto;
+    font-size: clamp(1rem, min(6cqw, 10cqh), 3rem);
+}
+
 button {
     font-family: inherit;
     font-weight: inherit;
@@ -136,6 +158,14 @@ button:focus:not(:focus-visible) {
 }
 
 main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* Fills main so the views inside can flex. */
+.mode {
     display: flex;
     flex-direction: column;
     flex: 1 1 0;
