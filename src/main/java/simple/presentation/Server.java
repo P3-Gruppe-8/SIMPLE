@@ -2,6 +2,8 @@ package simple.presentation;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
@@ -9,13 +11,21 @@ import simple.Main;
 public class Server {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
+    private static final String DEV_STATIC_DIR = "src/main/resources/static";
 
     public static void start(int port) {
 
         var app = Javalin.create(config -> {
             config.requestLogger.http(
                     (ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
-            config.staticFiles.add("/static", Location.CLASSPATH);
+            // When run from the repo, serve the source folder straight from disk for hot
+            // reloads
+            if (Files.isDirectory(Path.of(DEV_STATIC_DIR))) {
+                log.info("Serving static files from {} (live reload on refresh)", DEV_STATIC_DIR);
+                config.staticFiles.add(DEV_STATIC_DIR, Location.EXTERNAL);
+            } else {
+                config.staticFiles.add("/static", Location.CLASSPATH);
+            }
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
             config.routes.get("/ping", ctx -> ctx.result("Pong!"));
             config.routes.post("/registerItemType", ctx -> {
