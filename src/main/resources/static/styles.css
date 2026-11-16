@@ -374,6 +374,65 @@ dialog[open] {
     border-radius: 12px;
 }
 
+.barcode-field {
+    --field-height: 5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.barcode-field input {
+    box-sizing: border-box;
+    height: var(--field-height);
+}
+
+.barcode-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* the lip is drawn below the button, so leave room for it to match the input's height */
+.barcode-buttons button {
+    --lip: 5px;
+    box-sizing: border-box;
+    height: calc(var(--field-height) - var(--lip));
+    margin-bottom: var(--lip);
+    font-size: clamp(1rem, 8cqi, 2rem);
+    line-height: 1.1; /* long labels may wrap to two lines on narrow screens */
+    padding: 0 clamp(8px, 3cqi, 20px);
+    border-radius: 12px;
+    transition:
+        background-color 0.15s,
+        border-color 0.15s;
+}
+
+.barcode-scan {
+    flex: 1;
+    min-width: 0;
+}
+
+.barcode-scan.awaiting {
+    --face: #f5b800;
+    --edge: #a67c00;
+    animation: barcode-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes barcode-pulse {
+    50% {
+        filter: brightness(1.15);
+    }
+}
+
+.barcode-manual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+}
+
+.barcode-manual-icon {
+    height: 2.5rem;
+}
+
 dialog h2 {
     font-size: clamp(1.75rem, 12cqi, 4rem);
     text-align: center;

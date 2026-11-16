@@ -2,11 +2,14 @@ import { registerItemType } from "./api.js";
 import { logIn, quickWriteOff } from "./navigation.js";
 import { showToast } from "./toast.js";
 import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
+import { setUpBarcodeField } from "./barcodeField.js";
 
 const loginIds = ["5741000134894", "5741000142899"]; // booster med sukker, booster uden sukker.....
 const consumableIds = ["5056784902424"]; // monster rio punch.........
 
 disableEnterToSubmit();
+
+document.querySelectorAll(".barcode-field").forEach(setUpBarcodeField);
 
 addBarcodeListener((barcode) => {
     console.log(`Got barcode ${barcode}`);
