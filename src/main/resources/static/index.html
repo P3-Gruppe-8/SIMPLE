@@ -118,7 +118,35 @@
                                     </div>
                                     <div class="form-field">
                                         <label for="item-id">Item ID</label>
-                                        <input type="text" id="item-id" />
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
                                     </div>
                                     <div class="form-field">
                                         <label for="item-type-shelf"
