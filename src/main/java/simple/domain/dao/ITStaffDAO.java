@@ -2,7 +2,6 @@ package simple.domain.dao;
 
 import java.util.List;
 import java.util.Optional;
-
 import simple.domain.employee.ITStaff;
 
 public interface ITStaffDAO {

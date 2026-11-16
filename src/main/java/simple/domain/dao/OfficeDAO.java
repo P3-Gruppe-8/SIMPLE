@@ -1,8 +1,8 @@
 package simple.domain.dao;
 
-import simple.domain.itemmanagement.*;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+import simple.domain.itemmanagement.Office;
 
 public interface OfficeDAO {
     public Optional<Office> findById(int id);
