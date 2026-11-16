@@ -1,10 +1,9 @@
 package simple.domain.repository;
 
-import java.util.Optional;
 import java.util.Date;
-
-import simple.domain.transactionmanagement.LoanAgreement;
+import java.util.Optional;
 import simple.domain.itemmanagement.Loanable;
+import simple.domain.transactionmanagement.LoanAgreement;
 
 public interface LoanAgreementRepository {
 
@@ -15,5 +14,4 @@ public interface LoanAgreementRepository {
     public boolean create(LoanAgreement loanAgreement);
 
     public boolean delete(Loanable loanable);
-
 }

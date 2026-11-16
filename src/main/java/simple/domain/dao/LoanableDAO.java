@@ -1,7 +1,6 @@
 package simple.domain.dao;
 
 import java.util.Optional;
-
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Loanable;
 
