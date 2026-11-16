@@ -433,6 +433,27 @@ dialog[open] {
     height: 2.5rem;
 }
 
+.form-field select {
+    appearance: none; /* remove out of place arrow */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.form-field select:has(option[value=""]:checked) {
+    color: #888888;
+}
+
+.form-field select.invalid,
+.form-field select.invalid:has(option[value=""]:checked) {
+    border-color: #e53935;
+    color: #e53935;
+}
+
+.form-field select option {
+    color: #000000;
+}
+
 dialog h2 {
     font-size: clamp(1.75rem, 12cqi, 4rem);
     text-align: center;
