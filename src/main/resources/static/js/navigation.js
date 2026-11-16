@@ -1,4 +1,6 @@
 // Mode switching, view history and login state.
+import { writeOff } from "./api.js";
+import { showToast } from "./toast.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
@@ -140,4 +142,14 @@ export function logOut() {
     if (currentView === "loanModeHomeScreen") {
         showView("loanModeLogInScreen");
     }
+}
+
+export function quickWriteOff(barcode) {
+    const options = {
+        barcode: barcode,
+        amount: 1,
+    };
+    writeOff(options)
+        .then((text) => showToast(text))
+        .catch((error) => console.error(error));
 }

@@ -11,3 +11,15 @@ export async function registerItemType(itemType) {
     }
     return await response.text();
 }
+
+export async function writeOff(options) {
+    const response = await fetch("writeOff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(options),
+    });
+    if (!response.ok) {
+        throw new Error("writeOff failed: " + response.status);
+    }
+    return await response.text();
+}
