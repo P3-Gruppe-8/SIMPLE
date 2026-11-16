@@ -1,7 +1,7 @@
 package simple.dataaccess.config;
 
 import java.sql.*;
-
+import org.flywaydb.core.Flyway;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class Databaseconnection {
@@ -12,16 +12,29 @@ public class Databaseconnection {
             .ignoreIfMissing()
             .load();
 
-    // Uses the local Docker database by default, but allows
-    // overriding the URL through an environment variable.
-    private final String url = dotenv.get(
-            "DB_URL",
-            "jdbc:postgresql://127.0.0.1:5432/dbs");
-
-    // Get database username and password from environment variables
+    // Get database username, password and url from environment variables
     // to avoid storing credentials in source code.
     private final String uname = dotenv.get("DB_USER");
     private final String pass = dotenv.get("DB_PASSWORD");
+    private final String url = dotenv.get("DB_URL");
+
+    // Throws error if invironment variables are not configured
+    public Databaseconnection() {
+        if (url == null || url.isBlank()
+                || uname == null || uname.isBlank()
+                || pass == null || pass.isBlank()) {
+            throw new IllegalStateException(
+                    "DB_URL, DB_USER and DB_PASSWORD must be configured.");
+        }
+    } 
+
+    // Applies pending database migrations before the server starts.
+    public void migrate() {
+        Flyway.configure()
+                .dataSource(url, uname, pass)
+                .load()
+                .migrate();
+    }
 
     public Connection getDbConnection() throws SQLException {
         return DriverManager.getConnection(url, uname, pass);

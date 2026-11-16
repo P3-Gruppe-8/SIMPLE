@@ -23,6 +23,6 @@ public class Server {
         app.start(port);
         log.info("Server started on port {}", port);
 
-        jdbctest hej = new jdbctest();
+        // jdbctest hej = new jdbctest();
     }
 }
