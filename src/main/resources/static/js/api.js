@@ -23,3 +23,11 @@ export async function writeOff(options) {
     }
     return await response.text();
 }
+
+export async function getShelves() {
+    const response = await fetch("shelves");
+    if (!response.ok) {
+        throw new Error("getShelves failed: " + response.status);
+    }
+    return await response.json();
+}

@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
@@ -28,6 +29,17 @@ public class Server {
             }
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
             config.routes.get("/ping", ctx -> ctx.result("Pong!"));
+
+            // TODO: placeholder until shelves come from the domain
+            config.routes.get("/shelves",
+                    ctx -> ctx.json(List.of(
+                            "A1", "A2", "A3",
+                            "B1", "B2", "B3",
+                            "C1", "C2", "C3",
+                            "D1", "D2", "D3",
+                            "E1", "E2", "E3",
+                            "F1", "F2", "F3",
+                            "G1", "G2", "G3")));
             config.routes.post("/registerItemType", ctx -> {
                 var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
                 ctx.result("Successfully registered " + itemDetails.name());
