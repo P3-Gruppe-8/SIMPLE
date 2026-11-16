@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NOWACO SIMPLE</title>
         <link rel="stylesheet" href="styles.css" />
@@ -304,8 +305,13 @@
                 <p class="button-label">Alerts</p>
             </button>
         </footer>
+        <button type="button" id="toast" class="toast raised invisible">
+            <img src="images/check-solid-full.svg" class="toast-icon" />
+            <p id="toast-message" class="toast-message"></p>
+        </button>
         <script src="api.js"></script>
         <script src="navigation.js"></script>
+        <script src="toast.js"></script>
         <script src="alerts.js"></script>
         <script src="script.js"></script>
     </body>

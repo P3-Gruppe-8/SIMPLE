@@ -398,3 +398,32 @@ dialog form {
     flex-direction: column;
     height: 100%;
 }
+
+.toast {
+    --face: #3ce339;
+    --edge: #30b52d;
+    position: fixed;
+    right: 1rem;
+    bottom: calc(11vh + 1rem); /* just above the bottombar */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: min(28rem, calc(100vw - 2rem));
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    color: black;
+    font-size: 2rem;
+    text-align: left;
+}
+
+.toast-icon {
+    flex-shrink: 0;
+    height: 1.25em;
+    width: 1.25em;
+}
+
+.toast-message {
+    margin: 0;
+    overflow-wrap: anywhere;
+}

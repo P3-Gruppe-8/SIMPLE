@@ -19,8 +19,8 @@ public class Server {
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
             config.routes.get("/ping", ctx -> ctx.result("Pong!"));
             config.routes.post("/registerItemType", ctx -> {
-                var request = ctx.bodyAsClass(RegisterItemTypeRequest.class);
-                ctx.result("Got " + request);
+                var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
+                ctx.result("Successfully registered " + itemDetails.name());
             });
         });
 

@@ -1,4 +1,4 @@
-// Scanning and forms. Depends on api.js and navigation.js.
+// Scanning and forms. Depends on api.js, navigation.js and toast.js.
 
 // scanners type a whole barcode in a few ms
 const SCAN_KEY_GAP_MS = 20;
@@ -42,7 +42,9 @@ document
             itemId: document.getElementById("item-id").value,
             shelf: document.getElementById("item-type-shelf").value,
         };
-        registerItemType(itemType).then((text) => console.log(text));
+        registerItemType(itemType)
+            .then((text) => showToast(text))
+            .catch((error) => console.error(error));
         event.target.reset();
     });
 
