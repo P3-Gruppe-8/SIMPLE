@@ -1,4 +1,6 @@
-// Scanning and forms. Depends on api.js, navigation.js and toast.js.
+import { registerItemType } from "./api.js";
+import { logIn } from "./navigation.js";
+import { showToast } from "./toast.js";
 
 // scanners type a whole barcode in a few ms
 const SCAN_KEY_GAP_MS = 20;

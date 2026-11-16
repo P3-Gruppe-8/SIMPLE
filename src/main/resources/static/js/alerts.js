@@ -1,11 +1,11 @@
-// Alerts. Depends on navigation.js.
+// Alerts.
 
 let showNewAlerts = true;
 let alertTestVariable = false;
 
 let currentTime = new Date().toString();
 
-let dummyAlertArray = [
+export let dummyAlertArray = [
     {
         alertType: "stockAlert",
         urgency: "INFO",
@@ -68,6 +68,6 @@ let dummyAlertArray = [
     },
 ];
 
-function recieveAlerts(alertArray) {
+export function recieveAlerts(alertArray) {
     alertViewVisited = false;
 }
