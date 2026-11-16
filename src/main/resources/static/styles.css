@@ -283,10 +283,18 @@ header {
     --lip: 5px;
 }
 
-button.back {
-    width: 30%;
+button.red {
     --face: #e53935;
     --edge: #9e1c1a;
+}
+
+button.green {
+    --face: #3ce339;
+    --edge: #30b52d;
+}
+
+button.back {
+    width: 30%;
     container-type: size;
     display: flex;
     align-items: center;
@@ -315,4 +323,78 @@ button.alerts {
 
 .alerts .button-icon {
     height: 70cqh;
+}
+
+dialog {
+    height: 85vh;
+    width: 85vw;
+    border-color: #444444;
+    border-radius: 20px;
+}
+
+dialog[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-body {
+    display: flex;
+    padding: 0 24px 24px 24px;
+    flex: 1;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field label {
+    font-size: 1.75rem;
+}
+
+.form-field input {
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 2rem;
+    padding: 16px 20px;
+    border: 3px solid #444444;
+    border-radius: 12px;
+}
+
+dialog h2 {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: -2rem;
+    margin-top: 1rem;
+}
+
+dialog p {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px 24px;
+}
+
+.dialog-footer button {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+dialog form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }

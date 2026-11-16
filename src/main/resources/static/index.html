@@ -87,13 +87,63 @@
                 <!-- After pressing "more options" in supply mode -->
                 <div class="view button-col" id="detailedSupply">
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="register-consumable-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/plus-solid-full.svg"
                                 class="button-icon"
                             />
                             <p class="button-label">Register Item Type</p>
                         </button>
+                        <dialog id="register-consumable-dialog">
+                            <form
+                                id="register-consumable-dialog-form"
+                                method="dialog"
+                            >
+                                <div class="dialog-body">
+                                    <h2>Register Item Type</h2>
+                                    <p>Register a new item type.</p>
+                                    <div class="form-field">
+                                        <label for="item-type-name"
+                                            >Item Type Name</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="item-type-name"
+                                        />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="item-id">Item ID</label>
+                                        <input type="text" id="item-id" />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="item-type-shelf"
+                                            >Shelf</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="item-type-shelf"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="register-consumable-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        Apply
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                         <button class="menu-button raised">
                             <img
                                 src="images/minus-solid-full.svg"
@@ -233,14 +283,14 @@
         <footer class="bottombar">
             <button
                 onclick="previousView()"
-                class="back raised"
+                class="red back raised"
                 id="backButton"
             >
                 <img src="images/back-arrow.png" class="button-icon" />
             </button>
             <button
                 onclick="logOut()"
-                class="back raised invisible"
+                class="red back raised invisible"
                 id="logoutButton"
             >
                 <p>Log out</p>
@@ -254,6 +304,9 @@
                 <p class="button-label">Alerts</p>
             </button>
         </footer>
+        <script src="api.js"></script>
+        <script src="navigation.js"></script>
+        <script src="alerts.js"></script>
         <script src="script.js"></script>
     </body>
 </html>
