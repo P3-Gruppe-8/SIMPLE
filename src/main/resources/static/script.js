@@ -223,18 +223,21 @@ let dummyAlertArray = [
     },
 ];
 
-let showNewAlerts = false;
-let alertTestVariable = false;
+let showNewAlerts = true;
 
 function showAlertView(alertView, showBack) {
     showView(alertView, showBack);
     hideById("alertButton");
-    showById("newAlerts");
+    hideById("newAlertsHeader");
+    hideById("newAlertsRow");
+    hideById("newAlertsFooter");
 
-    if (!showNewAlerts) {
-        hideById("newAlerts");
+    if (showNewAlerts) {
+        showById("newAlertsHeader");
+        showById("newAlertsRow");
+        showById("newAlertsFooter");
     }
-    showNewAlerts = false;
+    showNewAlerts = true; // change to false if true
 }
 
 function recieveAlerts(alertArray) {}
