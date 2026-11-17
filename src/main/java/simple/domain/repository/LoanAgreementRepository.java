@@ -2,9 +2,8 @@ package simple.domain.repository;
 
 import java.util.Date;
 import java.util.Optional;
-
-import simple.domain.transactionmanagement.LoanAgreement;
 import simple.domain.itemmanagement.Loanable;
+import simple.domain.transactionmanagement.LoanAgreement;
 
 public interface LoanAgreementRepository {
 

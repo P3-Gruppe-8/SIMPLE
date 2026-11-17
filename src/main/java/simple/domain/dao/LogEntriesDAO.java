@@ -1,7 +1,7 @@
 package simple.domain.dao;
 
-import simple.domain.LogEntry;
 import java.util.List;
+import simple.domain.LogEntry;
 
 public interface LogEntriesDAO {
     public void create(LogEntry logEntry);

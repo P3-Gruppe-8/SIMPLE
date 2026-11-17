@@ -2,7 +2,6 @@ package simple.domain.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Office;
 import simple.domain.itemmanagement.Shelf;

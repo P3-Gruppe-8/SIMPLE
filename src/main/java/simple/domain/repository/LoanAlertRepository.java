@@ -1,7 +1,6 @@
 package simple.domain.repository;
 
 import java.util.List;
-
 import simple.domain.alert.LoanAlert;
 import simple.domain.transactionmanagement.LoanAgreement;
 
