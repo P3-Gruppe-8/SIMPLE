@@ -41,5 +41,5 @@ target/
 .idea/
 *.iml
 
-# Environment
-.env
+# Environment (.env is being used)
+# .env
