@@ -5,8 +5,14 @@ import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
 import { setUpBarcodeField } from "./barcodeField.js";
 import { setUpShelfSelect } from "./shelfSelect.js";
 
-const loginIds = ["5741000134894", "5741000142899"]; // booster med sukker, booster uden sukker.....
-const consumableIds = ["5056784902424"]; // monster rio punch.........
+const loginIds = ["victor nummer 2", "leon da boss"];
+const consumableIds = [
+    "5056784902424",
+    "5060337502290",
+    "consumable 67",
+    "consumable 42",
+]; // monster rio punch, hvid monner.........
+const loanableIds = ["loanable 01", "loanable 02"];
 
 disableEnterToSubmit();
 
