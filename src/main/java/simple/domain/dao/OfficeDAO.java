@@ -2,18 +2,18 @@ package simple.domain.dao;
 
 import java.util.List;
 import java.util.Optional;
+
+import simple.domain.JDBCException;
 import simple.domain.itemmanagement.Office;
 
 public interface OfficeDAO {
-    public Optional<Office> findById(int id);
+    public Optional<Office> findById(int id) throws JDBCException;
 
-    public Optional<Office> findByName(String name);
+    public Optional<Office> findByName(String name) throws JDBCException;
 
-    public Optional<Office> findByAddress(String address);
+    public List<Office> findAll() throws JDBCException;
 
-    public List<Office> findAll();
+    public void update(Office office) throws JDBCException;
 
-    public boolean update(Office office);
-
-    public boolean delete(int id);
+    public void delete(int id) throws JDBCException;
 }

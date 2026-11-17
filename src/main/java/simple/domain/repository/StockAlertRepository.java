@@ -1,14 +1,16 @@
 package simple.domain.repository;
 
 import java.util.List;
+
+import simple.domain.JDBCException;
 import simple.domain.alert.StockAlert;
 import simple.domain.itemmanagement.Descriptor;
 
 public interface StockAlertRepository {
 
-    public List<StockAlert> findAll();
+    public List<StockAlert> findAll() throws JDBCException;
 
-    public boolean create(StockAlert stockAlert);
+    public void create(StockAlert stockAlert) throws JDBCException;
 
-    public boolean delete(Descriptor descriptor);
+    public void delete(Descriptor descriptor) throws JDBCException;
 }

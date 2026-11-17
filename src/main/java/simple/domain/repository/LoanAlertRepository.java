@@ -1,13 +1,15 @@
 package simple.domain.repository;
 
 import java.util.List;
+
+import simple.domain.JDBCException;
 import simple.domain.alert.LoanAlert;
 import simple.domain.transactionmanagement.LoanAgreement;
 
 public interface LoanAlertRepository {
-    public List<LoanAlert> findAll();
+    public List<LoanAlert> findAll() throws JDBCException;
 
-    public boolean create(LoanAlert loanAlert);
+    public void create(LoanAlert loanAlert) throws JDBCException;
 
-    public boolean delete(LoanAgreement loanAgreement);
+    public void delete(LoanAgreement loanAgreement) throws JDBCException;
 }

@@ -65,8 +65,8 @@ CREATE TABLE descriptor_barcodes (
 
 CREATE TABLE loanables (
   loanable_id SERIAL PRIMARY KEY,
-  -- -- RFID tag identifier used to identify an individual loanable.
-  loanable_RFID VARCHAR(100) UNIQUE NOT NULL,
+  -- -- barcode tag identifier used to identify an individual loanable.
+  loanable_barcode VARCHAR(100) UNIQUE NOT NULL,
   -- "copy number" eg. laptop"3"
   unit_number INTEGER NOT NULL CONSTRAINT positive_unit_number CHECK (unit_number >= 0),
   -- The template from descriptor is filled out when adding loanables
