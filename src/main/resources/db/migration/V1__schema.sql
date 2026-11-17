@@ -122,7 +122,7 @@ CREATE TABLE loan_alerts (
 CREATE TABLE inactivity_alerts (
   inactivity_alert_id SERIAL PRIMARY KEY,
   alert_name VARCHAR(50) NOT NULL,
-  alert_types VARCHAR(500) NOT NULL,
+  log_types VARCHAR(500) NOT NULL,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
