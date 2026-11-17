@@ -16,7 +16,7 @@ public class Databaseconnection {
     private final String pass = dotenv.get("DB_PASSWORD");
     private final String url = dotenv.get("DB_URL");
 
-    // Throws error if invironment variables are not configured
+    // Throws error if environment variables are not configured
     public Databaseconnection() {
         if (url == null || url.isBlank() || uname == null || uname.isBlank() || pass == null || pass.isBlank()) {
             throw new IllegalStateException("DB_URL, DB_USER and DB_PASSWORD must be configured.");
