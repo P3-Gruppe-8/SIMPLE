@@ -34,8 +34,8 @@ public class Server {
             config.routes.get(
                     "/shelves",
                     ctx -> ctx.json(List.of(
-                            "A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3", "D1", "D2", "D3", "E1", "E2", "E3",
-                            "F1", "F2", "F3", "G1", "G2", "G3")));
+                            "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3", "e1", "e2", "e3",
+                            "f1", "f2", "f3", "g1", "g2", "g3")));
             config.routes.post("/registerItemType", ctx -> {
                 var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
                 ctx.result("Successfully registered " + itemDetails.name());
