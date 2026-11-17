@@ -14,9 +14,7 @@ public class Main {
         // Use port from environment variables if available,
         // Azure supplies this port because it is what it opens
         String portValue = System.getenv("PORT");
-        int port = (portValue == null || portValue.isBlank())
-                ? 7070
-                : Integer.parseInt(portValue);
+        int port = (portValue == null || portValue.isBlank()) ? 7070 : Integer.parseInt(portValue);
 
         Server.start(port);
     }

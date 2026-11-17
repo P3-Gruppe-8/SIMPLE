@@ -5,7 +5,6 @@ import io.javalin.http.staticfiles.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
-import simple.dataaccess.jdbc.jdbctest;
 
 public class Server {
 

@@ -1,16 +1,14 @@
 package simple.dataaccess.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.*;
 import org.flywaydb.core.Flyway;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class Databaseconnection {
 
     // Reads local .env values for development
     // or Azure environment variables when live.
-    private final Dotenv dotenv = Dotenv.configure()
-            .ignoreIfMissing()
-            .load();
+    private final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     // Get database username, password and url from environment variables
     // to avoid storing credentials in source code.
@@ -20,11 +18,8 @@ public class Databaseconnection {
 
     // Throws error if invironment variables are not configured
     public Databaseconnection() {
-        if (url == null || url.isBlank()
-                || uname == null || uname.isBlank()
-                || pass == null || pass.isBlank()) {
-            throw new IllegalStateException(
-                    "DB_URL, DB_USER and DB_PASSWORD must be configured.");
+        if (url == null || url.isBlank() || uname == null || uname.isBlank() || pass == null || pass.isBlank()) {
+            throw new IllegalStateException("DB_URL, DB_USER and DB_PASSWORD must be configured.");
         }
     }
 
