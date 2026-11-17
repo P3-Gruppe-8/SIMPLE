@@ -503,13 +503,22 @@ dialog form {
     height: 100%;
 }
 
-.toast {
-    --face: #3ce339;
-    --edge: #30b52d;
+.toasts {
     position: fixed;
     right: 1rem;
     bottom: calc(11vh + 1rem); /* just above the bottombar */
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    pointer-events: none; /* only the toasts themselves catch clicks */
+}
+
+.toast {
+    --face: #3ce339;
+    --edge: #30b52d;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 0.75rem;

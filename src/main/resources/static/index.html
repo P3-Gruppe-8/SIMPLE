@@ -326,10 +326,13 @@
                 <span class="button-label">Alerts</span>
             </button>
         </footer>
-        <button type="button" id="toast" class="toast raised invisible">
-            <img src="images/check-solid-full.svg" class="toast-icon" />
-            <span id="toast-message" class="toast-message"></span>
-        </button>
+        <div id="toasts" class="toasts"></div>
+        <template id="toast-template">
+            <button type="button" class="toast raised">
+                <img src="images/check-solid-full.svg" class="toast-icon" />
+                <span class="toast-message"></span>
+            </button>
+        </template>
         <script type="module" src="js/script.js"></script>
     </body>
 </html>
