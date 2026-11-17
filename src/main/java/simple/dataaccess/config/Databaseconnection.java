@@ -26,14 +26,18 @@ public class Databaseconnection {
             throw new IllegalStateException(
                     "DB_URL, DB_USER and DB_PASSWORD must be configured.");
         }
-    } 
+    }
 
     // Applies pending database migrations before the server starts.
+    //
     public void migrate() {
-        Flyway.configure()
+        Flyway flyway = Flyway.configure()
                 .dataSource(url, uname, pass)
-                .load()
-                .migrate();
+                .cleanDisabled(false)
+                .load();
+
+        flyway.clean();
+        flyway.migrate();
     }
 
     public Connection getDbConnection() throws SQLException {
