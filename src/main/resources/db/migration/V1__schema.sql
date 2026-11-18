@@ -3,22 +3,21 @@ CREATE TABLE offices (
   office_id SERIAL PRIMARY KEY,
   -- Full address stored as a multiline string, lines seperated by '\n'.
   office_address VARCHAR(500) NOT NULL,
-  office_name VARCHAR(50) UNIQUE NOT NULL,
+  office_name VARCHAR(50) NOT NULL,
   -- Soft delete, null if not deleted
   office_deleted TIMESTAMPTZ
 );
 
--- The office name has to be unique within its office,
--- for offices which are not soft deleted.
+-- The office name has to be unique for offices which are not soft deleted.
 CREATE UNIQUE INDEX unique_active_office
-ON offices (office_id, office_name)
+ON offices (office_name)
 WHERE office_deleted IS NULL;
 
 -- Stores IT staff information for identification and logging
 CREATE TABLE it_staffs (
   it_staff_id SERIAL PRIMARY KEY,
   -- The first digits before @ in the employees work e-mail adress.
-  username VARCHAR(50) UNIQUE NOT NULL,
+  username VARCHAR(50) NOT NULL,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   -- Soft delete, null if not deleted
@@ -50,7 +49,7 @@ CREATE TABLE shelves (
   room_name VARCHAR(50),
   -- Soft delete, null if not deleted
   shelf_deleted TIMESTAMPTZ,
-  office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE,
+  office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE
 );
 
 -- The shelf name has to be unique within its office,
@@ -71,6 +70,7 @@ CREATE TABLE descriptors (
   -- For loanables, a template can be stored for unique fields, eg. serial number.
   info_template VARCHAR(500),
   -- Soft delete, null if not deleted
+  -- IMPORTANT: Soft delete of descriptors, has to soft delete its barcodes.
   descriptor_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE,
   -- Enables the composite foreign key in descriptor_barcodes.
@@ -82,16 +82,20 @@ CREATE TABLE descriptor_barcodes (
   barcode_key VARCHAR(50) NOT NULL,
   descriptor_id INTEGER NOT NULL,
   office_id INTEGER NOT NULL,
+  barcode_deleted TIMESTAMPTZ,
   -- Ensures the descriptor belongs to the specified office.
-  FOREIGN KEY (descriptor_id, office_id) REFERENCES descriptors (descriptor_id, office_id) ON DELETE CASCADE,
-  -- Ensures barcodes are unique within each office.
-  UNIQUE (office_id, barcode_key)
+  FOREIGN KEY (descriptor_id, office_id) REFERENCES descriptors (descriptor_id, office_id) ON DELETE CASCADE
 );
+
+-- Barcodes which are not soft deleted, has to be unique within its office
+CREATE UNIQUE INDEX unique_active_barcode
+ON descriptor_barcodes (office_id, barcode_key)
+WHERE barcode_deleted IS NULL;
 
 CREATE TABLE loanables (
   loanable_id SERIAL PRIMARY KEY,
-  -- -- RFID tag identifier used to identify an individual loanable.
-  loanable_RFID VARCHAR(100) UNIQUE NOT NULL,
+  -- Barcode tag identifier used to identify an individual loanable.
+  loanable_barcode VARCHAR(100) NOT NULL,
   -- "copy number" eg. laptop"3"
   unit_number INTEGER NOT NULL CONSTRAINT positive_unit_number CHECK (unit_number >= 0),
   -- The template from descriptor is filled out when adding loanables
@@ -99,14 +103,18 @@ CREATE TABLE loanables (
   -- Soft delete, null if not deleted
   loanable_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE,
-  shelf_id INTEGER REFERENCES shelves (shelf_id) ON DELETE SET NULL,
-  -- Ensures unit_number are unique within each descriptor.
-  UNIQUE (descriptor_id, unit_number)
+  shelf_id INTEGER REFERENCES shelves (shelf_id) ON DELETE SET NULL
 );
 
--- The username has to be unique for users which are not soft deleted.
-CREATE UNIQUE INDEX unique_loanable_unit_number
-ON loanables (unit_number)
+-- Barcodes must be unique among active loanables.
+CREATE UNIQUE INDEX unique_active_loanable_barcode
+ON loanables (loanable_barcode)
+WHERE loanable_deleted IS NULL;
+
+-- Unit numbers must be unique within each descriptor
+-- for loanables which are not soft deleted.
+CREATE UNIQUE INDEX unique_active_loanable_unit_number
+ON loanables (descriptor_id, unit_number)
 WHERE loanable_deleted IS NULL;
 
 -- Associates descriptors with their possible storage locations.
@@ -132,13 +140,18 @@ CREATE TABLE loan_agreements (
   loanable_id INTEGER NOT NULL REFERENCES loanables (loanable_id) ON DELETE RESTRICT
 );
 
+-- Ensures a loanable can only have one active loan agreement at a time.
+CREATE UNIQUE INDEX unique_active_loan
+ON loan_agreements (loanable_id)
+WHERE actual_return_date IS NULL;
+
 -- Monitors descriptor quantities against configured minimum thresholds.
 CREATE TABLE stock_alerts (
   stock_alert_id SERIAL PRIMARY KEY,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
-  min_quantity INTEGER NOT NULL,
+  min_quantity INTEGER NOT NULL CHECK (min_quantity >= 0),
   -- Soft delete, null if not deleted
   stock_alert_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE
@@ -165,8 +178,8 @@ CREATE TABLE inactivity_alerts (
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
   -- Minimum number of matching log entries within the interval.
-  threshold_transactions INTEGER NOT NULL,
-  threshold_interval INTEGER NOT NULL,
+  threshold_transactions INTEGER NOT NULL CHECK (threshold_transactions >= 0),
+  threshold_interval INTEGER NOT NULL CHECK (threshold_interval > 0),
   -- Soft delete, null if not deleted
   inactivity_alert_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE
