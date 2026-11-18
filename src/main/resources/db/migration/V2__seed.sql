@@ -113,21 +113,21 @@ BEGIN
 
     -- Available laptop
     INSERT INTO loanables
-        (loanable_RFID, unit_number, info_field, descriptor_id, shelf_id)
+        (loadnable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-RFID-LAPTOP-001', 1, 'Serial number: DEMO-L001',
          laptop_id, aalborg_loan_shelf);
 
     -- Borrowed laptops have no current shelf location.
     INSERT INTO loanables
-        (loanable_RFID, unit_number, info_field, descriptor_id, shelf_id)
+        (loadnable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-RFID-LAPTOP-002', 2, 'Serial number: DEMO-L002',
          laptop_id, NULL)
     RETURNING loanable_id INTO borrowed_laptop_id;
 
     INSERT INTO loanables
-        (loanable_RFID, unit_number, info_field, descriptor_id, shelf_id)
+        (loadnable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-RFID-LAPTOP-003', 3, 'Serial number: DEMO-L003',
          laptop_id, NULL)
