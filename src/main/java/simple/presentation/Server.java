@@ -17,6 +17,11 @@ public class Server {
                     (ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
             config.staticFiles.add("/static", Location.CLASSPATH);
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
+            config.routes.get("/ping", ctx -> ctx.result("Pong!"));
+            config.routes.post("/registerItemType", ctx -> {
+                var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
+                ctx.result("Successfully registered " + itemDetails.name());
+            });
         });
 
         app.start(port);

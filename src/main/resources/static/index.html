@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NOWACO SIMPLE</title>
         <link rel="stylesheet" href="styles.css" />
-        <link rel="icon" href="nowaco-logo.png" type="image/png" />
+        <link rel="icon" href="images/nowaco-logo.png" type="image/png" />
     </head>
     <body>
         <header>
             <nav class="navbar">
                 <ol>
                     <li class="navbar-element">
-                        <img src="nowaco-logo.png" />
+                        <img src="images/nowaco-logo.png" />
                     </li>
                     <li class="navbar-element">
                         <div class="mode-switch" id="modeSwitch">
                             <div class="mode-slider"></div>
                             <button
                                 class="mode-option active"
-                                data-mode="supply"
+                                data-mode="supplyMode"
                             >
                                 Supply Mode
                             </button>
-                            <button class="mode-option" data-mode="loan">
+                            <button class="mode-option" data-mode="loanMode">
                                 Loan Mode
                             </button>
                         </div>
@@ -31,24 +32,271 @@
             </nav>
         </header>
         <main>
-            <div class="button-row height-two-fifths">
-                <button class="menu-button">Register Item Type</button>
-                <button class="menu-button">Delete Item Type</button>
-            </div>
+            <div class="mode" id="supplyMode">
+                <!-- The default supply mode view -->
+                <div class="view button-col" id="defaultView">
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised default-option">
+                            <img
+                                src="images/share-from-square-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Write Off</p>
+                        </button>
+                    </div>
 
-            <div class="button-row height-two-fifths">
-                <button class="menu-button">Count Inventory</button>
-                <button class="menu-button">Edit Item Type Locations</button>
-            </div>
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/box-open-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Restock</p>
+                        </button>
+                    </div>
 
-            <div class="button-row height-one-fifth">
-                <button class="menu-button">Item Details</button>
+                    <div class="button-row height-one-fifth">
+                        <button
+                            data-view="detailedSupply"
+                            id="moreOptions"
+                            class="menu-button raised invisible"
+                        >
+                            <img
+                                src="images/bars-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">More options</p>
+                        </button>
+                        <button id="scanIdPrompt" class="menu-button">
+                            <img
+                                src="images/id-card-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label detailed">
+                                Scan ID for more options...
+                            </p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alert view -->
+                <div class="view" id="alertView">
+                    <div id="newAlerts" class="alert-row-new">New Alerts</div>
+                    <div id="oldAlerts" class="alert-row-old">Old Alerts</div>
+                </div>
+
+                <!-- After pressing "more options" in supply mode -->
+                <div class="view button-col" id="detailedSupply">
+                    <div class="button-row height-two-fifths">
+                        <button
+                            command="show-modal"
+                            commandfor="register-consumable-dialog"
+                            class="menu-button raised"
+                        >
+                            <img
+                                src="images/plus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Register Item Type</p>
+                        </button>
+                        <dialog id="register-consumable-dialog">
+                            <form
+                                id="register-consumable-dialog-form"
+                                method="dialog"
+                            >
+                                <div class="dialog-body">
+                                    <h2>Register Item Type</h2>
+                                    <p>Register a new item type.</p>
+                                    <div class="form-field">
+                                        <label for="item-type-name"
+                                            >Item Type Name</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="item-type-name"
+                                        />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="item-id">Item ID</label>
+                                        <input type="text" id="item-id" />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="item-type-shelf"
+                                            >Shelf</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="item-type-shelf"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="register-consumable-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        Apply
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
+                        <button class="menu-button raised">
+                            <img
+                                src="images/minus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Delete Item Type</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/list-check-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Count Inventory</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="images/right-left-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Edit Item Type Locations</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/circle-info-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Item Details</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mode" id="loanMode">
+                <div class="view login-prompt" id="loanModeLogInScreen">
+                    <img
+                        src="images/id-card-solid-full.svg"
+                        class="button-icon"
+                    />
+                    <p class="button-label">Scan ID to proceed...</p>
+                </div>
+                <!-- Loan menu home screen -->
+                <div class="view button-col" id="loanModeHomeScreen">
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised default-option">
+                            <img
+                                src="images/share-from-square-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">New Loan</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised default-option">
+                            <img
+                                src="images/left-long-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Return Item</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button
+                            data-view="detailedLoan"
+                            class="menu-button raised"
+                        >
+                            <img
+                                src="images/bars-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">More Options</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- After pressing "More Options" in loan mode -->
+                <div class="view button-col" id="detailedLoan">
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/plus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Add New Item</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="images/calendar-plus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Extend Loan</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-two-fifths">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/list-check-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Count Inventory</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="images/minus-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Delete Item</p>
+                        </button>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button class="menu-button raised">
+                            <img
+                                src="images/right-left-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Move Item</p>
+                        </button>
+                        <button class="menu-button raised">
+                            <img
+                                src="images/circle-info-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <p class="button-label">Item Details</p>
+                        </button>
+                    </div>
+                </div>
             </div>
         </main>
         <footer class="bottombar">
-            <button class="back">Back</button>
-            <button class="alerts">Alerts</button>
+            <button class="red back raised" id="backButton">
+                <img src="images/back-arrow.png" class="button-icon" />
+            </button>
+            <button class="red back raised invisible" id="logoutButton">
+                <p>Log out</p>
+            </button>
+            <button class="alerts raised" id="alertButton">
+                <img src="images/bell-solid-full.svg" class="button-icon" />
+                <p class="button-label">Alerts</p>
+            </button>
         </footer>
-        <script src="script.js"></script>
+        <button type="button" id="toast" class="toast raised invisible">
+            <img src="images/check-solid-full.svg" class="toast-icon" />
+            <p id="toast-message" class="toast-message"></p>
+        </button>
+        <script type="module" src="js/script.js"></script>
     </body>
 </html>
