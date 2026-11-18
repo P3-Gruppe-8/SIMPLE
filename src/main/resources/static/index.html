@@ -697,5 +697,28 @@
             </button>
         </template>
         <script type="module" src="js/script.js"></script>
+        <!-- TODO: dev helper, remove before handover. -->
+        <script>
+            const IT = "victor nummer 2";
+            const IT2 = "leon da boss";
+            const CO = "consumable 42";
+            const CO2 = "consumable 67";
+            const LO = "loanable 01";
+            const LO2 = "loanable 02";
+            const SH = "nowaco shelf a1";
+
+            // types the code and Enter as fast keystrokes, like a scanner does
+            function s(code) {
+                const target = document.activeElement ?? document.body;
+                for (const key of code + "\n") {
+                    const event = new KeyboardEvent("keydown", {
+                        key: key === "\n" ? "Enter" : key,
+                        bubbles: true,
+                        cancelable: true,
+                    });
+                    target.dispatchEvent(event);
+                }
+            }
+        </script>
     </body>
 </html>
