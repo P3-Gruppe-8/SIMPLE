@@ -529,6 +529,14 @@ dialog form {
     height: 100%;
 }
 
+.item-details-result {
+    font-size: clamp(1rem, 7cqi, 2rem);
+    padding: 16px clamp(8px, 4cqi, 20px);
+    border: 3px solid var(--border);
+    border-radius: 12px;
+    white-space: pre-line; /* the server's line breaks separate the details */
+}
+
 .toasts {
     position: fixed;
     right: 1rem;

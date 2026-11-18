@@ -36,23 +36,178 @@
                 <!-- The default supply mode view -->
                 <div class="view button-col" id="defaultView">
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised default-option">
+                        <button
+                            command="show-modal"
+                            commandfor="write-off-dialog"
+                            class="menu-button raised default-option"
+                        >
                             <img
                                 src="images/share-from-square-solid-full.svg"
                                 class="button-icon"
                             />
                             <span class="button-label">Write Off</span>
                         </button>
+                        <dialog id="write-off-dialog">
+                            <form id="write-off-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Write Off</h2>
+                                    <p>Remove items from stock.</p>
+                                    <div class="form-field">
+                                        <label for="write-off-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="write-off-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="write-off-amount"
+                                            >Amount</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="write-off-amount"
+                                            inputmode="numeric"
+                                            min="1"
+                                            value="1"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="write-off-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Write Off</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="restock-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/box-open-solid-full.svg"
                                 class="button-icon"
                             />
                             <span class="button-label">Restock</span>
                         </button>
+                        <dialog id="restock-dialog">
+                            <form id="restock-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Restock</h2>
+                                    <p>Put items back into stock.</p>
+                                    <div class="form-field">
+                                        <label for="restock-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="restock-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="restock-amount"
+                                            >Amount</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="restock-amount"
+                                            inputmode="numeric"
+                                            min="1"
+                                            value="1"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="restock-shelf">Shelf</label>
+                                        <select
+                                            id="restock-shelf"
+                                            class="shelf-select"
+                                        >
+                                            <option value="" disabled selected>
+                                                Loading shelves...
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="restock-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Restock</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-one-fifth">
@@ -178,13 +333,72 @@
                                 </div>
                             </form>
                         </dialog>
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="deregister-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/minus-solid-full.svg"
                                 class="button-icon"
                             />
                             <span class="button-label">Delete Item Type</span>
                         </button>
+                        <dialog id="deregister-dialog">
+                            <form id="deregister-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Delete Item Type</h2>
+                                    <p>Remove an item type from the system.</p>
+                                    <div class="form-field">
+                                        <label for="deregister-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="deregister-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="deregister-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-two-fifths">
@@ -195,23 +409,178 @@
                             />
                             <span class="button-label">Count Inventory</span>
                         </button>
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="locations-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/right-left-solid-full.svg"
                                 class="button-icon"
                             />
-                            <span class="button-label">Edit Item Type Locations</span>
+                            <span class="button-label"
+                                >Edit Item Type Locations</span
+                            >
                         </button>
+                        <dialog id="locations-dialog">
+                            <form id="locations-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Edit Item Type Locations</h2>
+                                    <p>
+                                        Add or remove a shelf where an item type
+                                        can be stored.
+                                    </p>
+                                    <div class="form-field">
+                                        <label for="locations-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="locations-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="locations-shelf"
+                                            >Shelf</label
+                                        >
+                                        <select
+                                            id="locations-shelf"
+                                            class="shelf-select"
+                                            required
+                                        >
+                                            <option value="" disabled selected>
+                                                Loading shelves...
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="locations-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        value="remove"
+                                        class="green raised"
+                                    >
+                                        <span>Remove</span>
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        value="add"
+                                        class="green raised"
+                                    >
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-one-fifth">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="item-details-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/circle-info-solid-full.svg"
                                 class="button-icon"
                             />
                             <span class="button-label">Item Details</span>
                         </button>
+                        <dialog id="item-details-dialog">
+                            <form id="item-details-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Item Details</h2>
+                                    <p>Look up an item type.</p>
+                                    <div class="form-field">
+                                        <label for="item-details-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="item-details-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        id="item-details-result"
+                                        class="item-details-result invisible"
+                                    ></div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="item-details-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Close</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Show</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
                 </div>
             </div>
