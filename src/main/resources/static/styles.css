@@ -155,6 +155,7 @@ body {
 button {
     font-family: inherit;
     font-weight: inherit;
+    color: black; /* iPad Safari otherwise uses its own blue/white text */
     -webkit-tap-highlight-color: transparent; /* removes the weird highlight on android */
     cursor: pointer;
 }
