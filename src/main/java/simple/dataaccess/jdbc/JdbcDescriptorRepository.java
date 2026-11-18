@@ -4,7 +4,6 @@ import java.sql.*;
 import simple.dataaccess.config.Databaseconnection;
 import simple.domain.exception.DataAccessException;
 import simple.domain.repository.DescriptorRepository;
-import simple.domain.itemmanagement.Descriptor;
 
 public class JdbcDescriptorRepository implements DescriptorRepository {
 
