@@ -4,6 +4,31 @@
     src: url("fonts/nunito.woff2") format("woff2");
 }
 
+:root {
+    --white: #ffffff;
+    --white-edge: #c5cbd4;
+    --black: #000000;
+
+    --navy: #1d345c;
+    --navy-edge: #122038;
+    --navy-dark: #142644;
+    --blue: #3b65b1;
+    --blue-gray: #a5b0c0;
+    --light-blue: #6a9fdc;
+    --light-blue-edge: #3a699f;
+
+    --red: #e53935;
+    --red-edge: #9e1c1a;
+    --green: #3ce339;
+    --green-edge: #30b52d;
+    --yellow: #f5b800;
+    --yellow-edge: #a67c00;
+
+    --border: #444444;
+    --text-muted: gray;
+    --placeholder: #888888;
+}
+
 html,
 body {
     display: flex;
@@ -24,8 +49,8 @@ body {
 
 .navbar {
     display: flex;
-    background-color: #1d345c;
-    border-bottom: 5px solid #122038;
+    background-color: var(--navy);
+    border-bottom: 5px solid var(--navy-edge);
     height: 9vh;
     align-items: center;
 }
@@ -56,7 +81,7 @@ body {
     display: flex;
     align-items: center;
     height: 100%;
-    color: white;
+    color: var(--white);
 }
 
 .mode-switch {
@@ -66,7 +91,7 @@ body {
     width: min(320px, 65vw);
     height: 80%;
     padding: 2px;
-    background-color: #142644;
+    background-color: var(--navy-dark);
     border-radius: 14px;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
@@ -75,11 +100,12 @@ body {
 
 .mode-slider {
     position: absolute;
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
+    --space: 5px;
+    top: var(--space);
+    bottom: var(--space);
+    left: var(--space);
     width: calc(50% - 5px);
-    background-color: #3b65b1;
+    background-color: var(--blue);
     border-radius: 10px;
     transition: transform 0.3s ease;
 }
@@ -97,7 +123,7 @@ body {
     padding: 0 4px;
     border: none;
     background: transparent;
-    color: #a5b0c0;
+    color: var(--blue-gray);
     font-size: clamp(0.7rem, 6.8cqw, 22px);
     white-space: nowrap;
     cursor: pointer;
@@ -109,7 +135,7 @@ body {
     flex-direction: column;
     flex: 1 1 0;
     min-height: 0;
-    background-color: #6a9fdc;
+    background-color: var(--light-blue);
     justify-content: center;
     align-items: center;
     container-type: size;
@@ -139,8 +165,8 @@ button:focus:not(:focus-visible) {
 }
 
 .raised {
-    --face: #ffffff;
-    --edge: #c5cbd4;
+    --face: var(--white);
+    --edge: var(--white-edge);
     --lip: 6px;
     border: 2px solid var(--edge);
     background-color: var(--face);
@@ -150,7 +176,7 @@ button:focus:not(:focus-visible) {
 }
 
 .mode-option.active {
-    color: #ffffff;
+    color: var(--white);
 }
 
 .mode-option:hover {
@@ -224,13 +250,13 @@ main {
     text-wrap: balance;
     font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
     overflow-wrap: anywhere;
-    color: black;
+    color: var(--black);
 }
 
 .button-label.detailed {
     font-size: clamp(0.7rem, min(10cqw, 20cqh), 1.5rem);
     font-weight: 600;
-    color: gray;
+    color: var(--text-muted);
     margin: 0 0 0 10px;
 }
 
@@ -244,8 +270,8 @@ main {
 }
 
 .default-option {
-    --face: #6a9fdc;
-    --edge: #3a699f;
+    --face: var(--light-blue);
+    --edge: var(--light-blue-edge);
 }
 
 .height-one-fifth .menu-button {
@@ -276,7 +302,7 @@ header {
     --space: 0.4rem;
     display: flex;
     height: 11vh;
-    background-color: #000000;
+    background-color: var(--black);
     align-items: center;
     gap: var(--space);
     padding: 0 var(--space) 5px;
@@ -290,13 +316,13 @@ header {
 }
 
 button.red {
-    --face: #e53935;
-    --edge: #9e1c1a;
+    --face: var(--red);
+    --edge: var(--red-edge);
 }
 
 button.green {
-    --face: #3ce339;
-    --edge: #30b52d;
+    --face: var(--green);
+    --edge: var(--green-edge);
 }
 
 button.back {
@@ -312,8 +338,8 @@ button.back {
 }
 
 button.alerts {
-    --face: #f5b800;
-    --edge: #a67c00;
+    --face: var(--yellow);
+    --edge: var(--yellow-edge);
     flex-direction: row;
     flex-grow: 1;
     container-type: size;
@@ -334,7 +360,7 @@ button.alerts {
 dialog {
     height: 85vh;
     width: 85vw;
-    border-color: #444444;
+    border-color: var(--border);
     border-radius: 20px;
 }
 
@@ -370,7 +396,7 @@ dialog[open] {
     font-size: clamp(1rem, 7cqi, 2rem);
     padding: 16px clamp(8px, 4cqi, 20px);
     min-width: 0;
-    border: 3px solid #444444;
+    border: 3px solid var(--border);
     border-radius: 12px;
 }
 
@@ -411,8 +437,8 @@ dialog[open] {
 }
 
 .barcode-scan.awaiting {
-    --face: #f5b800;
-    --edge: #a67c00;
+    --face: var(--yellow);
+    --edge: var(--yellow-edge);
     animation: barcode-pulse 1.2s ease-in-out infinite;
 }
 
@@ -441,17 +467,17 @@ dialog[open] {
 }
 
 .form-field select:has(option[value=""]:checked) {
-    color: #888888;
+    color: var(--placeholder);
 }
 
 .form-field select.invalid,
 .form-field select.invalid:has(option[value=""]:checked) {
-    border-color: #e53935;
-    color: #e53935;
+    border-color: var(--red);
+    color: var(--red);
 }
 
 .form-field select option {
-    color: #000000;
+    color: var(--black);
 }
 
 dialog h2 {
@@ -516,8 +542,8 @@ dialog form {
 }
 
 .toast {
-    --face: #3ce339;
-    --edge: #30b52d;
+    --face: var(--green);
+    --edge: var(--green-edge);
     pointer-events: auto;
     display: flex;
     align-items: center;
@@ -525,7 +551,7 @@ dialog form {
     max-width: min(28rem, calc(100vw - 2rem));
     padding: 0.75rem 1rem;
     border-radius: 12px;
-    color: black;
+    color: var(--black);
     font-size: 2rem;
     text-align: left;
 }
