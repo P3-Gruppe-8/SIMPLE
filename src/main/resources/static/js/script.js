@@ -39,7 +39,7 @@ document
     .addEventListener("submit", (event) => {
         const itemType = {
             name: document.getElementById("item-type-name").value,
-            itemId: document.getElementById("item-id").value,
+            barcode: document.getElementById("item-id").value,
             shelf: document.getElementById("item-type-shelf").value,
         };
         registerItemType(itemType)

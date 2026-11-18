@@ -1,10 +1,11 @@
 package simple.presentation;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
@@ -30,19 +31,24 @@ public class Server {
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
             config.routes.get("/ping", ctx -> ctx.result("Pong!"));
 
-            // TODO: placeholder until shelves come from the domain
-            config.routes.get(
-                    "/shelves",
-                    ctx -> ctx.json(List.of(
-                            "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3", "e1", "e2", "e3",
-                            "f1", "f2", "f3", "g1", "g2", "g3")));
-            config.routes.post("/registerItemType", ctx -> {
-                var itemDetails = ctx.bodyAsClass(RegisterItemTypeRequest.class);
-                ctx.result("Successfully registered " + itemDetails.name());
-            });
-            config.routes.post("/writeOff", ctx -> {
-                var itemDetails = ctx.bodyAsClass(WriteOffRequest.class);
-                ctx.result("Wrote off " + itemDetails.amount() + " " + itemDetails.barcode() + "s");
+            var descriptorController = new DescriptorController();
+            var shelfController = new ShelfController();
+            config.routes.apiBuilder(() -> {
+                path("/descriptors", () -> {
+                    post(descriptorController::create);
+                    path("/{barcode}", () -> {
+                        get(descriptorController::getOne);
+                        patch(descriptorController::update);
+                        delete(descriptorController::delete);
+                        path("/shelves/{shelf}", () -> {
+                            put(descriptorController::addShelf);
+                            delete(descriptorController::removeShelf);
+                        });
+                    });
+                });
+                path("/shelves", () -> {
+                    get(shelfController::getAll);
+                });
             });
         });
 

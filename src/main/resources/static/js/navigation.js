@@ -1,5 +1,5 @@
 // Mode switching, view history and login state.
-import { writeOff } from "./api.js";
+import { changeStock } from "./api.js";
 import { showToast } from "./toast.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
@@ -145,11 +145,7 @@ export function logOut() {
 }
 
 export function quickWriteOff(barcode) {
-    const options = {
-        barcode: barcode,
-        amount: 1,
-    };
-    writeOff(options)
+    changeStock(barcode, -1)
         .then((text) => showToast(text))
         .catch((error) => console.error(error));
 }
