@@ -1,27 +1,53 @@
-// Calls to the backend.
+// Calls to the backend's REST API.
 
-export async function registerItemType(itemType) {
-    const response = await fetch("registerItemType", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(itemType),
-    });
+// sends a request, with `body` as JSON if given, and returns the server's text reply
+async function send(method, path, body) {
+    const options = { method: method };
+    if (body !== undefined) {
+        options.headers = { "Content-Type": "application/json" };
+        options.body = JSON.stringify(body);
+    }
+    const response = await fetch(path, options);
     if (!response.ok) {
-        throw new Error("registerItemType failed: " + response.status);
+        throw new Error(method + " " + path + " failed: " + response.status);
     }
     return await response.text();
 }
 
-export async function writeOff(options) {
-    const response = await fetch("writeOff", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(options),
-    });
-    if (!response.ok) {
-        throw new Error("writeOff failed: " + response.status);
-    }
-    return await response.text();
+// barcodes can contain spaces and other characters that aren't allowed in a URL
+function descriptorPath(barcode) {
+    return "descriptors/" + encodeURIComponent(barcode);
+}
+
+export async function registerItemType(itemType) {
+    return await send("POST", "descriptors", itemType);
+}
+
+export async function getItemDetails(barcode) {
+    return await send("GET", descriptorPath(barcode));
+}
+
+export async function deregisterItemType(barcode) {
+    return await send("DELETE", descriptorPath(barcode));
+}
+
+// negative writes off, positive restocks
+export async function changeStock(barcode, change) {
+    return await send("PATCH", descriptorPath(barcode), { change: change });
+}
+
+export async function addItemTypeLocation(barcode, shelf) {
+    return await send(
+        "PUT",
+        descriptorPath(barcode) + "/shelves/" + encodeURIComponent(shelf),
+    );
+}
+
+export async function removeItemTypeLocation(barcode, shelf) {
+    return await send(
+        "DELETE",
+        descriptorPath(barcode) + "/shelves/" + encodeURIComponent(shelf),
+    );
 }
 
 export async function getShelves() {
