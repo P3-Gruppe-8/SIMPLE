@@ -33,6 +33,21 @@ document
     .addEventListener("click", () => showAlertView("alertView"));
 document.getElementById("devButton").addEventListener("click", showDevView);
 
+// tapping the logo reveals the hidden dev button for 2 seconds
+const DEV_BUTTON_VISIBLE_MS = 2000;
+let devButtonTimer;
+document.getElementById("logo").addEventListener("click", () => {
+    if (viewHistory.at(-1) === "devView") {
+        return;
+    }
+    showById("devButton");
+    clearTimeout(devButtonTimer);
+    devButtonTimer = setTimeout(
+        () => hideById("devButton"),
+        DEV_BUTTON_VISIBLE_MS,
+    );
+});
+
 export function hide(element) {
     element.classList.add("invisible");
 }
@@ -111,7 +126,6 @@ export function previousView() {
     }
     if (viewHistory.at(-1) === "devView") {
         showById(currentMode);
-        showById("devButton");
         showById("alertButton");
         showById("modeSwitch");
     }
@@ -129,6 +143,9 @@ export function showAlertView(alertView) {
 
 // the dev view lives outside the modes, so the current mode is hidden while it is open
 export function showDevView() {
+    if (viewHistory.at(-1) === "devView") {
+        return;
+    }
     hideById(currentMode);
     showView("devView");
     hideById("devButton");
