@@ -9,6 +9,8 @@ export function setUpBarcodeField(field) {
     const manualButton = field.querySelector(".barcode-manual");
     const input = field.querySelector("input");
     const idleLabel = scanLabel.textContent;
+    // fields marked data-keep-scanning take every scan, not just the first
+    const keepScanning = "keepScanning" in field.dataset;
 
     // the value of this variable will be a function which, when called, removes the claim from the claims list.
     let cancelCapture = null;
@@ -28,7 +30,12 @@ export function setUpBarcodeField(field) {
             cancelCapture = null;
             stopAwaiting();
             input.value = barcode;
-            showInput(); // so the user can see if the scan messed up
+            if (keepScanning) {
+                startAwaiting(); // the page shows the result, so the input can stay hidden
+            } else {
+                showInput(); // so the user can see if the scan messed up
+            }
+            field.dispatchEvent(new Event("scan")); // lets the page react to the scan
         });
     }
 
