@@ -204,3 +204,5 @@ CREATE TABLE log_entries (
   borrower VARCHAR(50),
   info VARCHAR(500)
 );
+
+
