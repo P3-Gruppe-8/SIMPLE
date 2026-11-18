@@ -189,8 +189,7 @@ BEGIN
     -- Available laptop stored on a shelf.
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number,
-         info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-LAPTOP-001', 1,
          'Serial number: DEMO-L001',
@@ -199,8 +198,7 @@ BEGIN
     -- Borrowed laptops have no current shelf.
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number,
-         info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-LAPTOP-002', 2,
          'Serial number: DEMO-L002',
@@ -208,8 +206,7 @@ BEGIN
     RETURNING loanable_id INTO borrowed_laptop_id;
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number,
-         info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
     VALUES
         ('DEMO-LAPTOP-003', 3,
          'Serial number: DEMO-L003',

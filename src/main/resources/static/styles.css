@@ -1,17 +1,31 @@
+@font-face {
+    font-family: "Nunito";
+    font-weight: 200 1000;
+    src: url("fonts/nunito.woff2") format("woff2");
+}
+
 html,
 body {
     display: flex;
     margin: 0;
     padding: 0;
-    height: 100vh;
-    width: 100vw;
+    min-height: 100dvh;
+    min-width: 100dvw;
     flex-direction: column;
     overflow: hidden;
+    font-family: "Nunito", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.invisible {
+    display: none !important;
 }
 
 .navbar {
     display: flex;
     background-color: #1d345c;
+    border-bottom: 5px solid #122038;
     height: 9vh;
     align-items: center;
 }
@@ -33,7 +47,9 @@ body {
     height: 100%;
     width: 100%;
     justify-content: space-between;
-    margin: 2%;
+    gap: 2vw;
+    padding: 0 2vw;
+    box-sizing: border-box;
 }
 
 .navbar-element {
@@ -47,21 +63,24 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    width: 320px;
+    width: min(320px, 65vw);
     height: 80%;
-    padding: 5px;
+    padding: 2px;
     background-color: #142644;
     border-radius: 14px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
+    container-type: inline-size;
 }
 
 .mode-slider {
     position: absolute;
-    width: calc(50% - 3px);
-    height: 92.5%;
-    left: 3px;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: calc(50% - 5px);
     background-color: #3b65b1;
-    border-radius: 12.95px;
+    border-radius: 10px;
     transition: transform 0.3s ease;
 }
 
@@ -72,15 +91,62 @@ body {
 .mode-option {
     position: relative;
     z-index: 1;
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
     height: 100%;
+    padding: 0 4px;
     border: none;
     background: transparent;
     color: #a5b0c0;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: clamp(0.7rem, 6.8cqw, 22px);
+    white-space: nowrap;
     cursor: pointer;
     transition: color 0.3s ease;
+}
+
+.login-prompt {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    background-color: #6a9fdc;
+    justify-content: center;
+    align-items: center;
+    container-type: size;
+}
+
+.login-prompt .button-icon {
+    height: min(25cqh, 25cqw);
+}
+
+.login-prompt .button-label {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: auto;
+    font-size: clamp(1rem, min(6cqw, 10cqh), 3rem);
+}
+
+button {
+    font-family: inherit;
+    font-weight: inherit;
+    -webkit-tap-highlight-color: transparent; /* removes the weird highlight on android */
+    cursor: pointer;
+}
+
+/* No focus ring after tapping, but keep it for keyboard users */
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.raised {
+    --face: #ffffff;
+    --edge: #c5cbd4;
+    --lip: 6px;
+    border: 2px solid var(--edge);
+    background-color: var(--face);
+    box-shadow:
+        0 var(--lip) 0 var(--edge),
+        0 10px 12px rgba(0, 0, 0, 0.15);
 }
 
 .mode-option.active {
@@ -92,83 +158,272 @@ body {
 }
 
 main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* Fills main so the views inside can flex. */
+.mode {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.button-col {
     --space: 0.5rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1 1 0;
+    min-height: 0;
     gap: var(--space);
     padding: var(--space);
 }
 
 .button-row {
     display: flex;
-    flex-grow: 1;
+    min-height: 0;
     justify-content: space-evenly;
     gap: var(--space);
 }
 
 .height-one-fifth {
-    height: 20%;
+    flex: 1 1 0;
 }
 
 .height-two-fifths {
-    height: 40%;
+    flex: 2 1 0;
 }
 
 .menu-button {
-    flex: 1;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    margin: 0.3rem;
     min-width: 0;
     min-height: 0;
-    border-radius: 25px;
-    border: 5px solid black;
-    background-color: whitesmoke;
-    text-align: center;
-    text-wrap: balance;
-    font-weight: bold;
-    font-size: clamp(1.5rem, 7vw, 4rem);
-    overflow-wrap: anywhere;
+    overflow: hidden;
+    border-radius: 20px;
+    container-type: size;
 }
 
-.menu-button:hover {
-    background-color: lightgrey;
+.button-label {
+    margin: 0;
+    flex-shrink: 0;
+    line-height: 1.1;
+    height: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-wrap: balanced;
+    font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
+    overflow-wrap: anywhere;
+    color: black;
+}
+
+.button-label.detailed {
+    font-size: clamp(0.7rem, min(10cqw, 20cqh), 1.5rem);
+    font-weight: 600;
+    color: gray;
+    margin: 0 0 0 10px;
+}
+
+.button-icon {
+    flex: 0 0 auto;
+    height: 45cqh;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+}
+
+.default-option {
+    --face: #6a9fdc;
+    --edge: #3a699f;
+}
+
+.height-one-fifth .menu-button {
+    flex-direction: row;
+}
+
+.height-one-fifth .button-label {
+    height: auto;
+    font-size: clamp(1rem, min(50cqh, 9cqw), 3rem);
+}
+
+.height-one-fifth .button-icon {
+    height: 80cqh;
 }
 
 footer,
 header {
-    flex-shrink: 0;
+    flex-shrink: 1;
 }
 
 .bottombar {
+    --space: 0.4rem;
     display: flex;
     height: 11vh;
     background-color: #000000;
     align-items: center;
+    gap: var(--space);
+    padding: 0 var(--space) 5px;
 }
 
 .bottombar button {
     height: 86%;
     font-size: 2em;
-    font-weight: bold;
-    margin: 5px;
-    outline: none !important;
+    border-radius: 0px;
+    --lip: 5px;
+}
+
+button.red {
+    --face: #e53935;
+    --edge: #9e1c1a;
+}
+
+button.green {
+    --face: #3ce339;
+    --edge: #30b52d;
 }
 
 button.back {
     width: 30%;
-    background-color: red;
-    border: none;
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-button.back:hover {
-    background-color: rgb(201, 0, 0);
+.back .button-icon {
+    height: 100cqh;
 }
 
 button.alerts {
-    width: 70%;
-    background-color: #ffbf00;
+    --face: #f5b800;
+    --edge: #a67c00;
+    flex-direction: row;
+    flex-grow: 1;
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.alerts .button-label {
+    font-size: clamp(1rem, 80cqh, 3rem);
+}
+
+.alerts .button-icon {
+    height: 70cqh;
+}
+
+dialog {
+    height: 85vh;
+    width: 85vw;
+    border-color: #444444;
+    border-radius: 20px;
+}
+
+dialog[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-body {
+    display: flex;
+    padding: 0 24px 24px 24px;
+    flex: 1;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field label {
+    font-size: 1.75rem;
+}
+
+.form-field input {
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 2rem;
+    padding: 16px 20px;
+    border: 3px solid #444444;
+    border-radius: 12px;
+}
+
+dialog h2 {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: -2rem;
+    margin-top: 1rem;
+}
+
+dialog p {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px 24px;
+}
+
+.dialog-footer button {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
+    border-radius: 8px;
+    cursor: pointer;
     border: none;
 }
 
-button.alerts:hover {
-    background-color: #d7a200;
+dialog form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.toast {
+    --face: #3ce339;
+    --edge: #30b52d;
+    position: fixed;
+    right: 1rem;
+    bottom: calc(11vh + 1rem); /* just above the bottombar */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: min(28rem, calc(100vw - 2rem));
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    color: black;
+    font-size: 2rem;
+    text-align: left;
+}
+
+.toast-icon {
+    flex-shrink: 0;
+    height: 1.25em;
+    width: 1.25em;
+}
+
+.toast-message {
+    margin: 0;
+    overflow-wrap: anywhere;
 }
