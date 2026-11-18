@@ -3,8 +3,16 @@ CREATE TABLE offices (
   office_id SERIAL PRIMARY KEY,
   -- Full address stored as a multiline string, lines seperated by '\n'.
   office_address VARCHAR(500) NOT NULL,
-  office_name VARCHAR(50) UNIQUE NOT NULL
+  office_name VARCHAR(50) UNIQUE NOT NULL,
+  -- Soft delete, null if not deleted
+  office_deleted TIMESTAMPTZ
 );
+
+-- The office name has to be unique within its office,
+-- for offices which are not soft deleted.
+CREATE UNIQUE INDEX unique_active_office
+ON offices (office_id, office_name)
+WHERE office_deleted IS NULL;
 
 -- Stores IT staff information for identification and logging
 CREATE TABLE it_staffs (
@@ -13,14 +21,23 @@ CREATE TABLE it_staffs (
   username VARCHAR(50) UNIQUE NOT NULL,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
+  -- Soft delete, null if not deleted
+  it_staff_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE
 );
+
+-- The username has to be unique for users which are not soft deleted.
+CREATE UNIQUE INDEX unique_active_username
+ON it_staffs (username)
+WHERE it_staff_deleted IS NULL;
 
 -- Stores administrator credentials.
 CREATE TABLE admins (
   admin_id SERIAL PRIMARY KEY,
   -- Argon2id hash generated and verified in Java.
   password_hash TEXT NOT NULL,
+  -- Soft delete, null if not deleted
+  admin_deleted TIMESTAMPTZ,
   it_staff_id INTEGER UNIQUE NOT NULL REFERENCES it_staffs (it_staff_id) ON DELETE CASCADE
 );
 
@@ -31,10 +48,16 @@ CREATE TABLE shelves (
   shelf_name VARCHAR(50) NOT NULL,
   -- Name of the room containing the shelf.
   room_name VARCHAR(50),
+  -- Soft delete, null if not deleted
+  shelf_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE,
-  -- The shelf name has to be unique within its office.
-  UNIQUE (office_id, shelf_name)
 );
+
+-- The shelf name has to be unique within its office,
+-- for shelves which are not soft deleted.
+CREATE UNIQUE INDEX unique_active_shelf
+ON shelves (office_id, shelf_name)
+WHERE shelf_deleted IS NULL;
 
 CREATE TABLE descriptors (
   descriptor_id SERIAL PRIMARY KEY,
@@ -47,6 +70,8 @@ CREATE TABLE descriptors (
   info_field VARCHAR(500),
   -- For loanables, a template can be stored for unique fields, eg. serial number.
   info_template VARCHAR(500),
+  -- Soft delete, null if not deleted
+  descriptor_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE,
   -- Enables the composite foreign key in descriptor_barcodes.
   UNIQUE (descriptor_id, office_id)
@@ -71,11 +96,18 @@ CREATE TABLE loanables (
   unit_number INTEGER NOT NULL CONSTRAINT positive_unit_number CHECK (unit_number >= 0),
   -- The template from descriptor is filled out when adding loanables
   info_field VARCHAR(800),
+  -- Soft delete, null if not deleted
+  loanable_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE,
   shelf_id INTEGER REFERENCES shelves (shelf_id) ON DELETE SET NULL,
   -- Ensures unit_number are unique within each descriptor.
   UNIQUE (descriptor_id, unit_number)
 );
+
+-- The username has to be unique for users which are not soft deleted.
+CREATE UNIQUE INDEX unique_loanable_unit_number
+ON loanables (unit_number)
+WHERE loanable_deleted IS NULL;
 
 -- Associates descriptors with their possible storage locations.
 -- A descriptor may be stored on multiple shelves, and shelves can contain multible descriptors.
@@ -93,6 +125,8 @@ CREATE TABLE loan_agreements (
   agreed_return_date TIMESTAMPTZ NOT NULL,
   borrower VARCHAR(50) NOT NULL,
   note VARCHAR(500),
+  -- Return date instead of soft delete, null if not deleted
+  actual_return_date TIMESTAMPTZ,
   -- The agreed return date cannot be before the date borrowed
   CONSTRAINT chk_agreed_return_date CHECK (agreed_return_date > loan_time),
   loanable_id INTEGER NOT NULL REFERENCES loanables (loanable_id) ON DELETE RESTRICT
@@ -105,6 +139,8 @@ CREATE TABLE stock_alerts (
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
   min_quantity INTEGER NOT NULL,
+  -- Soft delete, null if not deleted
+  stock_alert_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE
 );
 
@@ -114,6 +150,8 @@ CREATE TABLE loan_alerts (
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
+  -- Soft delete, null if not deleted
+  loan_alert_deleted TIMESTAMPTZ,
   loan_id INTEGER NOT NULL REFERENCES loan_agreements (loan_id) ON DELETE CASCADE
 );
 
@@ -122,13 +160,15 @@ CREATE TABLE loan_alerts (
 CREATE TABLE inactivity_alerts (
   inactivity_alert_id SERIAL PRIMARY KEY,
   alert_name VARCHAR(50) NOT NULL,
-  alert_types VARCHAR(500) NOT NULL,
+  log_types VARCHAR(500) NOT NULL,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
   active BOOLEAN NOT NULL,
   muted BOOLEAN NOT NULL,
   -- Minimum number of matching log entries within the interval.
   threshold_transactions INTEGER NOT NULL,
   threshold_interval INTEGER NOT NULL,
+  -- Soft delete, null if not deleted
+  inactivity_alert_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE
 );
 
@@ -139,10 +179,15 @@ CREATE TABLE log_entries (
   entry_id SERIAL PRIMARY KEY,
   entry_type VARCHAR(50) NOT NULL,
   entry_time TIMESTAMPTZ NOT NULL,
-  descriptor VARCHAR(50),
-  loanable VARCHAR(50),
-  actor VARCHAR(50),
+  office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE RESTRICT,
+  it_staff_id INTEGER REFERENCES it_staffs (it_staff_id) ON DELETE CASCADE,
+  shelf_id INTEGER REFERENCES shelves (shelf_id) ON DELETE CASCADE,
+  descriptor_id INTEGER REFERENCES descriptors (descriptor_id) ON DELETE CASCADE,
+  loanable_id INTEGER REFERENCES loanables (loanable_id) ON DELETE CASCADE,
+  loan_id INTEGER REFERENCES loan_agreements (loan_id) ON DELETE CASCADE,
+  stock_alert_id INTEGER REFERENCES stock_alerts (stock_alert_id) ON DELETE CASCADE,
+  loan_alert_id INTEGER REFERENCES loan_alerts (loan_alert_id) ON DELETE CASCADE,
+  inactivity_alert_id INTEGER REFERENCES inactivity_alerts (inactivity_alert_id) ON DELETE CASCADE,
   borrower VARCHAR(50),
-  info VARCHAR(500),
-  office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE RESTRICT
+  info VARCHAR(500)
 );
