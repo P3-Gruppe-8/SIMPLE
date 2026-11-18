@@ -61,6 +61,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
               <transformers>
                 <!-- Automatically sets the Main-Class in the JAR manifest -->
                 <transformer
