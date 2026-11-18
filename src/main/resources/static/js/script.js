@@ -4,7 +4,7 @@ import { logIn } from "./navigation.js";
 import { showToast } from "./toast.js";
 
 // scanners type a whole barcode in a few ms
-const SCAN_KEY_GAP_MS = 20;
+const SCAN_KEY_GAP_MS = 75;
 
 // barcodes are usually longer than a few characters, so less than that might be random keystrokes
 const MIN_BARCODE_LENGTH = 3;
