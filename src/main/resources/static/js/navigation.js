@@ -33,6 +33,7 @@ document.getElementById("logoutButton").addEventListener("click", logOut);
 document
     .getElementById("alertButton")
     .addEventListener("click", () => showAlertView("alertView"));
+document.getElementById("devButton").addEventListener("click", showDevView);
 
 export function hide(element) {
     element.classList.add("invisible");
@@ -53,6 +54,7 @@ export function showById(id) {
 }
 
 let loggedInAs = null;
+let currentMode = null;
 
 export const loginIds = ["victor nummer 2", "leon da boss"];
 
@@ -71,6 +73,7 @@ export function setMode(id) {
         hide(mode);
     }
     showById(id);
+    currentMode = id;
     if (id === "supplyMode") {
         showView("defaultView");
         if (loggedInAs) {
@@ -114,6 +117,12 @@ export function previousView() {
         showById("alertButton");
         showById("modeSwitch");
     }
+    if (viewHistory.at(-1) === "devView") {
+        showById(currentMode);
+        showById("devButton");
+        showById("alertButton");
+        showById("modeSwitch");
+    }
 
     viewHistory.pop(); // the view we are leaving
     let previousViewId = viewHistory.pop(); // showView pushes it back on
@@ -122,6 +131,15 @@ export function previousView() {
 
 export function showAlertView(alertView) {
     showView(alertView);
+    hideById("alertButton");
+    hideById("modeSwitch");
+}
+
+// the dev view lives outside the modes, so the current mode is hidden while it is open
+export function showDevView() {
+    hideById(currentMode);
+    showView("devView");
+    hideById("devButton");
     hideById("alertButton");
     hideById("modeSwitch");
 }
