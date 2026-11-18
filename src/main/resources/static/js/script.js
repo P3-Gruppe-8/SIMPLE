@@ -1,4 +1,5 @@
 import { registerItemType } from "./api.js";
+import { logKey, logScan } from "./dev.js";
 import { logIn } from "./navigation.js";
 import { showToast } from "./toast.js";
 
@@ -13,12 +14,14 @@ let buffer = "";
 
 window.addEventListener("keydown", (e) => {
     const currentTime = Date.now();
+    logKey(e, currentTime - lastKeyTime);
     if (currentTime - lastKeyTime > SCAN_KEY_GAP_MS) {
         buffer = "";
     }
     lastKeyTime = currentTime;
     if (e.key === "Enter" && buffer.length >= MIN_BARCODE_LENGTH) {
         e.preventDefault();
+        logScan(buffer);
         onScan(buffer);
         buffer = "";
         return;
