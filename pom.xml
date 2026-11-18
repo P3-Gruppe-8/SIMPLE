@@ -37,6 +37,28 @@
       <version>2.0.20</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- Source: https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.14</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>13.12.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <version>13.12.2</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -67,6 +89,8 @@
                   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>simple.Main</mainClass>
                 </transformer>
+                <!-- Preserves service provider registrations for Flyway in the shaded JAR. -->
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
               </transformers>
               <!-- Prevents security exceptions from signed dependency jars -->
               <filters>
@@ -81,9 +105,9 @@
               </filters>
             </configuration>
           </execution>
-      </executions>
-    </plugin>
-    <plugin>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>3.11.0</version>
