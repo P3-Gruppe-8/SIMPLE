@@ -82,15 +82,12 @@ CREATE TABLE descriptor_barcodes (
   barcode_key VARCHAR(50) NOT NULL,
   descriptor_id INTEGER NOT NULL,
   office_id INTEGER NOT NULL,
-  barcode_deleted TIMESTAMPTZ,
+   -- Ensures barcodes are unique within each office.
+  UNIQUE (office_id, barcode_key),
   -- Ensures the descriptor belongs to the specified office.
   FOREIGN KEY (descriptor_id, office_id) REFERENCES descriptors (descriptor_id, office_id) ON DELETE CASCADE
 );
 
--- Barcodes which are not soft deleted, has to be unique within its office
-CREATE UNIQUE INDEX unique_active_barcode
-ON descriptor_barcodes (office_id, barcode_key)
-WHERE barcode_deleted IS NULL;
 
 CREATE TABLE loanables (
   loanable_id SERIAL PRIMARY KEY,
