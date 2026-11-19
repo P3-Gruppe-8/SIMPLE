@@ -62,6 +62,7 @@
   </dependencies>
 
   <build>
+    <finalName>simple</finalName>
     <defaultGoal>compile exec:java</defaultGoal>
     <plugins>
       <plugin>
