@@ -13,8 +13,6 @@ public interface DescriptorRepository {
      *
      * public List<Shelf> findPosibleShelves(int descriptorId);
      *
-     * public Optional<Descriptor> findByBarcode(String barcode, Office office);
-     *
      * public Optional<Descriptor> findByName(String name);
      *
      * public List<Descriptor> findAll();
@@ -23,6 +21,7 @@ public interface DescriptorRepository {
      *
      * public void delete(String barcode);
      */
+    public Optional<Descriptor> findByBarcode(String barcode, int office_id);
 
     public boolean changeQuantity(int descriptor_id, int change);
 }

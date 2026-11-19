@@ -3,7 +3,7 @@ package simple.service;
 public class DescriptorService {
 
     public void writeOff(String barcode, int change) {
-
+        
     }
 
     public void deregister(String barcode) {
