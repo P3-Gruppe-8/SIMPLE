@@ -15,8 +15,6 @@ public interface DescriptorRepository {
      *
      * public List<Shelf> findPosibleShelves(int descriptorId);
      *
-     * public Optional<Descriptor> findByBarcode(String barcode, Office office);
-     *
      * public Optional<Descriptor> findByName(String name);
      *
      * public List<Descriptor> findAll();
@@ -25,6 +23,7 @@ public interface DescriptorRepository {
      *
      * public void delete(String barcode);
      */
+    public Optional<Descriptor> findByBarcode(String barcode, int office_id);
 
 /**
  * Adjusts the stored stock quantity by the given amount.
