@@ -11,7 +11,7 @@ public interface DescriptorRepository {
     /*
      * public Optional<Descriptor> findById(int id);
      *
-     * public List<Shelf> findPosibleShelves(int descriptorId);
+     * public List<Shelf> findPossibleShelves(int descriptorId);
      *
      * public Optional<Descriptor> findByName(String name);
      *
@@ -25,3 +25,4 @@ public interface DescriptorRepository {
 
     public boolean changeQuantity(int descriptor_id, int change);
 }
+
