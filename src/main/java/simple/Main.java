@@ -2,6 +2,9 @@ package simple;
 
 import simple.dataaccess.config.Databaseconnection;
 import simple.presentation.Server;
+import simple.dataaccess.jdbc.JdbcInventory;
+import simple.domain.repository.InventoryRepository.InventoryOverview;
+import simple.service.InventoryService;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,6 +13,17 @@ public class Main {
 
         // Applies pending database migrations before starting the server.
         db.migrate();
+
+        // Test af getOverviewByOffice
+        InventoryService inventoryService = new InventoryService(new JdbcInventory());
+
+        InventoryOverview overview = inventoryService.getOverviewByOffice(1);
+
+        System.out.println("Consumables:");
+        overview.consumables().forEach(System.out::println);
+
+        System.out.println("Loanables:");
+        overview.loanables().forEach(System.out::println);
 
         // Tests af findByBarcode og changeQuantity på descriptor
 
