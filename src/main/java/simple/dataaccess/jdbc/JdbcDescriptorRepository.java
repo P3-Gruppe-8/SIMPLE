@@ -36,8 +36,13 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             try (ResultSet result = statement.executeQuery()) {
                 return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
             }
+            
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to change descriptor quantity", e);
+            if ("23514".equals(e.getSQLState())) {
+                throw new DataAccessException("Failed to change descriptor quantity", e);
+            }
+            System.out.println("Unknown SQL Exception in changeQuantity(): " + e.getMessage());
+            return Optional.empty();
         }
     }
 
@@ -63,6 +68,28 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to find descriptor by barcode: Unresponsive database", e);
+        }
+    }
+
+    public boolean softDelete(int descriptor_id, int office_id) {
+
+        Databaseconnection db = new Databaseconnection();
+        String sql = """
+                UPDATE descriptors
+                SET descriptor_deleted = now()
+                WHERE descriptor_id = ?
+                    AND office_id = ?
+                """;
+
+        try (Connection conn = db.getDbConnection();
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
+            statement.setInt(1, descriptor_id);
+            statement.setInt(2, office_id);
+            int result = statement.executeUpdate();
+            return result > 0;
+        }
+        catch (SQLException e) {
+            throw new DataAccessException("Failed to delete descriptor", e);
         }
     }
 }
