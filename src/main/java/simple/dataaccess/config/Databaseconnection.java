@@ -18,7 +18,12 @@ public class Databaseconnection {
 
     // Throws error if environment variables are not configured
     public Databaseconnection() {
-        if (url == null || url.isBlank() || username == null || username.isBlank() || password == null || password.isBlank()) {
+        if (url == null
+                || url.isBlank()
+                || username == null
+                || username.isBlank()
+                || password == null
+                || password.isBlank()) {
             throw new IllegalStateException("DB_URL, DB_USER and DB_PASSWORD must be configured.");
         }
     }

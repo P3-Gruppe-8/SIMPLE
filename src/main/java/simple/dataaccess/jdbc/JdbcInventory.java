@@ -6,8 +6,8 @@ import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.descriptorMap;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
-import simple.domain.itemmanagement.Loanable;
 import simple.domain.itemmanagement.Inventory;
+import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.InventoryRepository;
 
 public class JdbcInventory implements InventoryRepository {
@@ -44,7 +44,6 @@ public class JdbcInventory implements InventoryRepository {
                 ORDER BY descriptors.descriptor_name, descriptors.descriptor_id, loanables.unit_number
                 """;
 
-        
         Databaseconnection databaseConnection = new Databaseconnection();
 
         try (Connection connection = databaseConnection.getDbConnection()) {
