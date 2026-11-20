@@ -55,8 +55,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                 """;
 
         try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn
-                        .prepareStatement(sql);) {
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery(); ) {
