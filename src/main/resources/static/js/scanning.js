@@ -6,6 +6,7 @@ const MIN_BARCODE_LENGTH = 3;
 
 let lastKeyTime = Date.now();
 let buffer = "";
+let valueBeforeScan; // the focused field's value when the current scan began, undefined outside fields
 
 // the "claims" system lets us take priority over the global barcode scan handler
 // this array contains objects with a handler field (some function that uses the barcode) and a pattern field (a regular expression)
@@ -51,13 +52,17 @@ export function addBarcodeListener(onScan) {
             buffer = ""; // we only care about super fast keystrokes
         }
         lastKeyTime = currentTime;
+        if (buffer === "") {
+            // a scan may be starting; remember the field as it was so we can undo the scanner's typing
+            valueBeforeScan = e.target.value;
+        }
         if (e.key === "Enter" && buffer.length >= MIN_BARCODE_LENGTH) {
             e.preventDefault();
             const claim = findClaim(buffer); // if there are no matching claims this is undefined
             if (claim) {
-                if (inTextField && e.target.value.endsWith(buffer)) {
+                if (inTextField && valueBeforeScan !== undefined) {
                     // the scanner already typed the barcode into the focused field, so take it back out
-                    e.target.value = e.target.value.slice(0, -buffer.length);
+                    e.target.value = valueBeforeScan;
                 }
                 // send the buffer to the found claim's handler
                 claim.handler(buffer);

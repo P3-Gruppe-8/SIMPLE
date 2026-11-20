@@ -56,7 +56,10 @@
                                         <label for="write-off-item-id"
                                             >Item ID</label
                                         >
-                                        <div class="barcode-field">
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
                                             <div class="barcode-buttons">
                                                 <button
                                                     type="button"
@@ -86,18 +89,10 @@
                                             />
                                         </div>
                                     </div>
-                                    <div class="form-field">
-                                        <label for="write-off-amount"
-                                            >Amount</label
-                                        >
-                                        <input
-                                            type="number"
-                                            id="write-off-amount"
-                                            inputmode="numeric"
-                                            min="1"
-                                            value="1"
-                                            required
-                                        />
+                                    <div id="write-off-receipt" class="receipt">
+                                        <table>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="dialog-footer">
@@ -138,7 +133,10 @@
                                         <label for="restock-item-id"
                                             >Item ID</label
                                         >
-                                        <div class="barcode-field">
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
                                             <div class="barcode-buttons">
                                                 <button
                                                     type="button"
@@ -169,19 +167,6 @@
                                         </div>
                                     </div>
                                     <div class="form-field">
-                                        <label for="restock-amount"
-                                            >Amount</label
-                                        >
-                                        <input
-                                            type="number"
-                                            id="restock-amount"
-                                            inputmode="numeric"
-                                            min="1"
-                                            value="1"
-                                            required
-                                        />
-                                    </div>
-                                    <div class="form-field">
                                         <label for="restock-shelf">Shelf</label>
                                         <select
                                             id="restock-shelf"
@@ -191,6 +176,11 @@
                                                 Loading shelves...
                                             </option>
                                         </select>
+                                    </div>
+                                    <div id="restock-receipt" class="receipt">
+                                        <table>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="dialog-footer">
@@ -689,6 +679,25 @@
                 <span class="button-label">Alerts</span>
             </button>
         </footer>
+        <!-- shared by write off and restock, filled in by showReceiptResults -->
+        <dialog id="receipt-results-dialog">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2></h2>
+                    <p>Lines marked ✗ were not changed.</p>
+                    <div class="receipt">
+                        <table>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" class="green raised">
+                        <span>Done</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
         <div id="toasts" class="toasts"></div>
         <template id="toast-template">
             <button type="button" class="toast raised">
