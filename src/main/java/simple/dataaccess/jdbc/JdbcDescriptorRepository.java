@@ -11,20 +11,38 @@ import simple.domain.itemmanagement.Descriptor;
 
 public class JdbcDescriptorRepository implements DescriptorRepository {
 
-    public boolean changeQuantity(int descriptor_id, int change) {
+    @Override
+    public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta) {
+        String sql = """
+                UPDATE descriptors AS d
+                SET quantity = d.quantity + ?
+                FROM descriptor_barcodes AS b
+                WHERE b.descriptor_id = d.descriptor_id
+                  AND b.barcode_key = ?
+                  AND b.office_id = ?
+                  AND d.is_loanable = false
+                  AND d.quantity IS NOT NULL
+                RETURNING d.*
+                """;
 
         Databaseconnection db = new Databaseconnection();
 
         try (Connection conn = db.getDbConnection();
-                PreparedStatement decrement = conn
-                        .prepareStatement("UPDATE descriptors SET quantity = quantity + ? WHERE descriptor_id = ?");) {
-            decrement.setInt(1, change);
-            decrement.setInt(2, descriptor_id);
-            if (decrement.executeUpdate() == 0)
-                return false;
-            return true;
+                PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, delta);
+            statement.setString(2, barcode);
+            statement.setInt(3, officeId);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (!result.next()) {
+                    return Optional.empty();
+                }
+
+                return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
+            }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to change the descriptors quantity: Unresponsive database", e);
+            throw new DataAccessException("Failed to change descriptor quantity", e);
         }
     }
 
@@ -52,4 +70,3 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 }
-

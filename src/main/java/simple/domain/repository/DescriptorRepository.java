@@ -36,5 +36,5 @@ public interface DescriptorRepository {
  * @throws DataAccessException if the database operation fails,
  *         including when the resulting quantity would be negative
  */
-    public boolean changeQuantity(int descriptor_id, int change);
+public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta);
 }
