@@ -35,10 +35,6 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             statement.setInt(3, officeId);
 
             try (ResultSet result = statement.executeQuery()) {
-                if (!result.next()) {
-                    return Optional.empty();
-                }
-
                 return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
