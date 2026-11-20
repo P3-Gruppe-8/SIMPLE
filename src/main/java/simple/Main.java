@@ -1,11 +1,7 @@
 package simple;
 
-import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.presentation.Server;
-import simple.domain.itemmanagement.Descriptor;
 
 public class Main {
     public static void main(String[] args) {
