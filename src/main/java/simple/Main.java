@@ -1,9 +1,9 @@
 package simple;
 
 import simple.dataaccess.config.Databaseconnection;
-import simple.presentation.Server;
 import simple.dataaccess.jdbc.JdbcInventory;
 import simple.domain.repository.InventoryRepository.InventoryOverview;
+import simple.presentation.Server;
 import simple.service.InventoryService;
 
 public class Main {

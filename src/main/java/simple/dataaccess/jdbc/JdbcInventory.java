@@ -2,13 +2,12 @@ package simple.dataaccess.jdbc;
 
 import java.sql.*;
 import java.util.ArrayList;
-
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.rowMapping.descriptorMap;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.InventoryRepository;
-import simple.dataaccess.jdbc.rowMapping.descriptorMap;
 
 public class JdbcInventory implements InventoryRepository {
 
@@ -83,5 +82,6 @@ public class JdbcInventory implements InventoryRepository {
         }
 
         return new InventoryOverview(consumables, loanables);
-    };
+    }
+    ;
 }
