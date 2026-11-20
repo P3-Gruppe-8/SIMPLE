@@ -2,7 +2,7 @@ package simple;
 
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcInventory;
-import simple.domain.repository.InventoryRepository.InventoryOverview;
+import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
 import simple.service.InventoryService;
 
@@ -17,13 +17,13 @@ public class Main {
         // Test af getOverviewByOffice
         InventoryService inventoryService = new InventoryService(new JdbcInventory());
 
-        InventoryOverview overview = inventoryService.getOverviewByOffice(1);
+        Inventory inventory = inventoryService.getOverviewByOffice(1);
 
         System.out.println("Consumables:");
-        overview.consumables().forEach(System.out::println);
+        inventory.consumables().forEach(System.out::println);
 
         System.out.println("Loanables:");
-        overview.loanables().forEach(System.out::println);
+        inventory.loanables().forEach(System.out::println);
 
         // Tests af findByBarcode og changeQuantity på descriptor
 

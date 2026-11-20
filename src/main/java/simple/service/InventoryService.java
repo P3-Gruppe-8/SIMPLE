@@ -1,7 +1,7 @@
 package simple.service;
 
 import simple.domain.repository.InventoryRepository;
-import simple.domain.repository.InventoryRepository.InventoryOverview;
+import simple.domain.itemmanagement.Inventory;
 
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
@@ -10,7 +10,7 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public InventoryOverview getOverviewByOffice(int officeId) {
+    public Inventory getOverviewByOffice(int officeId) {
         return inventoryRepository.findOverviewByOffice(officeId);
     }
 }

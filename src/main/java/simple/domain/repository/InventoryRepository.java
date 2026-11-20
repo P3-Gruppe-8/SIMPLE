@@ -1,12 +1,8 @@
 package simple.domain.repository;
 
-import java.util.ArrayList;
-import simple.domain.itemmanagement.Descriptor;
-import simple.domain.itemmanagement.Loanable;
+import simple.domain.itemmanagement.Inventory;
 
 public interface InventoryRepository {
 
-    record InventoryOverview(ArrayList<Descriptor> consumables, ArrayList<Loanable> loanables) {}
-
-    public InventoryOverview findOverviewByOffice(int officeId);
+    public Inventory findOverviewByOffice(int officeId);
 }
