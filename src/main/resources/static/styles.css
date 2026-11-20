@@ -4,6 +4,31 @@
     src: url("fonts/nunito.woff2") format("woff2");
 }
 
+:root {
+    --white: #ffffff;
+    --white-edge: #c5cbd4;
+    --black: #000000;
+
+    --navy: #1d345c;
+    --navy-edge: #122038;
+    --navy-dark: #142644;
+    --blue: #3b65b1;
+    --blue-gray: #a5b0c0;
+    --light-blue: #6a9fdc;
+    --light-blue-edge: #3a699f;
+
+    --red: #e53935;
+    --red-edge: #9e1c1a;
+    --green: #3ce339;
+    --green-edge: #30b52d;
+    --yellow: #f5b800;
+    --yellow-edge: #a67c00;
+
+    --border: #444444;
+    --text-muted: gray;
+    --placeholder: #888888;
+}
+
 html,
 body {
     display: flex;
@@ -24,8 +49,8 @@ body {
 
 .navbar {
     display: flex;
-    background-color: #1d345c;
-    border-bottom: 5px solid #122038;
+    background-color: var(--navy);
+    border-bottom: 5px solid var(--navy-edge);
     height: 9vh;
     align-items: center;
 }
@@ -56,7 +81,7 @@ body {
     display: flex;
     align-items: center;
     height: 100%;
-    color: white;
+    color: var(--white);
 }
 
 .mode-switch {
@@ -66,7 +91,7 @@ body {
     width: min(320px, 65vw);
     height: 80%;
     padding: 2px;
-    background-color: #142644;
+    background-color: var(--navy-dark);
     border-radius: 14px;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
@@ -75,11 +100,12 @@ body {
 
 .mode-slider {
     position: absolute;
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
+    --space: 5px;
+    top: var(--space);
+    bottom: var(--space);
+    left: var(--space);
     width: calc(50% - 5px);
-    background-color: #3b65b1;
+    background-color: var(--blue);
     border-radius: 10px;
     transition: transform 0.3s ease;
 }
@@ -97,7 +123,7 @@ body {
     padding: 0 4px;
     border: none;
     background: transparent;
-    color: #a5b0c0;
+    color: var(--blue-gray);
     font-size: clamp(0.7rem, 6.8cqw, 22px);
     white-space: nowrap;
     cursor: pointer;
@@ -109,7 +135,7 @@ body {
     flex-direction: column;
     flex: 1 1 0;
     min-height: 0;
-    background-color: #6a9fdc;
+    background-color: var(--light-blue);
     justify-content: center;
     align-items: center;
     container-type: size;
@@ -139,8 +165,8 @@ button:focus:not(:focus-visible) {
 }
 
 .raised {
-    --face: #ffffff;
-    --edge: #c5cbd4;
+    --face: var(--white);
+    --edge: var(--white-edge);
     --lip: 6px;
     border: 2px solid var(--edge);
     background-color: var(--face);
@@ -150,7 +176,7 @@ button:focus:not(:focus-visible) {
 }
 
 .mode-option.active {
-    color: #ffffff;
+    color: var(--white);
 }
 
 .mode-option:hover {
@@ -221,16 +247,16 @@ main {
     align-items: center;
     justify-content: center;
     text-align: center;
-    text-wrap: balanced;
+    text-wrap: balance;
     font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
     overflow-wrap: anywhere;
-    color: black;
+    color: var(--black);
 }
 
 .button-label.detailed {
     font-size: clamp(0.7rem, min(10cqw, 20cqh), 1.5rem);
     font-weight: 600;
-    color: gray;
+    color: var(--text-muted);
     margin: 0 0 0 10px;
 }
 
@@ -244,8 +270,8 @@ main {
 }
 
 .default-option {
-    --face: #6a9fdc;
-    --edge: #3a699f;
+    --face: var(--light-blue);
+    --edge: var(--light-blue-edge);
 }
 
 .height-one-fifth .menu-button {
@@ -253,12 +279,18 @@ main {
 }
 
 .height-one-fifth .button-label {
+    flex: 0 1 auto;
+    min-width: 0;
     height: auto;
     font-size: clamp(1rem, min(50cqh, 9cqw), 3rem);
 }
 
+.height-one-fifth .button-label.detailed {
+    font-size: clamp(0.8rem, min(30cqh, 6cqw), 2.5rem);
+}
+
 .height-one-fifth .button-icon {
-    height: 80cqh;
+    height: min(80cqh, 25cqw);
 }
 
 footer,
@@ -270,7 +302,7 @@ header {
     --space: 0.4rem;
     display: flex;
     height: 11vh;
-    background-color: #000000;
+    background-color: var(--black);
     align-items: center;
     gap: var(--space);
     padding: 0 var(--space) 5px;
@@ -284,13 +316,13 @@ header {
 }
 
 button.red {
-    --face: #e53935;
-    --edge: #9e1c1a;
+    --face: var(--red);
+    --edge: var(--red-edge);
 }
 
 button.green {
-    --face: #3ce339;
-    --edge: #30b52d;
+    --face: var(--green);
+    --edge: var(--green-edge);
 }
 
 button.back {
@@ -306,8 +338,8 @@ button.back {
 }
 
 button.alerts {
-    --face: #f5b800;
-    --edge: #a67c00;
+    --face: var(--yellow);
+    --edge: var(--yellow-edge);
     flex-direction: row;
     flex-grow: 1;
     container-type: size;
@@ -328,8 +360,31 @@ button.alerts {
 dialog {
     height: 85vh;
     width: 85vw;
-    border-color: #444444;
+    border-color: var(--border);
     border-radius: 20px;
+}
+
+dialog.msgbox {
+    height: fit-content;
+    width: min(36rem, 85vw);
+}
+
+dialog.msgbox .dialog-footer button {
+    height: 4rem;
+}
+
+dialog.msgbox h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+
+dialog.msgbox p {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.unknown-barcode {
+    white-space: nowrap;
 }
 
 dialog[open] {
@@ -338,8 +393,9 @@ dialog[open] {
 }
 
 .dialog-body {
+    container-type: inline-size;
     display: flex;
-    padding: 0 24px 24px 24px;
+    padding: 0 clamp(8px, 5vw, 24px) 24px;
     flex: 1;
     flex-direction: column;
     gap: 24px;
@@ -353,44 +409,141 @@ dialog[open] {
 }
 
 .form-field label {
-    font-size: 1.75rem;
+    font-size: clamp(1.1rem, 6cqi, 1.75rem);
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
     font-family: inherit;
     font-weight: 800;
-    font-size: 2rem;
-    padding: 16px 20px;
-    border: 3px solid #444444;
+    font-size: clamp(1rem, 7cqi, 2rem);
+    padding: 16px clamp(8px, 4cqi, 20px);
+    min-width: 0;
+    border: 3px solid var(--border);
     border-radius: 12px;
 }
 
+.barcode-field {
+    --field-height: 5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.barcode-field input {
+    box-sizing: border-box;
+    height: var(--field-height);
+}
+
+.barcode-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* the lip is drawn below the button, so leave room for it to match the input's height */
+.barcode-buttons button {
+    --lip: 5px;
+    box-sizing: border-box;
+    height: calc(var(--field-height) - var(--lip));
+    margin-bottom: var(--lip);
+    font-size: clamp(1rem, 8cqi, 2rem);
+    line-height: 1.1; /* long labels may wrap to two lines on narrow screens */
+    padding: 0 clamp(8px, 3cqi, 20px);
+    border-radius: 12px;
+    transition:
+        background-color 0.15s,
+        border-color 0.15s;
+}
+
+.barcode-scan {
+    flex: 1;
+    min-width: 0;
+}
+
+.barcode-scan.awaiting {
+    --face: var(--yellow);
+    --edge: var(--yellow-edge);
+    animation: barcode-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes barcode-pulse {
+    50% {
+        filter: brightness(1.15);
+    }
+}
+
+.barcode-manual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+}
+
+.barcode-manual-icon {
+    height: 2.5rem;
+}
+
+.form-field select {
+    appearance: none; /* remove out of place arrow */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.form-field select:has(option[value=""]:checked) {
+    color: var(--placeholder);
+}
+
+.form-field select.invalid,
+.form-field select.invalid:has(option[value=""]:checked) {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.form-field select option {
+    color: var(--black);
+}
+
 dialog h2 {
-    font-size: 4rem;
+    font-size: clamp(1.75rem, 12cqi, 4rem);
     text-align: center;
     margin-bottom: -2rem;
     margin-top: 1rem;
 }
 
 dialog p {
-    font-size: 2rem;
+    font-size: clamp(1rem, 7cqi, 2rem);
     text-align: center;
+}
+
+dialog::backdrop {
+    background-color: #00000088;
 }
 
 .dialog-footer {
     display: flex;
     justify-content: space-between;
+    min-height: 10%;
     gap: 16px;
     padding: 16px 24px 24px;
 }
 
 .dialog-footer button {
-    flex: 1;
-    padding: 14px 20px;
-    font-size: clamp(1rem, min(15cqw, 30cqh), 3rem);
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px clamp(4px, 3vw, 20px);
     border-radius: 8px;
     cursor: pointer;
     border: none;
+    container-type: size;
+}
+
+.dialog-footer span {
+    line-height: 1;
+    white-space: nowrap;
+    font-size: clamp(0.75rem, min(25cqw, 60cqh), 3rem);
 }
 
 dialog form {
@@ -399,20 +552,117 @@ dialog form {
     height: 100%;
 }
 
-.toast {
-    --face: #3ce339;
-    --edge: #30b52d;
+.item-details-result {
+    font-size: clamp(1rem, 7cqi, 2rem);
+    padding: 16px clamp(8px, 4cqi, 20px);
+    border: 3px solid var(--border);
+    border-radius: 12px;
+    white-space: pre-line; /* the server's line breaks separate the details */
+}
+
+.receipt {
+    flex: 1 1 0;
+    min-height: 6rem;
+    overflow-y: auto;
+    border: 3px solid var(--white-edge);
+    border-radius: 12px;
+}
+
+.receipt table {
+    width: 100%;
+    border-collapse: collapse; /* this means the items in the table share their borders instead of doubling it */
+    font-size: clamp(1rem, 7cqi, 2rem);
+}
+
+.receipt tr.unknown {
+    color: var(--red);
+}
+
+.receipt tr.scanned {
+    animation: receipt-flash 0.8s ease-out;
+}
+
+@keyframes receipt-flash {
+    from {
+        background-color: var(--yellow);
+    }
+}
+
+.receipt td {
+    padding: 12px clamp(8px, 4cqi, 20px);
+    border-bottom: 2px solid var(--white-edge);
+    overflow-wrap: anywhere;
+}
+
+.receipt-status {
+    width: 1em;
+    text-align: center;
+}
+
+.receipt-status.succeeded {
+    color: var(--green-edge);
+}
+
+.receipt-status.failed {
+    color: var(--red);
+}
+
+.receipt-amount {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.receipt-amount input {
+    width: 4ch;
+    font: inherit;
+    text-align: center;
+    padding: 4px 8px;
+    margin: 0 8px;
+    border: 2px solid var(--white-edge);
+    border-radius: 8px;
+}
+
+.receipt-step {
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border-radius: 8px;
+    vertical-align: middle;
+}
+
+.receipt-step img {
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+.dialog-footer button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toasts {
     position: fixed;
     right: 1rem;
     bottom: calc(11vh + 1rem); /* just above the bottombar */
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    pointer-events: none; /* only the toasts themselves catch clicks */
+}
+
+.toast {
+    --face: var(--green);
+    --edge: var(--green-edge);
+    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     max-width: min(28rem, calc(100vw - 2rem));
     padding: 0.75rem 1rem;
     border-radius: 12px;
-    color: black;
+    color: var(--black);
     font-size: 2rem;
     text-align: left;
 }
