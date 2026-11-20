@@ -56,6 +56,9 @@ export function addBarcodeListener(onScan) {
             // a scan may be starting; remember the field as it was so we can undo the scanner's typing
             valueBeforeScan = e.target.value;
         }
+        if (e.key === " " && buffer !== "" && !inTextField) {
+            e.preventDefault(); // a space inside a scan (e.g. "leon da boss") would otherwise press the focused button
+        }
         if (e.key === "Enter" && buffer.length >= MIN_BARCODE_LENGTH) {
             e.preventDefault();
             const claim = findClaim(buffer); // if there are no matching claims this is undefined
