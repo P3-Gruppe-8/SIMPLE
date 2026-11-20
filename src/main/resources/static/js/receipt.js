@@ -1,4 +1,5 @@
 // A receipt: a table of scanned item types and how many of each. Scanning the same barcode again adds one.
+import { getItemDetails } from "./api.js";
 
 export function setUpReceipt(receipt) {
     const form = receipt.closest("form");
@@ -29,7 +30,12 @@ export function setUpReceipt(receipt) {
         } else {
             row = rows.insertRow();
             row.dataset.barcode = barcode;
-            row.insertCell().textContent = barcode; // TODO: show the item type's name once the API returns it
+            const nameCell = row.insertCell();
+            nameCell.className = "receipt-name";
+            nameCell.textContent = barcode; // until the name arrives, or if the barcode is unknown
+            getItemDetails(barcode)
+                .then((details) => (nameCell.textContent = details.name))
+                .catch((error) => console.error(error));
             const amountCell = row.insertCell();
             amountCell.className = "receipt-amount";
             amountCell.append(...createAmountControls(row));
@@ -118,7 +124,7 @@ export function showReceiptResults(title, items, applyItem) {
     rows.replaceChildren();
     for (const item of items) {
         const row = rows.insertRow();
-        row.insertCell().textContent = item.barcode;
+        row.insertCell().textContent = item.name;
         const amountCell = row.insertCell();
         amountCell.className = "receipt-amount";
         amountCell.textContent = item.amount;
@@ -139,12 +145,17 @@ export function showReceiptResults(title, items, applyItem) {
     dialog.showModal();
 }
 
-// the receipt's lines as [{ barcode, amount }]
+// the receipt's lines as [{ barcode, name, amount }]
 export function getReceiptItems(receipt) {
     const items = [];
     for (const row of receipt.querySelector("tbody").children) {
         const amount = Number(row.querySelector(".receipt-amount input").value);
-        items.push({ barcode: row.dataset.barcode, amount: amount });
+        const name = row.querySelector(".receipt-name").textContent;
+        items.push({
+            barcode: row.dataset.barcode,
+            name: name,
+            amount: amount,
+        });
     }
     return items;
 }
