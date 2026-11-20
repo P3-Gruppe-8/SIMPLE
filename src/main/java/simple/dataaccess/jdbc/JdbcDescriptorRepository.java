@@ -42,20 +42,22 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
+    @Override
     public Optional<Descriptor> findByBarcode(String barcode, int office_id) {
         Databaseconnection db = new Databaseconnection();
+        String sql = """
+                SELECT d.*
+                FROM descriptors d
+                JOIN descriptor_barcodes db
+                    ON d.descriptor_id = db.descriptor_id
+                    AND d.office_id = db.office_id
+                WHERE db.barcode_key = ?
+                    AND db.office_id = ?;
+                """;
 
         try (Connection conn = db.getDbConnection();
                 PreparedStatement statement = conn
-                        .prepareStatement("""
-                                        SELECT d.*
-                                        FROM descriptors d
-                                        JOIN descriptor_barcodes db
-                                            ON d.descriptor_id = db.descriptor_id
-                                            AND d.office_id = db.office_id
-                                        WHERE db.barcode_key = ?
-                                            AND db.office_id = ?;
-                                        """);) {
+                        .prepareStatement(sql);) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery();) {
