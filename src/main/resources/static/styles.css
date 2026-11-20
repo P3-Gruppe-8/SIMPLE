@@ -390,6 +390,7 @@ button.alerts {
     border-radius: 20px;
     margin-left: 1em;
     margin-right: 1em;
+    margin-bottom: 1em;
     display: grid;
     grid-template-columns: 9dvh 1fr;
     justify-content: center;
@@ -402,8 +403,7 @@ button.alerts {
     box-shadow: 0px 0px 9px 0px black;
     padding: 1em;
     border-radius: 20px;
-    margin-left: 1em;
-    margin-right: 1em;
+    margin: 1em;
     display: grid;
     grid-template-columns: 9dvh 1fr;
     justify-content: center;
