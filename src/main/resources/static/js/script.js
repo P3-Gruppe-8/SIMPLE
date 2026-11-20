@@ -131,7 +131,14 @@ document
         result.textContent = "Loading...";
         show(result);
         getItemDetails(barcode)
-            .then((text) => (result.textContent = text))
+            .then((details) => {
+                result.textContent =
+                    details.name +
+                    "\nBarcode: " +
+                    details.barcode +
+                    "\nIn stock: " +
+                    details.quantity;
+            })
             .catch((error) => {
                 console.error(error);
                 result.textContent = "Couldn't load the details";

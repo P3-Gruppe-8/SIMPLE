@@ -2,6 +2,7 @@ package simple.presentation;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import java.util.Map;
 
 /**
  * Handles the /descriptors routes. TODO: placeholders until the service layer
@@ -14,9 +15,20 @@ public class DescriptorController {
         ctx.status(HttpStatus.CREATED).result("Successfully registered " + registration.name());
     }
 
+    // TODO: replace when database is connected
+    private static final Map<String, DescriptorDetails> DUMMY_DESCRIPTORS = Map.of(
+            "5056784902424", new DescriptorDetails("5056784902424", "Monster Rio Punch", 24),
+            "5060337502290", new DescriptorDetails("5060337502290", "Monster Ultra White", 12),
+            "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15));
+
     public void getOne(Context ctx) {
         var barcode = ctx.pathParam("barcode");
-        ctx.result("Details for " + barcode + " aren't available yet");
+        var descriptor = DUMMY_DESCRIPTORS.get(barcode);
+        if (descriptor == null) {
+            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
+        } else {
+            ctx.json(descriptor);
+        }
     }
 
     public void delete(Context ctx) {

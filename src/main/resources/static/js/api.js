@@ -23,8 +23,9 @@ export async function registerItemType(itemType) {
     return await send("POST", "descriptors", itemType);
 }
 
+// the item type as { barcode, name, quantity }
 export async function getItemDetails(barcode) {
-    return await send("GET", descriptorPath(barcode));
+    return JSON.parse(await send("GET", descriptorPath(barcode)));
 }
 
 export async function deregisterItemType(barcode) {
