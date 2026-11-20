@@ -9,7 +9,11 @@ async function send(method, path, body) {
     }
     const response = await fetch(path, options);
     if (!response.ok) {
-        throw new Error(method + " " + path + " failed: " + response.status);
+        const error = new Error(
+            method + " " + path + " failed: " + response.status,
+        );
+        error.status = response.status; // so callers can tell e.g. 404 from other failures
+        throw error;
     }
     return await response.text();
 }

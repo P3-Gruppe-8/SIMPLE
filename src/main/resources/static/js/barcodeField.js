@@ -80,7 +80,13 @@ export function setUpBarcodeField(field) {
     field.closest("dialog")?.addEventListener("toggle", (e) => {
         // we reset
         reset();
-        if (e.newState === "open") {
+        if (e.newState === "open" && field.dataset.prefill) {
+            // the opener already knows the barcode (set data-prefill before opening)
+            // this is used in the "prompt for descriptor on unknown item scan" use case
+            input.value = field.dataset.prefill;
+            delete field.dataset.prefill;
+            showInput();
+        } else if (e.newState === "open") {
             // and start awaiting if it's being opened.
             startAwaiting();
         }

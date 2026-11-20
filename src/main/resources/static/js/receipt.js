@@ -1,5 +1,7 @@
-// A receipt: a table of scanned item types and how many of each. Scanning the same barcode again adds one.
+// A receipt: a table of scanned item types and how many of each
 import { getItemDetails } from "./api.js";
+import { isLoggedIn, logIn, loginIds } from "./navigation.js";
+import { claimScans } from "./scanning.js";
 
 export function setUpReceipt(receipt) {
     const form = receipt.closest("form");
@@ -35,7 +37,16 @@ export function setUpReceipt(receipt) {
             nameCell.textContent = barcode; // until the name arrives, or if the barcode is unknown
             getItemDetails(barcode)
                 .then((details) => (nameCell.textContent = details.name))
-                .catch((error) => console.error(error));
+                .catch((error) => {
+                    if (error.status === 404) {
+                        row.classList.add("unknown");
+                        unknownPrompts = unknownPrompts
+                            .then(() => askAboutUnknown(row, nameCell))
+                            .catch(console.error); // so one failed prompt won't stop every later prompt from opening
+                    } else {
+                        console.error(error);
+                    }
+                });
             const amountCell = row.insertCell();
             amountCell.className = "receipt-amount";
             amountCell.append(...createAmountControls(row));
@@ -47,10 +58,45 @@ export function setUpReceipt(receipt) {
         highlight(row);
     }
 
+    // the user either undoes the scan or registers the barcode as a new item type
+    async function askAboutUnknown(row, nameCell) {
+        if (!row.isConnected) {
+            return; // the receipt was closed or the line removed while this waited
+        }
+        const prompt = document.getElementById("unknown-barcode-dialog");
+        prompt.querySelector(".unknown-barcode").textContent =
+            row.dataset.barcode;
+        prompt.returnValue = "";
+        prompt.showModal();
+        // while we ask about this barcode, other scans are ignored, so the worker deals with one item at a time
+        const releaseBlock = claimScans(() => {
+            // tell them the scan was ignored, e.g. shake the dialog or show "answer this first"
+        }, /.*/);
+        try {
+            await waitForClose(prompt);
+
+            const wantsToRegister = prompt.returnValue === "register";
+            // because of the way conditionals are evaluated, this auto-runs the ask for id part specifically if the user is not logged in but pressed "register item type".
+            if (wantsToRegister && (isLoggedIn() || (await askForStaffId()))) {
+                const name = await registerUnknown(row.dataset.barcode);
+                if (name !== null) {
+                    nameCell.textContent = name;
+                    row.classList.remove("unknown");
+                    return;
+                }
+            }
+            // this happens when they pressed "undo scan"
+            row.remove();
+            updateSubmitButton();
+        } finally {
+            releaseBlock();
+        }
+    }
+
     // a minus button, the amount field and a plus button
     function createAmountControls(row) {
         // text, not type="number", so a scan into it can be taken back out (see scanning.js)
-        // additionally, type="number" would not save you from accidental scans as barcodes usually consist of... numbers......
+        // additionally, type="number" would not save you from accidental scans as barcodes usually consist of numbers
         // but since the inputMode is set to numeric you basically can't input letters from the iPad anyway
         const input = document.createElement("input");
         input.type = "text";
@@ -58,7 +104,7 @@ export function setUpReceipt(receipt) {
         input.value = 1;
         input.addEventListener(
             "change",
-            () => setAmount(Math.floor(Number(input.value))), // if the input value somehow contains text the whole thing gets cleared, and decimals get floored
+            () => setAmount(Math.floor(Number(input.value))), // if the input value somehow contains text the whole line gets removed due to math.floor returning NaN (see the inside of setAmount). decimals get floored
         );
 
         const minus = createStepButton("images/minus-solid-full.svg");
@@ -114,6 +160,58 @@ export function setUpReceipt(receipt) {
     }
 
     updateSubmitButton();
+}
+
+// a queue of "unknown barcode" prompts, so they open one at a time.
+// it always holds the last prompt in line; each new prompt chains onto it with .then,
+// so it opens only once the one before it is closed.
+// it starts as an already-finished promise so the first prompt opens right away.
+let unknownPrompts = Promise.resolve();
+
+// opens the register dialog with the barcode filled in. returns the entered name, or null if cancelled.
+async function registerUnknown(barcode) {
+    const dialog = document.getElementById("register-consumable-dialog");
+    const form = dialog.querySelector("form");
+    let name = null;
+    // script.js does the registering; this only notices that it happened
+    const onSubmit = () =>
+        (name = document.getElementById("item-type-name").value);
+    form.addEventListener("submit", onSubmit);
+    document
+        .getElementById("item-id")
+        .closest(".barcode-field").dataset.prefill = barcode;
+    dialog.showModal();
+    await waitForClose(dialog);
+    form.removeEventListener("submit", onSubmit);
+    return name;
+}
+
+// lets someone who isn't logged in scan their staff ID. returns whether they logged in.
+async function askForStaffId() {
+    const dialog = document.getElementById("staff-id-dialog");
+    const message = dialog.querySelector(".staff-id-message");
+    message.textContent = "Scan your staff ID to register a new item type.";
+    let loggedIn = false;
+    // with a pattern, this claim gets chosen instead of the receipt's own pattern-less one (see findClaim in scanning.js)
+    const release = claimScans((barcode) => {
+        if (loginIds.includes(barcode)) {
+            logIn(barcode);
+            loggedIn = isLoggedIn(); // logIn refuses outside the root views
+            dialog.close();
+        } else {
+            message.textContent = "That isn't a staff ID. Try again.";
+        }
+    }, /.*/); // the pattern matches everything
+    dialog.showModal();
+    await waitForClose(dialog);
+    release();
+    return loggedIn;
+}
+
+function waitForClose(dialog) {
+    return new Promise((resolve) =>
+        dialog.addEventListener("close", resolve, { once: true }),
+    );
 }
 
 // shows every line with a ✓ or ✗ once its request is done

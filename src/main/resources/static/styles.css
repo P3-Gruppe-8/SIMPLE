@@ -364,6 +364,29 @@ dialog {
     border-radius: 20px;
 }
 
+dialog.msgbox {
+    height: fit-content;
+    width: min(36rem, 85vw);
+}
+
+dialog.msgbox .dialog-footer button {
+    height: 4rem;
+}
+
+dialog.msgbox h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+
+dialog.msgbox p {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.unknown-barcode {
+    white-space: nowrap;
+}
+
 dialog[open] {
     display: flex;
     flex-direction: column;
@@ -549,6 +572,10 @@ dialog form {
     width: 100%;
     border-collapse: collapse; /* this means the items in the table share their borders instead of doubling it */
     font-size: clamp(1rem, 7cqi, 2rem);
+}
+
+.receipt tr.unknown {
+    color: var(--red);
 }
 
 .receipt tr.scanned {

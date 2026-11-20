@@ -32,10 +32,11 @@ export function claimNextScan(handler) {
 }
 
 // given a barcode, first look for a claim whose pattern matches that barcode. if there is no such claim, look for a claim with no pattern.
+// uses findLast specifically because we want the newest matching claim to be chosen over an older matching claim
 function findClaim(barcode) {
     return (
-        claims.find((c) => c.pattern?.test(barcode)) ??
-        claims.find((c) => !c.pattern)
+        claims.findLast((c) => c.pattern?.test(barcode)) ??
+        claims.findLast((c) => !c.pattern)
     );
 }
 

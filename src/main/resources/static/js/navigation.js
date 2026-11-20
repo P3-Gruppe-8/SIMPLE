@@ -54,6 +54,12 @@ export function showById(id) {
 
 let loggedInAs = null;
 
+export const loginIds = ["victor nummer 2", "leon da boss"];
+
+export function isLoggedIn() {
+    return loggedInAs !== null;
+}
+
 // the first view of each mode is a "root view"
 const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
 let viewHistory = [];

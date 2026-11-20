@@ -244,85 +244,6 @@
                             />
                             <span class="button-label">Register Item Type</span>
                         </button>
-                        <dialog id="register-consumable-dialog">
-                            <form
-                                id="register-consumable-dialog-form"
-                                method="dialog"
-                            >
-                                <div class="dialog-body">
-                                    <h2>Register Item Type</h2>
-                                    <p>Register a new item type.</p>
-                                    <div class="form-field">
-                                        <label for="item-type-name"
-                                            >Item Type Name</label
-                                        >
-                                        <input
-                                            type="text"
-                                            id="item-type-name"
-                                        />
-                                    </div>
-                                    <div class="form-field">
-                                        <label for="item-id">Item ID</label>
-                                        <div class="barcode-field">
-                                            <div class="barcode-buttons">
-                                                <button
-                                                    type="button"
-                                                    class="barcode-scan raised"
-                                                >
-                                                    <span
-                                                        class="barcode-scan-label"
-                                                        >Scan barcode</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="barcode-manual raised"
-                                                    title="Manual entry"
-                                                    aria-label="Manual entry"
-                                                >
-                                                    <img
-                                                        src="images/keyboard-solid-full.svg"
-                                                        class="barcode-manual-icon"
-                                                    />
-                                                </button>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                id="item-id"
-                                                class="invisible"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label for="item-type-shelf"
-                                            >Shelf</label
-                                        >
-                                        <select
-                                            id="item-type-shelf"
-                                            class="shelf-select"
-                                            required
-                                        >
-                                            <option value="" disabled selected>
-                                                Loading shelves...
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dialog-footer">
-                                    <button
-                                        type="button"
-                                        commandfor="register-consumable-dialog"
-                                        command="close"
-                                        class="red raised"
-                                    >
-                                        <span>Cancel</span>
-                                    </button>
-                                    <button type="submit" class="green raised">
-                                        <span>Apply</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </dialog>
                         <button
                             command="show-modal"
                             commandfor="deregister-dialog"
@@ -679,12 +600,111 @@
                 <span class="button-label">Alerts</span>
             </button>
         </footer>
+        <!-- top level, not inside its view, so the receipt can open it too (see registerUnknown in receipt.js) -->
+        <dialog id="register-consumable-dialog">
+            <form id="register-consumable-dialog-form" method="dialog">
+                <div class="dialog-body">
+                    <h2>Register Item Type</h2>
+                    <p>Register a new item type.</p>
+                    <div class="form-field">
+                        <label for="item-type-name">Item Type Name</label>
+                        <input type="text" id="item-type-name" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="item-id">Item ID</label>
+                        <div class="barcode-field">
+                            <div class="barcode-buttons">
+                                <button
+                                    type="button"
+                                    class="barcode-scan raised"
+                                >
+                                    <span class="barcode-scan-label"
+                                        >Scan barcode</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="barcode-manual raised"
+                                    title="Manual entry"
+                                    aria-label="Manual entry"
+                                >
+                                    <img
+                                        src="images/keyboard-solid-full.svg"
+                                        class="barcode-manual-icon"
+                                    />
+                                </button>
+                            </div>
+                            <input type="text" id="item-id" class="invisible" />
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="item-type-shelf">Shelf</label>
+                        <select
+                            id="item-type-shelf"
+                            class="shelf-select"
+                            required
+                        >
+                            <option value="" disabled selected>
+                                Loading shelves...
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <button
+                        type="button"
+                        commandfor="register-consumable-dialog"
+                        command="close"
+                        class="red raised"
+                    >
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="green raised">
+                        <span>Apply</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- shown when a receipt scan isn't a known item type, see askAboutUnknown in receipt.js -->
+        <dialog id="unknown-barcode-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Unknown Barcode</h2>
+                    <p>
+                        No item type has the barcode
+                        <span class="unknown-barcode"></span>.
+                    </p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="undo" class="red raised">
+                        <span>Undo Scan</span>
+                    </button>
+                    <button type="submit" value="register" class="green raised">
+                        <span>Register Item Type</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- registering needs a login, see askForStaffId in receipt.js -->
+        <dialog id="staff-id-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Log In</h2>
+                    <p class="staff-id-message"></p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="cancel" class="red raised">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
         <!-- shared by write off and restock, filled in by showReceiptResults -->
         <dialog id="receipt-results-dialog">
             <form method="dialog">
                 <div class="dialog-body">
                     <h2></h2>
-                    <p>Lines marked ✗ were not changed.</p>
+                    <p>Results:</p>
                     <div class="receipt">
                         <table>
                             <tbody></tbody>

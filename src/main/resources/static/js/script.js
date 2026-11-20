@@ -6,7 +6,7 @@ import {
     registerItemType,
     removeItemTypeLocation,
 } from "./api.js";
-import { hide, logIn, quickWriteOff, show } from "./navigation.js";
+import { hide, logIn, loginIds, quickWriteOff, show } from "./navigation.js";
 import { showToast } from "./toast.js";
 import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
 import { setUpBarcodeField } from "./barcodeField.js";
@@ -17,7 +17,6 @@ import {
     showReceiptResults,
 } from "./receipt.js";
 
-const loginIds = ["victor nummer 2", "leon da boss"];
 const consumableIds = [
     "5056784902424",
     "5060337502290",
