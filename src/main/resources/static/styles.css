@@ -323,6 +323,18 @@ button.alerts {
     flex-direction: column;
     overflow: scroll;
     width: 100dvw;
+
+    --stockAlertColor: rgb(189, 222, 233);
+    --stockAlertColorWarning: rgb(113, 215, 249);
+    --stockAlertColorCritical: rgb(0, 187, 255);
+
+    --loanAlertColor: rgb(189, 238, 174);
+    --loanAlertColorWarning: rgb(124, 248, 86);
+    --loanAlertColorCritical: rgb(53, 226, 0);
+
+    --inactivityAlertColor: rgb(237, 147, 147);
+    --inactivityAlertColorWarning: rgb(249, 106, 106);
+    --inactivityAlertColorCritical: rgb(211, 0, 0);
 }
 
 .alert-header {
@@ -388,7 +400,7 @@ button.alerts {
     outline: 1px solid rgb(200, 200, 200);
     background-color: whitesmoke;
     box-shadow: 0px 0px 9px 0px black;
-    padding: 0.8rem;
+    padding: 1em;
     border-radius: 20px;
     margin-left: 1em;
     margin-right: 1em;
@@ -400,7 +412,6 @@ button.alerts {
 
 .alert-box-icon {
     height: 9dvh;
-    outline: 0px solid red;
 }
 
 .alert-box {
@@ -433,20 +444,20 @@ button.alerts {
 }
 
 .stock {
-    background-color: rgb(189, 222, 233);
+    background-color: var(--stockAlertColor);
 }
 
 .loan {
-    background-color: rgb(189, 238, 174);
+    background-color: var(--loanAlertColor);
 }
 
 .inactivity {
-    background-color: rgb(237, 147, 147);
+    background-color: var(--inactivityAlertColor);
 }
 
 .stock-icon {
     display: flex;
-    background-color: rgb(189, 222, 233);
+    background-color: var(--stockAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
@@ -454,7 +465,7 @@ button.alerts {
 
 .loan-icon {
     display: flex;
-    background-color: rgb(189, 238, 174);
+    background-color: var(--loanAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
@@ -462,12 +473,72 @@ button.alerts {
 
 .inactivity-icon {
     display: flex;
-    background-color: rgb(237, 147, 147);
+    background-color: var(--inactivityAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
 }
 
-.stock-icon-img {
-    width: 60%;
+.info-img {
+    width: 55% !important;
+}
+
+.warning-img {
+    width: 65% !important;
+}
+
+.critical-img {
+    width: 65% !important;
+}
+
+.critical {
+    outline: 3px solid black;
+}
+
+.stock-icon.warning {
+    background-color: var(--stockAlertColorWarning);
+}
+
+.stock-icon.critical {
+    background-color: var(--stockAlertColorCritical);
+}
+
+.stock.warning {
+    background-color: var(--stockAlertColorWarning);
+}
+
+.stock.critical {
+    background-color: var(--stockAlertColorCritical);
+}
+
+.loan-icon.warning {
+    background-color: var(--loanAlertColorWarning);
+}
+
+.loan-icon.critical {
+    background-color: var(--loanAlertColorCritical);
+}
+
+.loan.warning {
+    background-color: var(--loanAlertColorWarning);
+}
+
+.loan.critical {
+    background-color: var(--loanAlertColorCritical);
+}
+
+.inactivity-icon.warning {
+    background-color: var(--inactivityAlertColorWarning);
+}
+
+.inactivity-icon.critical {
+    background-color: var(--inactivityAlertColorCritical);
+}
+
+.inactivity.warning {
+    background-color: var(--inactivityAlertColorWarning);
+}
+
+.inactivity.critical {
+    background-color: var(--inactivityAlertColorCritical);
 }
