@@ -24,7 +24,12 @@ public class Server {
             // reloads
             if (Files.isDirectory(Path.of(DEV_STATIC_DIR))) {
                 log.info("Serving static files from {} (live reload on refresh)", DEV_STATIC_DIR);
-                config.staticFiles.add(DEV_STATIC_DIR, Location.EXTERNAL);
+                try {
+                    var staticDir = Path.of(DEV_STATIC_DIR).toRealPath();
+                    config.staticFiles.add(staticDir.toString(), Location.EXTERNAL);
+                } catch (java.io.IOException e) {
+                    throw new java.io.UncheckedIOException("Could not resolve the static files directory", e);
+                }
             } else {
                 config.staticFiles.add("/static", Location.CLASSPATH);
             }
