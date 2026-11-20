@@ -2,12 +2,11 @@ package simple.dataaccess.jdbc;
 
 import java.sql.*;
 import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.descriptorMap;
 import simple.domain.exception.DataAccessException;
-import simple.domain.repository.DescriptorRepository;
 import simple.domain.itemmanagement.Descriptor;
+import simple.domain.repository.DescriptorRepository;
 
 public class JdbcDescriptorRepository implements DescriptorRepository {
 
@@ -60,7 +59,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                         .prepareStatement(sql);) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
-            try (ResultSet result = statement.executeQuery();) {
+            try (ResultSet result = statement.executeQuery(); ) {
                 return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
