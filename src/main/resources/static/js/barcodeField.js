@@ -62,6 +62,13 @@ export function setUpBarcodeField(field) {
 
     scanButton.addEventListener("click", startAwaiting);
 
+    // with keep scanning, a typed barcode counts as a scan when Enter is pressed
+    input.addEventListener("keydown", (e) => {
+        if (keepScanning && e.key === "Enter" && input.value) {
+            field.dispatchEvent(new Event("scan"));
+        }
+    });
+
     // in case the scanner isn't working we want to be able to do manual entry
     manualButton.addEventListener("click", () => {
         stopAwaiting();

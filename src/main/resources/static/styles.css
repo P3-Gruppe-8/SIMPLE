@@ -537,6 +537,82 @@ dialog form {
     white-space: pre-line; /* the server's line breaks separate the details */
 }
 
+.receipt {
+    flex: 1 1 0;
+    min-height: 6rem;
+    overflow-y: auto;
+    border: 3px solid var(--white-edge);
+    border-radius: 12px;
+}
+
+.receipt table {
+    width: 100%;
+    border-collapse: collapse; /* this means the items in the table share their borders instead of doubling it */
+    font-size: clamp(1rem, 7cqi, 2rem);
+}
+
+.receipt tr.scanned {
+    animation: receipt-flash 0.8s ease-out;
+}
+
+@keyframes receipt-flash {
+    from {
+        background-color: var(--yellow);
+    }
+}
+
+.receipt td {
+    padding: 12px clamp(8px, 4cqi, 20px);
+    border-bottom: 2px solid var(--white-edge);
+    overflow-wrap: anywhere;
+}
+
+.receipt-status {
+    width: 1em;
+    text-align: center;
+}
+
+.receipt-status.succeeded {
+    color: var(--green-edge);
+}
+
+.receipt-status.failed {
+    color: var(--red);
+}
+
+.receipt-amount {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.receipt-amount input {
+    width: 4ch;
+    font: inherit;
+    text-align: center;
+    padding: 4px 8px;
+    margin: 0 8px;
+    border: 2px solid var(--white-edge);
+    border-radius: 8px;
+}
+
+.receipt-step {
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border-radius: 8px;
+    vertical-align: middle;
+}
+
+.receipt-step img {
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+.dialog-footer button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .toasts {
     position: fixed;
     right: 1rem;

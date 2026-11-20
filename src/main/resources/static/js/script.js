@@ -11,6 +11,11 @@ import { showToast } from "./toast.js";
 import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
 import { setUpBarcodeField } from "./barcodeField.js";
 import { setUpShelfSelect } from "./shelfSelect.js";
+import {
+    getReceiptItems,
+    setUpReceipt,
+    showReceiptResults,
+} from "./receipt.js";
 
 const loginIds = ["victor nummer 2", "leon da boss"];
 const consumableIds = [
@@ -25,6 +30,9 @@ disableEnterToSubmit();
 
 document.querySelectorAll(".barcode-field").forEach(setUpBarcodeField);
 document.querySelectorAll(".shelf-select").forEach(setUpShelfSelect);
+// not every .receipt: the results dialog has one too, but nothing to scan into it
+setUpReceipt(document.getElementById("write-off-receipt"));
+setUpReceipt(document.getElementById("restock-receipt"));
 
 // so a cancelled dialog doesn't show the old values next time it opens
 document.querySelectorAll("dialog").forEach((dialog) => {
@@ -64,30 +72,28 @@ document
 document
     .getElementById("write-off-dialog-form")
     .addEventListener("submit", () => {
-        const barcode = document.getElementById("write-off-item-id").value;
-        const amount = Number(
-            document.getElementById("write-off-amount").value,
+        const receipt = document.getElementById("write-off-receipt");
+        showReceiptResults("Write Off", getReceiptItems(receipt), (item) =>
+            changeStock(item.barcode, -item.amount),
         );
-        changeStock(barcode, -amount)
-            .then((text) => showToast(text))
-            .catch((error) => console.error(error));
     });
 
 document
     .getElementById("restock-dialog-form")
     .addEventListener("submit", () => {
-        const barcode = document.getElementById("restock-item-id").value;
-        const amount = Number(document.getElementById("restock-amount").value);
+        const receipt = document.getElementById("restock-receipt");
         const shelf = document.getElementById("restock-shelf").value;
-        changeStock(barcode, amount)
-            .then((text) => {
-                showToast(text);
+        showReceiptResults(
+            "Restock",
+            getReceiptItems(receipt),
+            async (item) => {
+                await changeStock(item.barcode, item.amount);
                 // adding a shelf is idempotent, so it's fine if the item type already has it
                 if (shelf) {
-                    return addItemTypeLocation(barcode, shelf);
+                    await addItemTypeLocation(item.barcode, shelf);
                 }
-            })
-            .catch((error) => console.error(error));
+            },
+        );
     });
 
 document
