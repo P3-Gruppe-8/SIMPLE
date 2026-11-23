@@ -2,6 +2,7 @@ package simple.presentation;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.UnauthorizedResponse;
 import java.util.Map;
 
 /**
@@ -10,7 +11,16 @@ import java.util.Map;
  */
 public class DescriptorController {
 
+    private static String requireStaffId(Context ctx) {
+        var staffId = ctx.header("X-Staff-Id");
+        if (staffId == null || staffId.isBlank()) {
+            throw new UnauthorizedResponse("Scan your staff ID first");
+        }
+        return staffId;
+    }
+
     public void create(Context ctx) {
+        requireStaffId(ctx); // TODO: pass to the service
         var registration = ctx.bodyAsClass(DescriptorRegistration.class);
         ctx.status(HttpStatus.CREATED).result("Successfully registered " + registration.name());
     }
@@ -33,6 +43,7 @@ public class DescriptorController {
     }
 
     public void delete(Context ctx) {
+        requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         ctx.result("Deleted item type " + barcode);
     }
@@ -50,12 +61,14 @@ public class DescriptorController {
     }
 
     public void addShelf(Context ctx) {
+        requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
         ctx.result("Added shelf " + shelf + " to " + barcode);
     }
 
     public void removeShelf(Context ctx) {
+        requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
         ctx.result("Removed shelf " + shelf + " from " + barcode);

@@ -1,11 +1,16 @@
 // Calls to the backend's REST API.
+import { getStaffId } from "./session.js";
 
-// sends a request, with `body` as JSON if given, and returns the server's text reply
+// sends a request, with `body` as JSON if given, and returns the server's text reply.
+// when someone is logged in, their staff ID is included in a header
 async function send(method, path, body) {
-    const options = { method: method };
+    const options = { method: method, headers: {} };
     if (body !== undefined) {
-        options.headers = { "Content-Type": "application/json" };
+        options.headers["Content-Type"] = "application/json";
         options.body = JSON.stringify(body);
+    }
+    if (getStaffId() !== null) {
+        options.headers["X-Staff-Id"] = getStaffId();
     }
     const response = await fetch(path, options);
     if (!response.ok) {
