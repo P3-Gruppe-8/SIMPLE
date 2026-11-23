@@ -1,3 +1,3 @@
 package simple.domain.employee;
 
-public record Admin () {}
+public record Admin() {}

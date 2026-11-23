@@ -2,7 +2,7 @@ package simple.dataaccess.jdbc.rowMapping;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import simple.domain.employee.ITStaff;;
+import simple.domain.employee.ITStaff;
 
 public class ItstaffMap {
     public static final ITStaff mapRow(ResultSet result) throws SQLException {

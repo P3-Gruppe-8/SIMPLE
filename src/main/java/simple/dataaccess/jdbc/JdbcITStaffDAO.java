@@ -1,14 +1,12 @@
 package simple.dataaccess.jdbc;
 
+import java.sql.*;
 import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.rowMapping.ItstaffMap;
 import simple.domain.dao.ITStaffDAO;
 import simple.domain.employee.ITStaff;
 import simple.domain.exception.DataAccessException;
-
-import java.sql.*;
-import simple.dataaccess.jdbc.rowMapping.ItstaffMap;
 
 public class JdbcITStaffDAO implements ITStaffDAO {
 
@@ -35,6 +33,6 @@ public class JdbcITStaffDAO implements ITStaffDAO {
             }
         } catch (SQLException e) {
             throw new DataAccessException("Database error: Failed to find IT staff by username and office", e);
-        }   
+        }
     }
 }
