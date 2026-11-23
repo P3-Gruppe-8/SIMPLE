@@ -1,6 +1,8 @@
 package simple.dataaccess.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import simple.domain.exception.DataAccessException;
+
 import java.sql.*;
 import org.flywaydb.core.Flyway;
 
@@ -41,5 +43,44 @@ public class Databaseconnection {
 
     public Connection getDbConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
+    }
+
+    public Connection newConnection(boolean autoCommit) {
+        Databaseconnection db = new Databaseconnection();
+        try {
+            Connection conn = db.getDbConnection();
+            conn.setAutoCommit(autoCommit);
+            return conn;
+        } catch (SQLException e) {
+            throw new DataAccessException("Unable to connect to database", e);
+        }
+    }
+
+    public Connection newConnection() {
+        return newConnection(true);
+    }
+
+    public void closeConnection(Connection conn) {
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new DataAccessException("Unable to close connection to database", e);
+        }
+    }
+
+    public void executeRollback(Connection conn) {
+        try {
+            conn.rollback();
+        } catch (SQLException e) {
+            throw new DataAccessException("Unable to perform rollback on database", e);
+        } 
+    }
+
+    public void executeCommit(Connection conn) {
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            throw new DataAccessException("Unable to perform commit on database", e);
+        }        
     }
 }

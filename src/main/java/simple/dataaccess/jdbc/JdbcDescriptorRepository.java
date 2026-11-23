@@ -11,7 +11,7 @@ import simple.domain.repository.DescriptorRepository;
 public class JdbcDescriptorRepository implements DescriptorRepository {
 
     @Override
-    public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta) {
+    public boolean changeQuantity(Connection conn, String barcode, int officeId, int delta) {
         String sql = """
                 UPDATE descriptors AS d
                 SET quantity = d.quantity + ?
@@ -24,31 +24,33 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                 RETURNING d.*
                 """;
 
-        Databaseconnection db = new Databaseconnection();
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
 
-        try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql)) {
+            conn.setAutoCommit(false);
 
             statement.setInt(1, delta);
             statement.setString(2, barcode);
             statement.setInt(3, officeId);
 
             try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? Optional.of(DescriptorMap.mapRow(result)) : Optional.empty();
+                if (result.next()) {
+                    return true; // En række blev opdateret
+                } else {
+                    return false; // Ingen rækker blev opdateret
+                }
             }
 
         } catch (SQLException e) {
             if ("23514".equals(e.getSQLState())) {
                 throw new DataAccessException("Failed to change descriptor quantity", e);
             }
-            System.out.println("Unknown SQL Exception in changeQuantity(): " + e.getMessage());
-            return Optional.empty();
+
+            return false;
         }
     }
 
     @Override
-    public Optional<Descriptor> findByBarcode(String barcode, int office_id) {
-        Databaseconnection db = new Databaseconnection();
+    public Optional<Descriptor> findByBarcode(Connection conn, String barcode, int office_id) {
         String sql = """
                 SELECT d.*
                 FROM descriptors d
@@ -59,8 +61,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     AND db.office_id = ?;
                 """;
 
-        try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql);) {
+        try (PreparedStatement statement = conn.prepareStatement(sql);) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery();) {
@@ -72,9 +73,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
-    public boolean softDelete(int descriptor_id, int office_id) {
-
-        Databaseconnection db = new Databaseconnection();
+    public boolean softDelete(Connection conn, int descriptor_id, int office_id) {
         String sql = """
                 UPDATE descriptors
                 SET descriptor_deleted = now()
@@ -82,8 +81,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     AND office_id = ?
                 """;
 
-        try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql);) {
+        try (PreparedStatement statement = conn.prepareStatement(sql);) {
             statement.setInt(1, descriptor_id);
             statement.setInt(2, office_id);
             int result = statement.executeUpdate();
@@ -93,17 +91,15 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
-    public int createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
-
-        Databaseconnection db = new Databaseconnection();
+    public int createNew(Connection conn, String descriptor_name, boolean is_loanable, String info_field,
+            int office_id) {
         String sql = """
                 INSERT INTO descriptors (descriptor_name, is_loanable, quantity, info_field, office_id)
                 VALUES (?, ?, 0, ?, ?)
                 RETURNING descriptor_id
                 """;
 
-        try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
 
             statement.setString(1, descriptor_name);
             statement.setBoolean(2, is_loanable);
@@ -123,22 +119,19 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
-    public boolean addBarcode(int descriptor_id, String barcode, int office_id) {
-        Databaseconnection db = new Databaseconnection();
+    public boolean addBarcode(Connection conn, int descriptor_id, String barcode, int office_id) {
         String sql = """
                 INSERT INTO descriptor_barcodes (barcode_key, descriptor_id, office_id)
                 VALUES (?, ?, ?)
-                """; 
-        try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql); ) {
+                """;
+        try (PreparedStatement statement = conn.prepareStatement(sql);) {
             statement.setString(1, barcode);
             statement.setInt(2, descriptor_id);
             statement.setInt(3, office_id);
             int result = statement.executeUpdate();
             return result > 0;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DataAccessException("Failed to add barcode", e);
-        } 
+        }
     }
 }
