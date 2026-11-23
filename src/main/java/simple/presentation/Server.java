@@ -64,6 +64,3 @@ public class Server {
         log.info("Server started on port {}", port);
     }
 }
-
-// String descriptor_name, boolean is_loanable, String info_field, int
-// office_id, String barcode

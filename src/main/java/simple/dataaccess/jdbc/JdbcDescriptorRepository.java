@@ -122,94 +122,83 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
 
     public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id,
             String barcode, int shelf_id) {
+
         Databaseconnection db = new Databaseconnection();
-        Connection conn = db.newConnection(false);
 
-        String sqlCreateDescriptor = """
-                INSERT INTO descriptors (descriptor_name, is_loanable, quantity, info_field, office_id)
-                VALUES (?, ?, 0, ?, ?)
-                RETURNING descriptor_id
-                """;
+        try (Connection conn = db.newConnection(false)) {
+            try {
+                String sqlCreateDescriptor = """
+                        INSERT INTO descriptors
+                        (descriptor_name, is_loanable, quantity, info_field, office_id)
+                        VALUES (?, ?, 0, ?, ?)
+                        RETURNING descriptor_id
+                        """;
 
-        try (PreparedStatement statementCreateDescriptor = conn.prepareStatement(sqlCreateDescriptor)) {
+                int descriptor_id;
 
-            statementCreateDescriptor.setString(1, descriptor_name);
-            statementCreateDescriptor.setBoolean(2, is_loanable);
-            statementCreateDescriptor.setString(3, info_field);
-            statementCreateDescriptor.setInt(4, office_id);
+                try (PreparedStatement statement = conn.prepareStatement(sqlCreateDescriptor)) {
+                    statement.setString(1, descriptor_name);
+                    statement.setBoolean(2, is_loanable);
+                    statement.setString(3, info_field);
+                    statement.setInt(4, office_id);
 
-            int descriptor_id = 0;
-
-            try (ResultSet rs = statementCreateDescriptor.executeQuery()) {
-                if (rs.next()) {
-                    descriptor_id = rs.getInt("descriptor_id");
-                } else {
-                    db.executeRollback(conn);
-                    db.closeConnection(conn);
-                    throw new DataAccessException("Failed to create descriptor: Unable to get descriptor ID");
+                    try (ResultSet rs = statement.executeQuery()) {
+                        if (!rs.next()) {
+                            db.executeRollback(conn);
+                            db.closeConnection(conn);
+                            throw new SQLException("Unable to create descriptor: No descriptor ID returned");
+                        }
+                        descriptor_id = rs.getInt("descriptor_id");
+                    }
                 }
+
+                String sqlAddBarcode = """
+                        INSERT INTO descriptor_barcodes
+                        (barcode_key, descriptor_id, office_id)
+                        VALUES (?, ?, ?)
+                        """;
+
+                try (PreparedStatement statement = conn.prepareStatement(sqlAddBarcode)) {
+                    statement.setString(1, barcode);
+                    statement.setInt(2, descriptor_id);
+                    statement.setInt(3, office_id);
+
+                    if (statement.executeUpdate() != 1) {
+                        db.executeRollback(conn);
+                        db.closeConnection(conn);
+                        throw new SQLException("Unable to create descriptor: Failed to add barcode");
+                    }
+                }
+
+                String sqlAddShelf = """
+                        INSERT INTO descriptor_shelves (descriptor_id, shelf_id)
+                        VALUES (?, ?)
+                        """;
+
+                try (PreparedStatement statement = conn.prepareStatement(sqlAddShelf)) {
+                    statement.setInt(1, descriptor_id);
+                    statement.setInt(2, shelf_id);
+
+                    if (statement.executeUpdate() != 1) {
+                        db.executeRollback(conn);
+                        db.closeConnection(conn);
+                        throw new SQLException("Unable to create descriptor: Failed to add shelf");
+                    }
+                }
+
+                db.executeCommit(conn);
+                db.closeConnection(conn);
+                return true;
+
             } catch (SQLException e) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
-                throw new DataAccessException("Failed to create descriptor: Unable to execute query", e);
+                throw new DataAccessException("Unable to create descriptor: Failed to create descriptor", e);
             }
-
-            String sqlAddBarcode = """
-                    INSERT INTO descriptor_barcodes (barcode_key, descriptor_id, office_id)
-                    VALUES (?, ?, ?)
-                    """;
-
-            try (PreparedStatement statementAddBarcode = conn.prepareStatement(sqlAddBarcode);) {
-                statementAddBarcode.setString(1, barcode);
-                statementAddBarcode.setInt(2, descriptor_id);
-                statementAddBarcode.setInt(3, office_id);
-                int result = statementAddBarcode.executeUpdate();
-                if (result != 1) {
-                    db.executeRollback(conn);
-                    db.closeConnection(conn);
-                    throw new DataAccessException("Failed to add barcode to descriptor: 0 or more than 1 row affected");
-                }
-            } catch (SQLException e) {
-                db.executeRollback(conn);
-                db.closeConnection(conn);
-                throw new DataAccessException("Failed to add barcode to descriptor", e);
-            }
-
-            String sqlAddShelf = """
-                    INSERT INTO descriptor_shelves (descriptor_id, shelf_id)
-                    VALUES (?, ?)
-                    """;
-            try (PreparedStatement statementAddShelf = conn.prepareStatement(sqlAddShelf);) {
-                statementAddShelf.setInt(1, descriptor_id);
-                statementAddShelf.setInt(1, shelf_id);
-                int result = statementAddShelf.executeUpdate();
-                if (result != 1) {
-                    db.executeRollback(conn);
-                    db.closeConnection(conn);
-                    throw new DataAccessException("Failed to add shelf to descriptor: 0 or more than 1 row affected");
-                }
-            } catch (SQLException e) {
-                db.executeRollback(conn);
-                db.closeConnection(conn);
-                throw new DataAccessException("Failed to add shelf to descriptor", e);
-            }
-
         } catch (SQLException e) {
-            db.executeRollback(conn);
-            db.closeConnection(conn);
-            throw new DataAccessException("Failed to create descriptor", e);
+            throw new DataAccessException("Unable to create descriptor: Failed to connect to database", e);
         }
-        db.executeCommit(conn);
-        db.closeConnection(conn);
-        return true;
     }
-
-    // CREATE TABLE descriptor_shelves (
-    // descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON
-    // DELETE CASCADE,
-    // shelf_id INTEGER NOT NULL REFERENCES shelves (shelf_id) ON DELETE CASCADE,
-    // PRIMARY KEY (descriptor_id, shelf_id)
-    // );
 
     public boolean addBarcode(int descriptor_id, String barcode, int office_id) {
         Databaseconnection db = new Databaseconnection();
@@ -223,8 +212,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             statement.setString(1, barcode);
             statement.setInt(2, descriptor_id);
             statement.setInt(3, office_id);
-            int result = statement.executeUpdate();
-            if (result == 1) {
+            if (statement.executeUpdate() == 1) {
                 db.executeCommit(conn);
                 db.closeConnection(conn);
                 return true;
