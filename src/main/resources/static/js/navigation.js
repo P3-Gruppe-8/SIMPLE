@@ -1,4 +1,6 @@
 // Mode switching, view history and login state.
+import { changeStock } from "./api.js";
+import { showToast } from "./toast.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
@@ -51,6 +53,12 @@ export function showById(id) {
 }
 
 let loggedInAs = null;
+
+export const loginIds = ["victor nummer 2", "leon da boss"];
+
+export function isLoggedIn() {
+    return loggedInAs !== null;
+}
 
 // the first view of each mode is a "root view"
 const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
@@ -140,4 +148,10 @@ export function logOut() {
     if (currentView === "loanModeHomeScreen") {
         showView("loanModeLogInScreen");
     }
+}
+
+export function quickWriteOff(barcode) {
+    changeStock(barcode, -1)
+        .then((text) => showToast(text))
+        .catch((error) => console.error(error));
 }

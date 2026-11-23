@@ -1,24 +1,20 @@
 // Toast: a short notification in the bottom right corner.
 
-import { hide, show } from "./navigation.js";
-
 const TOAST_DURATION_MS = 5000;
+const MAX_TOASTS = 6;
 
-const toast = document.getElementById("toast");
-const toastMessage = document.getElementById("toast-message");
-let toastTimeout;
+const toasts = document.getElementById("toasts");
+const toastTemplate = document.getElementById("toast-template");
 
 export function showToast(message) {
-    toastMessage.textContent = message;
-    show(toast);
-    // a new toast replaces the old one and restarts the timer
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(hideToast, TOAST_DURATION_MS);
-}
+    const toast = toastTemplate.content.firstElementChild.cloneNode(true);
+    toast.querySelector(".toast-message").textContent = message;
+    toast.addEventListener("click", () => toast.remove());
+    setTimeout(() => toast.remove(), TOAST_DURATION_MS);
+    toasts.append(toast);
 
-function hideToast() {
-    clearTimeout(toastTimeout);
-    hide(toast);
+    // drop the oldest so a burst of scans can't fill the screen
+    if (toasts.children.length > MAX_TOASTS) {
+        toasts.firstElementChild.remove();
+    }
 }
-
-toast.addEventListener("click", hideToast);
