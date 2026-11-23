@@ -423,6 +423,11 @@ dialog[open] {
     border-radius: 12px;
 }
 
+.form-field .short-input {
+    align-self: flex-start;
+    width: 5ch;
+}
+
 .barcode-field {
     --field-height: 5rem;
     display: flex;

@@ -62,6 +62,9 @@ document
             name: document.getElementById("item-type-name").value,
             barcode: document.getElementById("item-id").value,
             shelf: document.getElementById("item-type-shelf").value,
+            minQuantity: Number(
+                document.getElementById("item-type-min-quantity").value,
+            ),
         };
         registerItemType(itemType)
             .then((text) => showToast(text))
