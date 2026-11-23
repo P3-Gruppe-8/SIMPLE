@@ -324,17 +324,9 @@ button.alerts {
     overflow: scroll;
     width: 100dvw;
 
-    --stockAlertColor: rgb(189, 222, 233);
-    --stockAlertColorWarning: rgb(113, 215, 249);
-    --stockAlertColorCritical: rgb(0, 187, 255);
-
-    --loanAlertColor: rgb(189, 238, 174);
-    --loanAlertColorWarning: rgb(124, 248, 86);
-    --loanAlertColorCritical: rgb(53, 226, 0);
-
-    --inactivityAlertColor: rgb(237, 147, 147);
-    --inactivityAlertColorWarning: rgb(249, 106, 106);
-    --inactivityAlertColorCritical: rgb(211, 0, 0);
+    --alertColorInfo: rgb(189, 222, 233);
+    --alertColorWarning: rgb(113, 215, 249);
+    --alertColorCritical: rgb(0, 187, 255);
 }
 
 .alert-header {
@@ -443,21 +435,8 @@ button.alerts {
     font-size: clamp(0.5rem, 23cqh, 4rem);
 }
 
-.stock {
-    background-color: var(--stockAlertColor);
-}
-
-.loan {
-    background-color: var(--loanAlertColor);
-}
-
-.inactivity {
-    background-color: var(--inactivityAlertColor);
-}
-
 .stock-icon {
     display: flex;
-    background-color: var(--stockAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
@@ -465,7 +444,6 @@ button.alerts {
 
 .loan-icon {
     display: flex;
-    background-color: var(--loanAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
@@ -473,7 +451,6 @@ button.alerts {
 
 .inactivity-icon {
     display: flex;
-    background-color: var(--inactivityAlertColor);
     justify-content: center;
     align-items: center;
     border-radius: 60px;
@@ -491,54 +468,15 @@ button.alerts {
     width: 65% !important;
 }
 
+.info {
+    background-color: var(--alertColorInfo);
+}
+
+.warning {
+    background-color: var(--alertColorWarning);
+}
+
 .critical {
     outline: 3px solid black;
-}
-
-.stock-icon.warning {
-    background-color: var(--stockAlertColorWarning);
-}
-
-.stock-icon.critical {
-    background-color: var(--stockAlertColorCritical);
-}
-
-.stock.warning {
-    background-color: var(--stockAlertColorWarning);
-}
-
-.stock.critical {
-    background-color: var(--stockAlertColorCritical);
-}
-
-.loan-icon.warning {
-    background-color: var(--loanAlertColorWarning);
-}
-
-.loan-icon.critical {
-    background-color: var(--loanAlertColorCritical);
-}
-
-.loan.warning {
-    background-color: var(--loanAlertColorWarning);
-}
-
-.loan.critical {
-    background-color: var(--loanAlertColorCritical);
-}
-
-.inactivity-icon.warning {
-    background-color: var(--inactivityAlertColorWarning);
-}
-
-.inactivity-icon.critical {
-    background-color: var(--inactivityAlertColorCritical);
-}
-
-.inactivity.warning {
-    background-color: var(--inactivityAlertColorWarning);
-}
-
-.inactivity.critical {
-    background-color: var(--inactivityAlertColorCritical);
+    background-color: var(--alertColorCritical);
 }
