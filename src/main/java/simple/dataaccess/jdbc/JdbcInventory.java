@@ -3,7 +3,7 @@ package simple.dataaccess.jdbc;
 import java.sql.*;
 import java.util.ArrayList;
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.descriptorMap;
+import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Inventory;
@@ -52,7 +52,7 @@ public class JdbcInventory implements InventoryRepository {
 
                 try (ResultSet result = statement.executeQuery()) {
                     while (result.next()) {
-                        consumables.add(descriptorMap.mapRow(result));
+                        consumables.add(DescriptorMap.mapRow(result));
                     }
                 }
             }
@@ -75,7 +75,7 @@ public class JdbcInventory implements InventoryRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to load inventory for office " + officeId, e);
+            throw new DataAccessException("Database error: Failed to load inventory for office " + officeId, e);
         }
 
         return new Inventory(consumables, loanables);

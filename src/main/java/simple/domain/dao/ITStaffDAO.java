@@ -6,7 +6,7 @@ import simple.domain.employee.ITStaff;
 public interface ITStaffDAO {
     // public Optional<ITStaff> findById(int id);
 
-    public Optional<ITStaff> findByUsername(String username);
+    public Optional<ITStaff> findByUsername(String username, int officeId);
 
     // public void delete(int id);
 }
