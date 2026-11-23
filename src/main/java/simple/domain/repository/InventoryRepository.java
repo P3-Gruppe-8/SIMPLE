@@ -1,0 +1,8 @@
+package simple.domain.repository;
+
+import simple.domain.itemmanagement.Inventory;
+
+public interface InventoryRepository {
+
+    public Inventory findOverviewByOffice(int officeId);
+}

@@ -12,22 +12,26 @@ public class Databaseconnection {
 
     // Get database username, password and url from environment variables
     // to avoid storing credentials in source code.
-    private final String uname = dotenv.get("DB_USER");
-    private final String pass = dotenv.get("DB_PASSWORD");
+    private final String username = dotenv.get("DB_USER");
+    private final String password = dotenv.get("DB_PASSWORD");
     private final String url = dotenv.get("DB_URL");
 
     // Throws error if environment variables are not configured
     public Databaseconnection() {
-        if (url == null || url.isBlank() || uname == null || uname.isBlank() || pass == null || pass.isBlank()) {
+        if (url == null
+                || url.isBlank()
+                || username == null
+                || username.isBlank()
+                || password == null
+                || password.isBlank()) {
             throw new IllegalStateException("DB_URL, DB_USER and DB_PASSWORD must be configured.");
         }
     }
 
     // Applies pending database migrations before the server starts.
-    //
     public void migrate() {
         Flyway flyway = Flyway.configure()
-                .dataSource(url, uname, pass)
+                .dataSource(url, username, password)
                 .cleanDisabled(false)
                 .load();
 
@@ -36,6 +40,6 @@ public class Databaseconnection {
     }
 
     public Connection getDbConnection() throws SQLException {
-        return DriverManager.getConnection(url, uname, pass);
+        return DriverManager.getConnection(url, username, password);
     }
 }

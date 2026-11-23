@@ -11,6 +11,17 @@ public class Main {
         // Applies pending database migrations before starting the server.
         db.migrate();
 
+        // Test af getOverviewByOffice
+        // InventoryService inventoryService = new InventoryService(new JdbcInventory());
+
+        // Inventory inventory = inventoryService.getOverviewByOffice(1);
+
+        // System.out.println("Consumables:");
+        // inventory.consumables().forEach(System.out::println);
+
+        // System.out.println("Loanables:");
+        // inventory.loanables().forEach(System.out::println);
+
         // Tests af findByBarcode og changeQuantity på descriptor
 
         // JdbcDescriptorRepository jdbcDescriptorRepository = new
