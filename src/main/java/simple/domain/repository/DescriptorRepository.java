@@ -1,7 +1,6 @@
 package simple.domain.repository;
 
 import java.util.Optional;
-import java.sql.*;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 
@@ -28,11 +27,11 @@ public interface DescriptorRepository {
      * @throws DataAccessException if the database operation fails,
      *         including when the resulting quantity would be negative
      */
-    public boolean changeQuantity(Connection conn, String barcode, int officeId, int delta);
+    public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta);
 
-    public Optional<Descriptor> findByBarcode(Connection conn, String barcode, int office_id);
+    public Optional<Descriptor> findByBarcode(String barcode, int office_id);
 
-    public boolean softDelete(Connection conn, int descriptor_id, int office_id);
+    public boolean softDelete(int descriptor_id, int office_id);
 
-    public int createNew(Connection conn, String descriptor_name, boolean is_loanable, String info_field, int office_id);
+    public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id, String barcode, int shelf_id);
 }
