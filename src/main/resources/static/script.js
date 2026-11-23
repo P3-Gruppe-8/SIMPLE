@@ -277,7 +277,7 @@ let dummyAlertArray = [
         alertType: "inactivity",
         urgency: "critical",
         alertTextContent: "Write off has not been used in 1 week(s)",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
 ];
 
@@ -288,7 +288,7 @@ function recieveAlerts(SSEAlertArray) {
 }
 
 function updateAlerts(alertArray) {
-    removeAlerts();
+    //removeAlerts();
     const sortedAlertArray = sortAlerts(alertArray);
     buildAlerts(sortedAlertArray);
     currentAlertsArray = sortedAlertArray;
