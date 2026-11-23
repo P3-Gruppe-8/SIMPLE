@@ -365,8 +365,8 @@ button.alerts {
     width: 100dvw;
 
     --alertColorInfo: rgb(189, 222, 233);
-    --alertColorWarning: rgb(113, 215, 249);
-    --alertColorCritical: rgb(0, 187, 255);
+    --alertColorWarning: var(--yellow);
+    --alertColorCritical: rgb(255, 0, 0);
 }
 
 .alert-header {
@@ -496,15 +496,15 @@ button.alerts {
     border-radius: 60px;
 }
 
-.info-img {
-    width: 55% !important;
+.stock-img {
+    width: 69% !important;
 }
 
-.warning-img {
-    width: 65% !important;
+.loan-img {
+    width: 74% !important;
 }
 
-.critical-img {
+.inactivity-img {
     width: 65% !important;
 }
 
