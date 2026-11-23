@@ -1,6 +1,7 @@
 // Mode switching, view history and login state.
 import { changeStock } from "./api.js";
 import { showToast } from "./toast.js";
+import { showAlertView } from "./alerts.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
@@ -118,12 +119,6 @@ export function previousView() {
     viewHistory.pop(); // the view we are leaving
     let previousViewId = viewHistory.pop(); // showView pushes it back on
     showView(previousViewId);
-}
-
-export function showAlertView(alertView) {
-    showView(alertView);
-    hideById("alertButton");
-    hideById("modeSwitch");
 }
 
 export function logIn(staffId) {

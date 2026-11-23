@@ -1,11 +1,14 @@
 // Alerts
 
-let showNewAlerts = true;
+import { hideById, showById, showView } from "./navigation.js";
+
+let showNewAlerts = false;
 let currentAlertsArray = [];
 
-function showAlertView(alertView, showBack) {
-    showView(alertView, showBack);
+export function showAlertView(alertView) {
+    showView(alertView);
     hideById("alertButton");
+    hideById("modeSwitch");
     hideById("newAlertsHeader");
     hideById("newAlertsRow");
     hideById("newAlertsFooter");
@@ -42,6 +45,17 @@ function showAlertView(alertView, showBack) {
     showNewAlerts = false;
 }
 
+function hasNewAlerts() {
+    for (let alert in currentAlertsArray) {
+        const isNewAlert = currentAlertsArray[alert].isNewAlert;
+
+        if (isNewAlert === "true") {
+            showNewAlerts = true;
+            return;
+        }
+    }
+}
+
 function hasOlderAlerts() {
     let hasOldAlerts = false;
 
@@ -54,6 +68,18 @@ function hasOlderAlerts() {
     return hasOldAlerts;
 }
 
+function ageAlerts(currentAlertsArray) {
+    for (let alert in currentAlertsArray) {
+        const isNewAlert = currentAlertsArray[alert].isNewAlert;
+
+        if (isNewAlert === "true") {
+            isNewAlert = "false";
+            return hasOldAlerts;
+        }
+    }
+    console.log(currentAlertsArray);
+}
+
 /*
 
 let alert = {
@@ -64,7 +90,7 @@ let alert = {
 }
     */
 
-let dummyAlertArray = [
+export let dummyAlertArray = [
     {
         alertType: "stock",
         urgency: "info",
@@ -87,33 +113,33 @@ let dummyAlertArray = [
         alertType: "loan",
         urgency: "info",
         alertTextContent: "Loan by LTB of Laptop 5 ends tomorrow",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
     {
         alertType: "loan",
         urgency: "warning",
         alertTextContent:
             "Loan by LTB of Laptop 5 has not been returned, loan ended yesterday",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
     {
         alertType: "loan",
         urgency: "critical",
         alertTextContent:
             "Loan by LTB of Laptop 5 has not been returned, loan ended 1 week ago",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
     {
         alertType: "inactivity",
         urgency: "info",
         alertTextContent: "Write off has not been used in 1 day(s)",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
     {
         alertType: "inactivity",
         urgency: "warning",
         alertTextContent: "Write off has not been used in 3 day(s)",
-        isNewAlert: "true",
+        isNewAlert: "false",
     },
     {
         alertType: "inactivity",
@@ -129,8 +155,9 @@ function recieveAlerts(SSEAlertArray) {
     // function to handle alerts sent with SSE
 }
 
-function updateAlerts(alertArray) {
-    //removeAlerts();
+export function updateAlerts(alertArray) {
+    console.log("updating alerts");
+    removeAlerts();
     const sortedAlertArray = sortAlerts(alertArray);
     buildAlerts(sortedAlertArray);
     currentAlertsArray = sortedAlertArray;
@@ -157,23 +184,152 @@ function sortAlerts(alertArray) {
 
 function buildAlerts(sortedAlertArray) {
     for (let alert in sortedAlertArray) {
-        const alertType = sortedAlertArray[alert].alertType;
-        if (alertType === "stock") {
-            continue;
-        }
+        const alertObject = sortedAlertArray[alert];
 
-        if (alertType === "loan") {
-            continue;
-        }
-
-        if (alertType !== "inactivity") {
-            throw new Error("alertType is not recognized");
-        }
+        createAlert(alertObject);
     }
 }
 
-function buildStockAlert() {}
+function createAlert(alertObject) {
+    const alertType = alertObject.alertType;
+    const urgencyValue = alertObject.urgency;
 
-function buildLoanAlert() {}
+    // first create icon element
+    const newIconElement = createIcon(alertType, urgencyValue);
 
-function buildInactivityAlert() {}
+    // create alert element
+    const newAlertElement = document.createElement("div");
+
+    let classString = "alert-box";
+    const stockString = "stock";
+    const loanString = "loan";
+    const inactivityString = "inactivity";
+
+    switch (alertType) {
+        case "stock":
+            classString = classString.concat(" ", stockString);
+            break;
+        case "loan":
+            classString = classString.concat(" ", loanString);
+            break;
+        case "inactivity":
+            classString = classString.concat(" ", inactivityString);
+            break;
+        default:
+            throw new Error("Could not determine type of alert when building");
+    }
+
+    const infoString = "info";
+    const warningString = "warning";
+    const criticalString = "critical";
+
+    switch (urgencyValue) {
+        case "info":
+            classString = classString.concat(" ", infoString);
+            break;
+        case "warning":
+            classString = classString.concat(" ", warningString);
+            break;
+        case "critical":
+            classString = classString.concat(" ", criticalString);
+            break;
+        default:
+            throw new Error(
+                "Could not determine urgency of alert when building",
+            );
+    }
+
+    newAlertElement.setAttribute("class", classString);
+
+    // create label
+    const newAlertLabel = document.createElement("p");
+    const labelTextContent = alertObject.alertTextContent;
+
+    newAlertLabel.setAttribute("class", "alert-label");
+    newAlertLabel.textContent = labelTextContent;
+
+    newAlertElement.appendChild(newAlertLabel);
+
+    // append icon and alert to new or old alert rows
+    const isNewAlert = alertObject.isNewAlert;
+
+    if (isNewAlert === "true") {
+        const newAlertsRow = document.getElementById("newAlertsRow");
+        newAlertsRow.appendChild(newIconElement);
+        newAlertsRow.appendChild(newAlertElement);
+        return;
+    }
+
+    if (isNewAlert !== "true") {
+        const oldAlertsRow = document.getElementById("oldAlertsRow");
+        oldAlertsRow.appendChild(newIconElement);
+        oldAlertsRow.appendChild(newAlertElement);
+        return;
+    }
+
+    throw new Error("Could not determine if alert is new when building");
+}
+
+function createIcon(alertType, urgencyValue) {
+    const newIconElement = document.createElement("div");
+    const newImageElement = document.createElement("img");
+
+    let classString = "alert-box-icon";
+
+    const stockString = "stock-icon";
+    const stockImageClassString = "stock-img";
+    const stockImagePathString = "images/box-open-solid-full.svg";
+
+    const loanString = "loan-icon";
+    const loanImageClassString = "loan-img";
+    const loanImagePathString = "images/address-book.svg";
+
+    const inactivityString = "inactivity-icon";
+    const inactivityImageClassString = "inactivity-img";
+    const inactivityImagePathString = "images/activity.svg";
+
+    switch (alertType) {
+        case "stock":
+            classString = classString.concat(" ", stockString);
+            newImageElement.setAttribute("class", stockImageClassString);
+            newImageElement.setAttribute("src", stockImagePathString);
+            break;
+        case "loan":
+            classString = classString.concat(" ", loanString);
+            newImageElement.setAttribute("class", loanImageClassString);
+            newImageElement.setAttribute("src", loanImagePathString);
+            break;
+        case "inactivity":
+            classString = classString.concat(" ", inactivityString);
+            newImageElement.setAttribute("class", inactivityImageClassString);
+            newImageElement.setAttribute("src", inactivityImagePathString);
+            break;
+        default:
+            throw new Error("Could not determine type of alert when building");
+    }
+
+    const infoString = "info";
+    const warningString = "warning";
+    const criticalString = "critical";
+
+    switch (urgencyValue) {
+        case "info":
+            classString = classString.concat(" ", infoString);
+            break;
+        case "warning":
+            classString = classString.concat(" ", warningString);
+            break;
+        case "critical":
+            classString = classString.concat(" ", criticalString);
+            break;
+        default:
+            throw new Error(
+                "Could not determine urgency of alert when building",
+            );
+    }
+
+    newIconElement.setAttribute("class", classString);
+    newIconElement.appendChild(newImageElement);
+
+    return newIconElement;
+}

@@ -12,7 +12,8 @@ public class Main {
         db.migrate();
 
         // Test af getOverviewByOffice
-        // InventoryService inventoryService = new InventoryService(new JdbcInventory());
+        // InventoryService inventoryService = new InventoryService(new
+        // JdbcInventory());
 
         // Inventory inventory = inventoryService.getOverviewByOffice(1);
 
