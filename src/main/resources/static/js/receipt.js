@@ -1,6 +1,7 @@
 // A receipt: a table of scanned item types and how many of each
 import { getItemDetails } from "./api.js";
-import { isLoggedIn, logIn, loginIds } from "./navigation.js";
+import { logIn } from "./navigation.js";
+import { isLoggedIn, loginIds } from "./session.js";
 import { claimScans } from "./scanning.js";
 
 export function setUpReceipt(receipt) {
