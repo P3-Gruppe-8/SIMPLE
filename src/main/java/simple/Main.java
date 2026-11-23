@@ -7,6 +7,7 @@ import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
 import simple.service.ITStaffService;
 import simple.service.InventoryService;
+import simple.presentation.Server;
 
 public class Main {
     public static void main(String[] args) {
