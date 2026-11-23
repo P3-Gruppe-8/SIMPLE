@@ -36,5 +36,5 @@ public interface DescriptorRepository {
 
     public boolean softDelete(int descriptor_id, int office_id);
 
-    public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id);
+    public int createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id);
 }

@@ -29,11 +29,16 @@ public class DescriptorService {
         }
     }
 
-    public void register(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
+    public void register(String descriptor_name, boolean is_loanable, String info_field, int office_id,
+            String barcode) {
+
         JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        boolean result = jdbc.createNew(descriptor_name, is_loanable, info_field, office_id);
+
+        int descriptor_id = jdbc.createNew(descriptor_name, is_loanable, info_field, office_id);
+        boolean result = jdbc.addBarcode(descriptor_id, barcode, office_id);
+
         if (!result) {
-            throw new databaseUpdateException("Failed to create descriptor: 0 rows affected");
+            throw new databaseUpdateException("Failed to delete descriptor: 0 rows affected");
         }
     }
 

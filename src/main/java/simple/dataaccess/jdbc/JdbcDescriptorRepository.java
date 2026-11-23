@@ -93,24 +93,52 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
-    public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
+    public int createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
 
         Databaseconnection db = new Databaseconnection();
         String sql = """
                 INSERT INTO descriptors (descriptor_name, is_loanable, quantity, info_field, office_id)
                 VALUES (?, ?, 0, ?, ?)
+                RETURNING descriptor_id
                 """;
+
         try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql); ) {
+                PreparedStatement statement = conn.prepareStatement(sql)) {
+
             statement.setString(1, descriptor_name);
             statement.setBoolean(2, is_loanable);
             statement.setString(3, info_field);
             statement.setInt(4, office_id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("descriptor_id");
+                }
+            }
+
+            throw new DataAccessException("Failed to create descriptor: Unable to get new descriptor ID");
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to create descriptor", e);
+        }
+    }
+
+    public boolean addBarcode(int descriptor_id, String barcode, int office_id) {
+        Databaseconnection db = new Databaseconnection();
+        String sql = """
+                INSERT INTO descriptor_barcodes (barcode_key, descriptor_id, office_id)
+                VALUES (?, ?, ?)
+                """; 
+        try (Connection conn = db.getDbConnection();
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
+            statement.setString(1, barcode);
+            statement.setInt(2, descriptor_id);
+            statement.setInt(3, office_id);
             int result = statement.executeUpdate();
             return result > 0;
         }
         catch (SQLException e) {
-            throw new DataAccessException("Failed to create descriptor", e);
-        }
+            throw new DataAccessException("Failed to add barcode", e);
+        } 
     }
 }
