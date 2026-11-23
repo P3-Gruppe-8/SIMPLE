@@ -44,6 +44,10 @@ export function addBarcodeListener(onScan) {
     window.addEventListener("keydown", (e) => {
         // a scan into a text field belongs to that field, unless there is a claim
         const inTextField = isTextField(e.target);
+        if (!inTextField && e.key.length === 1 && e.key !== " ") {
+            // typed characters switch the browser to keyboard mode, which draws a focus ring on the last tapped button
+            e.target.blur();
+        }
         if (inTextField && claims.length === 0) {
             buffer = "";
             return;
