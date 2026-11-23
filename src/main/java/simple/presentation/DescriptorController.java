@@ -19,7 +19,8 @@ public class DescriptorController {
     private static final Map<String, DescriptorDetails> DUMMY_DESCRIPTORS = Map.of(
             "5056784902424", new DescriptorDetails("5056784902424", "Monster Rio Punch", 24),
             "5060337502290", new DescriptorDetails("5060337502290", "Monster Ultra White", 12),
-            "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15));
+            "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15),
+            "5061013940870", new DescriptorDetails("5061013940870", "Monster Original Zero Sugar", 1000));
 
     public void getOne(Context ctx) {
         var barcode = ctx.pathParam("barcode");
