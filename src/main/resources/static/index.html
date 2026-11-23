@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NOWACO SIMPLE</title>
         <link rel="stylesheet" href="styles.css" />
@@ -35,28 +36,173 @@
                 <!-- The default supply mode view -->
                 <div class="view button-col" id="defaultView">
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised default-option">
+                        <button
+                            command="show-modal"
+                            commandfor="write-off-dialog"
+                            class="menu-button raised default-option"
+                        >
                             <img
                                 src="images/share-from-square-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Write Off</p>
+                            <span class="button-label">Write Off</span>
                         </button>
+                        <dialog id="write-off-dialog">
+                            <form id="write-off-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Write Off</h2>
+                                    <p>Remove items from stock.</p>
+                                    <div class="form-field">
+                                        <label for="write-off-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="write-off-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div id="write-off-receipt" class="receipt">
+                                        <table>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="write-off-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Write Off</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="restock-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/box-open-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Restock</p>
+                            <span class="button-label">Restock</span>
                         </button>
+                        <dialog id="restock-dialog">
+                            <form id="restock-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Restock</h2>
+                                    <p>Put items back into stock.</p>
+                                    <div class="form-field">
+                                        <label for="restock-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="restock-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="restock-shelf">Shelf</label>
+                                        <select
+                                            id="restock-shelf"
+                                            class="shelf-select"
+                                        >
+                                            <option value="" disabled selected>
+                                                Loading shelves...
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div id="restock-receipt" class="receipt">
+                                        <table>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="restock-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Restock</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-one-fifth">
                         <button
-                            onclick="showView('detailedSupply')"
+                            data-view="detailedSupply"
                             id="moreOptions"
                             class="menu-button raised invisible"
                         >
@@ -64,16 +210,16 @@
                                 src="images/bars-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">More options</p>
+                            <span class="button-label">More options</span>
                         </button>
                         <button id="scanIdPrompt" class="menu-button">
                             <img
                                 src="images/id-card-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label detailed">
+                            <span class="button-label detailed">
                                 Scan ID for more options...
-                            </p>
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -225,20 +371,83 @@
                 <!-- After pressing "more options" in supply mode -->
                 <div class="view button-col" id="detailedSupply">
                     <div class="button-row height-two-fifths">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="register-consumable-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/plus-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Register Item Type</p>
+                            <span class="button-label">Register Item Type</span>
                         </button>
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="deregister-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/minus-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Delete Item Type</p>
+                            <span class="button-label">Delete Item Type</span>
                         </button>
+                        <dialog id="deregister-dialog">
+                            <form id="deregister-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Delete Item Type</h2>
+                                    <p>Remove an item type from the system.</p>
+                                    <div class="form-field">
+                                        <label for="deregister-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="deregister-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="deregister-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-two-fifths">
@@ -247,25 +456,180 @@
                                 src="images/list-check-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Count Inventory</p>
+                            <span class="button-label">Count Inventory</span>
                         </button>
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="locations-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/right-left-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Edit Item Type Locations</p>
+                            <span class="button-label"
+                                >Edit Item Type Locations</span
+                            >
                         </button>
+                        <dialog id="locations-dialog">
+                            <form id="locations-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Edit Item Type Locations</h2>
+                                    <p>
+                                        Add or remove a shelf where an item type
+                                        can be stored.
+                                    </p>
+                                    <div class="form-field">
+                                        <label for="locations-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div class="barcode-field">
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="locations-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="locations-shelf"
+                                            >Shelf</label
+                                        >
+                                        <select
+                                            id="locations-shelf"
+                                            class="shelf-select"
+                                            required
+                                        >
+                                            <option value="" disabled selected>
+                                                Loading shelves...
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="locations-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        value="remove"
+                                        class="green raised"
+                                    >
+                                        <span>Remove</span>
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        value="add"
+                                        class="green raised"
+                                    >
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
 
                     <div class="button-row height-one-fifth">
-                        <button class="menu-button raised">
+                        <button
+                            command="show-modal"
+                            commandfor="item-details-dialog"
+                            class="menu-button raised"
+                        >
                             <img
                                 src="images/circle-info-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Item Details</p>
+                            <span class="button-label">Item Details</span>
                         </button>
+                        <dialog id="item-details-dialog">
+                            <form id="item-details-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Item Details</h2>
+                                    <p>Look up an item type.</p>
+                                    <div class="form-field">
+                                        <label for="item-details-item-id"
+                                            >Item ID</label
+                                        >
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="item-details-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        id="item-details-result"
+                                        class="item-details-result invisible"
+                                    ></div>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="item-details-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Close</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Show</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
                     </div>
                 </div>
             </div>
@@ -281,34 +645,28 @@
                 <div class="view button-col" id="loanModeHomeScreen">
                     <div class="button-row height-two-fifths">
                         <button class="menu-button raised default-option">
-                            <img
-                                src="images/share-from-square-solid-full.svg"
-                                class="button-icon"
-                            />
-                            <p class="button-label">New Loan</p>
+                            <img src="images/lend.svg" class="button-icon" />
+                            <span class="button-label">New Loan</span>
                         </button>
                     </div>
 
                     <div class="button-row height-two-fifths">
                         <button class="menu-button raised default-option">
-                            <img
-                                src="images/left-long-solid-full.svg"
-                                class="button-icon"
-                            />
-                            <p class="button-label">Return Item</p>
+                            <img src="images/return.svg" class="button-icon" />
+                            <span class="button-label">Return Item</span>
                         </button>
                     </div>
 
                     <div class="button-row height-one-fifth">
                         <button
-                            onclick="showView('detailedLoan')"
+                            data-view="detailedLoan"
                             class="menu-button raised"
                         >
                             <img
                                 src="images/bars-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">More Options</p>
+                            <span class="button-label">More Options</span>
                         </button>
                     </div>
                 </div>
@@ -321,14 +679,14 @@
                                 src="images/plus-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Add New Item</p>
+                            <span class="button-label">Add New Item</span>
                         </button>
                         <button class="menu-button raised">
                             <img
-                                src="images/calendar-plus-solid-full.svg"
+                                src="images/calendar-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Extend Loan</p>
+                            <span class="button-label">Extend Loan</span>
                         </button>
                     </div>
 
@@ -338,14 +696,14 @@
                                 src="images/list-check-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Count Inventory</p>
+                            <span class="button-label">Count Inventory</span>
                         </button>
                         <button class="menu-button raised">
                             <img
                                 src="images/minus-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Delete Item</p>
+                            <span class="button-label">Delete Item</span>
                         </button>
                     </div>
 
@@ -355,43 +713,179 @@
                                 src="images/right-left-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Move Item</p>
+                            <span class="button-label">Move Item</span>
                         </button>
                         <button class="menu-button raised">
                             <img
                                 src="images/circle-info-solid-full.svg"
                                 class="button-icon"
                             />
-                            <p class="button-label">Item Details</p>
+                            <span class="button-label">Item Details</span>
                         </button>
                     </div>
                 </div>
             </div>
         </main>
         <footer class="bottombar">
-            <button
-                onclick="previousView()"
-                class="back raised"
-                id="backButton"
-            >
+            <button class="red back raised" id="backButton">
                 <img src="images/back-arrow.png" class="button-icon" />
             </button>
-            <button
-                onclick="logOut()"
-                class="back raised invisible"
-                id="logoutButton"
-            >
-                <p>Log out</p>
+            <button class="red back raised invisible" id="logoutButton">
+                <span>Log out</span>
             </button>
-            <button
-                class="alerts raised"
-                id="alertButton"
-                onclick="showAlertView('alertView')"
-            >
+            <button class="alerts raised" id="alertButton">
                 <img src="images/bell-solid-full.svg" class="button-icon" />
-                <p class="button-label">Alerts</p>
+                <span class="button-label">Alerts</span>
             </button>
         </footer>
-        <script src="script.js"></script>
+        <!-- top level, not inside its view, so the receipt can open it too (see registerUnknown in receipt.js) -->
+        <dialog id="register-consumable-dialog">
+            <form id="register-consumable-dialog-form" method="dialog">
+                <div class="dialog-body">
+                    <h2>Register Item Type</h2>
+                    <p>Register a new item type.</p>
+                    <div class="form-field">
+                        <label for="item-type-name">Item Type Name</label>
+                        <input type="text" id="item-type-name" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="item-id">Item ID</label>
+                        <div class="barcode-field">
+                            <div class="barcode-buttons">
+                                <button
+                                    type="button"
+                                    class="barcode-scan raised"
+                                >
+                                    <span class="barcode-scan-label"
+                                        >Scan barcode</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="barcode-manual raised"
+                                    title="Manual entry"
+                                    aria-label="Manual entry"
+                                >
+                                    <img
+                                        src="images/keyboard-solid-full.svg"
+                                        class="barcode-manual-icon"
+                                    />
+                                </button>
+                            </div>
+                            <input type="text" id="item-id" class="invisible" />
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="item-type-shelf">Shelf</label>
+                        <select
+                            id="item-type-shelf"
+                            class="shelf-select"
+                            required
+                        >
+                            <option value="" disabled selected>
+                                Loading shelves...
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <button
+                        type="button"
+                        commandfor="register-consumable-dialog"
+                        command="close"
+                        class="red raised"
+                    >
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="green raised">
+                        <span>Apply</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- shown when a receipt scan isn't a known item type, see askAboutUnknown in receipt.js -->
+        <dialog id="unknown-barcode-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Unknown Barcode</h2>
+                    <p>
+                        No item type has the barcode
+                        <span class="unknown-barcode"></span>.
+                    </p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="undo" class="red raised">
+                        <span>Undo Scan</span>
+                    </button>
+                    <button type="submit" value="register" class="green raised">
+                        <span>Register Item Type</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- registering needs a login, see askForStaffId in receipt.js -->
+        <dialog id="staff-id-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Log In</h2>
+                    <p class="staff-id-message"></p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="cancel" class="red raised">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- shared by write off and restock, filled in by showReceiptResults -->
+        <dialog id="receipt-results-dialog">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2></h2>
+                    <p>Results:</p>
+                    <div class="receipt">
+                        <table>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" class="green raised">
+                        <span>Done</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <div id="toasts" class="toasts"></div>
+        <template id="toast-template">
+            <button type="button" class="toast raised">
+                <img src="images/check-solid-full.svg" class="toast-icon" />
+                <span class="toast-message"></span>
+            </button>
+        </template>
+        <script type="module" src="js/script.js"></script>
+        <!-- TODO: dev helper, remove before handover. -->
+        <script>
+            const IT = "victor nummer 2";
+            const IT2 = "leon da boss";
+            const CO = "consumable 42";
+            const CO2 = "consumable 67";
+            const LO = "loanable 01";
+            const LO2 = "loanable 02";
+            const SH = "nowaco shelf a1";
+
+            // types the code and Enter as fast keystrokes, like a scanner does
+            function s(code) {
+                const target = document.activeElement ?? document.body;
+                for (const key of code + "\n") {
+                    const event = new KeyboardEvent("keydown", {
+                        key: key === "\n" ? "Enter" : key,
+                        bubbles: true,
+                        cancelable: true,
+                    });
+                    target.dispatchEvent(event);
+                }
+            }
+        </script>
     </body>
 </html>

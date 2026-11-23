@@ -41,8 +41,8 @@ target/
 .idea/
 *.iml
 
-# Environment
-.env
-
 # macOS
 .DS_Store
+
+# Environment (.env is being used)
+# .env
