@@ -92,4 +92,25 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             throw new DataAccessException("Failed to delete descriptor", e);
         }
     }
+
+    public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
+
+        Databaseconnection db = new Databaseconnection();
+        String sql = """
+                INSERT INTO descriptors (descriptor_name, is_loanable, quantity, info_field, office_id)
+                VALUES (?, ?, 0, ?, ?)
+                """;
+        try (Connection conn = db.getDbConnection();
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
+            statement.setString(1, descriptor_name);
+            statement.setBoolean(2, is_loanable);
+            statement.setString(3, info_field);
+            statement.setInt(4, office_id);
+            int result = statement.executeUpdate();
+            return result > 0;
+        }
+        catch (SQLException e) {
+            throw new DataAccessException("Failed to create descriptor", e);
+        }
+    }
 }

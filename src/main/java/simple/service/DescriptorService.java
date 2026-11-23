@@ -15,22 +15,26 @@ public class DescriptorService {
 
     public void deregister(String barcode, int office_id) {
         JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        Optional<Descriptor> optional = jdbc.findByBarcode(barcode, office_id);
+        Optional<Descriptor> opt_descriptor = jdbc.findByBarcode(barcode, office_id);
 
-        if (optional.isPresent()) {
-            Descriptor descriptor = optional.get();
+        if (opt_descriptor.isPresent()) {
+            Descriptor descriptor = opt_descriptor.get();
             boolean result = jdbc.softDelete(descriptor.id(), descriptor.office_id());
 
             if (!result) {
                 throw new databaseUpdateException("Failed to delete descriptor: 0 rows affected");
             }
         } else {
-            throw new databaseUpdateException("Failed to delete descriptor: Empty Optional");
+            throw new databaseUpdateException("Failed to delete descriptor: Unable to find descriptor via barcode");
         }
     }
 
-    public void register(String barcode) {
-
+    public void register(String descriptor_name, boolean is_loanable, String info_field, int office_id) {
+        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
+        boolean result = jdbc.createNew(descriptor_name, is_loanable, info_field, office_id);
+        if (!result) {
+            throw new databaseUpdateException("Failed to create descriptor: 0 rows affected");
+        }
     }
 
     public void restock(String barcode, int amount) {
