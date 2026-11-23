@@ -1,10 +1,7 @@
 package simple;
 
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.JdbcInventory;
-import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
-import simple.service.InventoryService;
 
 public class Main {
     public static void main(String[] args) {
