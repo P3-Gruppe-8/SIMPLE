@@ -3,6 +3,7 @@ package simple.presentation;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.UnauthorizedResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +32,12 @@ public class DescriptorController {
             "5060337502290", new DescriptorDetails("5060337502290", "Monster Ultra White", 12),
             "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15),
             "5061013940870", new DescriptorDetails("5061013940870", "Monster Original Zero Sugar", 1000));
+
+    // TODO: replace when database is connected
+    private static final Map<String, List<String>> DUMMY_POSSIBLE_SHELVES = Map.of(
+            "5056784902424", List.of("a1", "a2", "Kælderrum ved serverrummet, øverste hylde"),
+            "5060337502290", List.of("b1"),
+            "5741000142899", List.of("c1", "c2", "c3"));
 
     // the item type's name for messages, or the barcode if it isn't known
     private static String nameOf(String barcode) {
@@ -66,16 +73,36 @@ public class DescriptorController {
         }
     }
 
+    public void getPossibleShelves(Context ctx) {
+        var barcode = ctx.pathParam("barcode");
+        // TODO: descriptorService.getPossibleShelves(barcode); the service finds the
+        // item type from the barcode
+        if (!DUMMY_DESCRIPTORS.containsKey(barcode)) {
+            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
+        } else {
+            ctx.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
+        }
+    }
+
+    // replaces the whole possible shelves list
+    public void setPossibleShelves(Context ctx) {
+        requireStaffId(ctx);
+        var barcode = ctx.pathParam("barcode");
+        var shelves = ctx.bodyAsClass(String[].class);
+        // TODO: descriptorService.setPossibleShelves(barcode, shelves), in one database
+        // transaction
+        if (!DUMMY_DESCRIPTORS.containsKey(barcode)) {
+            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
+        } else {
+            ctx.result("Updated the possible shelves of " + nameOf(barcode));
+        }
+    }
+
+    // adds one shelf to a descriptor's possible shelves list
     public void addShelf(Context ctx) {
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
+        // TODO: descriptorService.addShelf(barcode, shelf)
         ctx.result("Added shelf " + shelf + " to " + nameOf(barcode));
-    }
-
-    public void removeShelf(Context ctx) {
-        requireStaffId(ctx);
-        var barcode = ctx.pathParam("barcode");
-        var shelf = ctx.pathParam("shelf");
-        ctx.result("Removed shelf " + shelf + " from " + nameOf(barcode));
     }
 }

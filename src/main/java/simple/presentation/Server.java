@@ -45,9 +45,12 @@ public class Server {
                         get(descriptorController::getOne);
                         patch(descriptorController::update);
                         delete(descriptorController::delete);
-                        path("/shelves/{shelf}", () -> {
-                            put(descriptorController::addShelf);
-                            delete(descriptorController::removeShelf);
+                        path("/shelves", () -> {
+                            get(descriptorController::getPossibleShelves);
+                            put(descriptorController::setPossibleShelves);
+                            path("/{shelf}", () -> {
+                                put(descriptorController::addShelf);
+                            });
                         });
                     });
                 });
