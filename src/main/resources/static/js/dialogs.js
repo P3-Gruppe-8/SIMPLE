@@ -105,44 +105,39 @@ async function lookUpItem(barcode, result) {
 }
 
 function setUpDeregisterDialog() {
+    const input = document.getElementById("deregister-item-id");
     let itemToDelete = null; // the item type shown in the delete dialog
     const deleteButton = document.querySelector(
         '#deregister-dialog-form button[type="submit"]',
     );
 
-    // looks the barcode up, and only allows Delete if it was found
-    async function lookUpItemToDelete(barcode) {
-        itemToDelete = await lookUpItem(
+    // Delete is only allowed for an item type that was looked up and found
+    function forgetItem() {
+        itemToDelete = null;
+        deleteButton.disabled = true;
+    }
+    forgetItem();
+
+    // every scan (or pause in typing) looks the item up
+    input.closest(".barcode-field").addEventListener("scan", async () => {
+        const barcode = input.value;
+        forgetItem();
+        const item = await lookUpItem(
             barcode,
             document.getElementById("deregister-item-details"),
         );
-        deleteButton.disabled = itemToDelete === null;
-    }
+        if (!item || input.value !== barcode) return; // not found, or another scan came in meanwhile
+        itemToDelete = item;
+        deleteButton.disabled = false;
+    });
 
-    // every scan looks the item up straight away
-    document
-        .getElementById("deregister-item-id")
-        .closest(".barcode-field")
-        .addEventListener("scan", async () => {
-            const barcode = document.getElementById("deregister-item-id").value;
-            await lookUpItemToDelete(barcode);
-        });
-
-    // a typed barcode hasn't been looked up yet, so Delete can look it up
-    document
-        .getElementById("deregister-item-id")
-        .addEventListener("input", () => (deleteButton.disabled = false));
+    // a changed barcode needs a new lookup before it can be deleted
+    input.addEventListener("input", forgetItem);
 
     document
         .getElementById("deregister-dialog-form")
-        .addEventListener("submit", async (event) => {
+        .addEventListener("submit", (event) => {
             event.preventDefault(); // only close once the deletion is confirmed
-            const barcode = document.getElementById("deregister-item-id").value;
-            if (!barcode) return;
-            // a typed barcode may not have been looked up yet
-            if (itemToDelete?.barcode !== barcode) {
-                await lookUpItemToDelete(barcode);
-            }
             if (!itemToDelete) return;
 
             const item = itemToDelete;
@@ -175,8 +170,7 @@ function setUpDeregisterDialog() {
     document
         .getElementById("deregister-dialog")
         .addEventListener("close", () => {
-            itemToDelete = null;
-            deleteButton.disabled = false;
+            forgetItem();
             hide(document.getElementById("deregister-item-details"));
         });
 }
