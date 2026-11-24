@@ -66,7 +66,7 @@ CREATE TABLE descriptors (
   -- Quantity is only saved for consumables, but is calculated for loanables when needed.
   quantity INTEGER CONSTRAINT positive_quantity CHECK (quantity >= 0),
   -- For relevant info about the descriptor, eg. model name
-  info_field VARCHAR(500),
+  descriptor_info_field VARCHAR(500),
   -- For loanables, a template can be stored for unique fields, eg. serial number.
   info_template VARCHAR(500),
   -- Soft delete, null if not deleted
@@ -104,7 +104,7 @@ CREATE TABLE loanables (
   -- "copy number" eg. laptop"3"
   unit_number INTEGER NOT NULL CONSTRAINT positive_unit_number CHECK (unit_number >= 0),
   -- The template from descriptor is filled out when adding loanables
-  info_field VARCHAR(800),
+  loanable_info_field VARCHAR(800),
   -- Soft delete, null if not deleted
   loanable_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE,

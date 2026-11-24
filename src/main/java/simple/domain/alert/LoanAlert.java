@@ -1,3 +1,12 @@
 package simple.domain.alert;
 
-public class LoanAlert extends Alert {}
+import simple.domain.transactionmanagement.LoanAgreement;
+
+public record LoanAlert(
+                int id,
+                Urgency urgency,
+                boolean active,
+                boolean muted,
+                int minQuantity,
+                LoanAgreement loanAgreement) {
+}
