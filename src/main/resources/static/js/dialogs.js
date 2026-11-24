@@ -188,6 +188,9 @@ function setUpLocationsDialog() {
     const shelfList = document.getElementById("locations-shelves");
     const addShelf = document.getElementById("locations-add-shelf");
     const addShelfField = addShelf.closest(".form-field");
+    const saveButton = document.querySelector(
+        '#locations-dialog-form button[type="submit"]',
+    );
     let shownBarcode = null; // the item type whose shelves are shown
 
     // every scan shows that item type's shelves, replacing any unsaved changes
@@ -210,6 +213,7 @@ function setUpLocationsDialog() {
         shownBarcode = barcode;
         show(shelfList);
         show(addShelfField);
+        saveButton.disabled = false;
     });
 
     // picking or scanning a shelf adds it to the top of the list
@@ -249,7 +253,9 @@ function setUpLocationsDialog() {
         shelfList.replaceChildren();
         hide(shelfList);
         hide(addShelfField);
+        saveButton.disabled = true; // nothing to save until an item type's shelves are shown
     }
+    hideShelves();
 
     document
         .getElementById("locations-dialog-form")
