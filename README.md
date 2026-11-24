@@ -35,3 +35,8 @@ Test:
 ```powershell
 .\mvnw.cmd test
 ```
+
+## Troubleshooting
+
+Scanning does nothing: browser extensions with keyboard shortcuts (e.g. Vimium) can stop the
+scanner's keystrokes from reaching the interface. Disable them for the app's site, or test in an incognito window.
