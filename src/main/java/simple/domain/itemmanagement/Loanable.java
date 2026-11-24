@@ -1,10 +1,12 @@
 package simple.domain.itemmanagement;
 
+import java.time.OffsetDateTime;
+
 public record Loanable(
         int id,
-        int descriptorId,
-        String descriptorName,
         String barcode,
         int unitNumber,
         String infoField,
+        OffsetDateTime deleted,
+        Descriptor descriptor,
         Integer shelfId) {}
