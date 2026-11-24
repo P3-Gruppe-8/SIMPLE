@@ -89,7 +89,11 @@
                                             />
                                         </div>
                                     </div>
-                                    <div id="write-off-receipt" class="receipt">
+                                    <div
+                                        id="write-off-receipt"
+                                        class="receipt"
+                                        data-no-register
+                                    >
                                         <table>
                                             <tbody></tbody>
                                         </table>
@@ -678,7 +682,7 @@
                 </div>
             </form>
         </dialog>
-        <!-- shown when a receipt scan isn't a known item type, see askAboutUnknown in receipt.js -->
+        <!-- shown when a receipt scan isn't a known item type, filled in by askAboutUnknown in receipt.js -->
         <dialog id="unknown-barcode-dialog" class="msgbox">
             <form method="dialog">
                 <div class="dialog-body">
