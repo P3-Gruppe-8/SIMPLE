@@ -1,8 +1,13 @@
 package simple.service;
 
+import simple.dataaccess.jdbc.JdbcDescriptorRepository;
+
 public class DescriptorService {
 
-    public void writeOff(String barcode, int change) {}
+    public void writeOff(String barcode, int change) {
+
+        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
+    }
 
     public void deregister(String barcode) {}
 
