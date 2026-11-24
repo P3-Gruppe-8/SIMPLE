@@ -67,7 +67,6 @@ public class DescriptorController {
     }
 
     public void addShelf(Context ctx) {
-        requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
         ctx.result("Added shelf " + shelf + " to " + nameOf(barcode));
