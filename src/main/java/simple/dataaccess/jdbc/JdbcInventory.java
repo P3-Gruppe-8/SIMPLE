@@ -3,7 +3,8 @@ package simple.dataaccess.jdbc;
 import java.sql.*;
 import java.util.ArrayList;
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.descriptorMap;
+import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
+import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Inventory;
@@ -18,64 +19,42 @@ public class JdbcInventory implements InventoryRepository {
         ArrayList<Descriptor> consumables = new ArrayList<Descriptor>();
         ArrayList<Loanable> loanables = new ArrayList<Loanable>();
 
-        String consumablesSql = """
-                SELECT *
-                FROM descriptors
-                WHERE office_id = ?
-                  AND is_loanable = false
-                  AND descriptor_deleted IS NULL
-                ORDER BY descriptor_name, descriptor_id
-                """;
-
-        String loanablesSql = """
-                SELECT loanables.loanable_id,
-                       loanables.descriptor_id,
-                       descriptors.descriptor_name,
+        // Left join makes a cartesian product between
+        String inventorySql = """
+                SELECT descriptors.*,
+                       loanables.loanable_id,
                        loanables.loanable_barcode,
                        loanables.unit_number,
-                       loanables.info_field,
+                       loanables.info_field AS loanable_info_field,
+                       loanables.loanable_deleted,
                        loanables.shelf_id
-                FROM loanables
-                JOIN descriptors ON descriptors.descriptor_id = loanables.descriptor_id
+                FROM descriptors
+                LEFT JOIN loanables
+                  ON loanables.descriptor_id = descriptors.descriptor_id
+                 AND descriptors.is_loanable = true
+                 AND loanables.loanable_deleted IS NULL
                 WHERE descriptors.office_id = ?
-                  AND descriptors.is_loanable = true
-                  AND loanables.loanable_deleted IS NULL
                   AND descriptors.descriptor_deleted IS NULL
                 ORDER BY descriptors.descriptor_name, descriptors.descriptor_id, loanables.unit_number
                 """;
 
         Databaseconnection databaseConnection = new Databaseconnection();
 
-        try (Connection connection = databaseConnection.getDbConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(consumablesSql)) {
-                statement.setInt(1, officeId);
+        try (Connection connection = databaseConnection.getDbConnection();
+                PreparedStatement statement = connection.prepareStatement(inventorySql)) {
+            statement.setInt(1, officeId);
 
-                try (ResultSet result = statement.executeQuery()) {
-                    while (result.next()) {
-                        consumables.add(descriptorMap.mapRow(result));
-                    }
-                }
-            }
-
-            try (PreparedStatement statement = connection.prepareStatement(loanablesSql)) {
-                statement.setInt(1, officeId);
-
-                try (ResultSet result = statement.executeQuery()) {
-                    while (result.next()) {
-                        loanables.add(new Loanable(
-                                result.getInt("loanable_id"),
-                                result.getInt("descriptor_id"),
-                                result.getString("descriptor_name"),
-                                result.getString("loanable_barcode"),
-                                result.getInt("unit_number"),
-                                result.getString("info_field"),
-                                // For at unterstøtte shelfId == NULL:
-                                result.getObject("shelf_id", Integer.class)));
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    if (!result.getBoolean("is_loanable")) {
+                        consumables.add(DescriptorMap.mapRow(result));
+                    } else if (result.getObject("loanable_id", Integer.class) != null) {
+                        loanables.add(LoanableMap.mapRow(result));
                     }
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to load inventory for office " + officeId, e);
+            throw new DataAccessException("Database error: Failed to load inventory for office " + officeId, e);
         }
 
         return new Inventory(consumables, loanables);

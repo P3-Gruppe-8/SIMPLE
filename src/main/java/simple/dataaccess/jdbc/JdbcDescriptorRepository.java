@@ -3,7 +3,7 @@ package simple.dataaccess.jdbc;
 import java.sql.*;
 import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.descriptorMap;
+import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.repository.DescriptorRepository;
@@ -34,10 +34,10 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             statement.setInt(3, officeId);
 
             try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
+                return result.next() ? Optional.of(DescriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to change descriptor quantity", e);
+            throw new DataAccessException("Database error: Failed to change descriptor quantity", e);
         }
     }
 
@@ -59,10 +59,11 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery(); ) {
-                return result.next() ? Optional.of(descriptorMap.mapRow(result)) : Optional.empty();
+                return result.next() ? Optional.of(DescriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to find descriptor by barcode: Unresponsive database", e);
+            throw new DataAccessException(
+                    "Database error: Failed to find descriptor by barcode: Unresponsive database", e);
         }
     }
 }

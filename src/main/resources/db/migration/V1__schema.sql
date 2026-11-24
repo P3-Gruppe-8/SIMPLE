@@ -77,6 +77,14 @@ CREATE TABLE descriptors (
   UNIQUE (descriptor_id, office_id)
 );
 
+-- The descriptor name has to be unique within its office,
+-- for descriptors which are not soft deleted.
+CREATE UNIQUE INDEX unique_active_descriptor_name
+ON descriptors (office_id, lower(descriptor_name))
+WHERE descriptor_deleted IS NULL;
+
+
+-- The barcodes associated with each descriptor
 CREATE TABLE descriptor_barcodes (
   barcode_id SERIAL PRIMARY KEY,
   barcode_key VARCHAR(50) NOT NULL,
