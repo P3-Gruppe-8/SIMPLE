@@ -373,14 +373,21 @@ dialog.msgbox .dialog-footer button {
     height: 4rem;
 }
 
+/* sized by width, not the short button's height; keep msgbox labels short (one word) so they fit */
+dialog.msgbox .dialog-footer span {
+    font-size: clamp(1rem, 18cqw, 1.75rem);
+}
+
 dialog.msgbox h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 0;
 }
 
 dialog.msgbox p {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     margin: 0;
+    color: var(--black);
 }
 
 .unknown-barcode {
@@ -510,6 +517,7 @@ dialog[open] {
 
 dialog h2 {
     font-size: clamp(1.75rem, 12cqi, 3.5rem);
+    font-weight: 800;
     text-align: center;
     margin-bottom: 1.2rem;
     margin-top: 1rem;
