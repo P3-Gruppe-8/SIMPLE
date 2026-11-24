@@ -21,6 +21,7 @@ import {
 const consumableIds = [
     "5056784902424",
     "5060337502290",
+    "5741000142899",
     "consumable 67",
     "consumable 42",
 ]; // monster rio punch, hvid monner.........
