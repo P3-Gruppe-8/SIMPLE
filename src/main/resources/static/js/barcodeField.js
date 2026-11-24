@@ -1,6 +1,9 @@
 // A form field whose value comes from either a barcode scan or manual typing.
 import { claimNextScan } from "./scanning.js";
 
+// with keep scanning, a typed barcode is looked up once typing pauses this long
+const TYPING_PAUSE_MS = 1000;
+
 export function setUpBarcodeField(field) {
     // grab all the buttons the field should have
     const buttons = field.querySelector(".barcode-buttons");
@@ -14,6 +17,9 @@ export function setUpBarcodeField(field) {
 
     // the value of this variable will be a function which, when called, removes the claim from the claims list.
     let cancelCapture = null;
+
+    // the pending lookup of a typed barcode, see TYPING_PAUSE_MS
+    let typingTimer = null;
 
     // begin waiting for any barcode to be entered
     function startAwaiting() {
@@ -54,6 +60,7 @@ export function setUpBarcodeField(field) {
     // gets called when the dialog the barcode field is potentially in, gets opened/closed.
     // that way, pressing cancel on a dialog does what you expect.
     function reset() {
+        clearTimeout(typingTimer);
         stopAwaiting();
         input.value = "";
         input.classList.add("invisible");
@@ -62,11 +69,21 @@ export function setUpBarcodeField(field) {
 
     scanButton.addEventListener("click", startAwaiting);
 
-    // with keep scanning, a typed barcode counts as a scan when Enter is pressed
+    // with keep scanning, a typed barcode counts as a scan when Enter is pressed or typing pauses
     input.addEventListener("keydown", (e) => {
         if (keepScanning && e.key === "Enter" && input.value) {
+            clearTimeout(typingTimer); // already looked up, don't do it twice
             field.dispatchEvent(new Event("scan"));
         }
+    });
+    input.addEventListener("input", () => {
+        if (!keepScanning) return;
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+            if (input.value) {
+                field.dispatchEvent(new Event("scan"));
+            }
+        }, TYPING_PAUSE_MS);
     });
 
     // in case the scanner isn't working we want to be able to do manual entry
