@@ -684,3 +684,12 @@ dialog form {
     margin: 0;
     overflow-wrap: anywhere;
 }
+
+.toast-count {
+    flex-shrink: 0;
+    font-weight: 800;
+}
+
+.toast-count:empty {
+    display: none;
+}
