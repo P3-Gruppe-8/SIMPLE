@@ -9,5 +9,4 @@ public record Loanable(
         String infoField,
         OffsetDateTime deleted,
         Descriptor descriptor,
-        Integer shelfId) {
-}
+        Integer shelfId) {}

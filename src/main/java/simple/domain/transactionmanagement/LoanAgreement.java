@@ -1,13 +1,14 @@
 package simple.domain.transactionmanagement;
 
 import java.time.OffsetDateTime;
+import simple.domain.itemmanagement.Loanable;
 
 public record LoanAgreement(
         int id,
-        OffsetDateTime loan_time,
-        OffsetDateTime agreed_return_date,
+        OffsetDateTime loanTime,
+        OffsetDateTime agreedReturnDate,
         String borrower,
         String note,
-        OffsetDateTime actual_return_date,
-        int loanable_id) {
+        OffsetDateTime actualReturnDate,
+        Loanable loanable) {
 }
