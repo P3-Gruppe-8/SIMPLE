@@ -268,7 +268,10 @@
                                         <label for="deregister-item-id"
                                             >Barcode</label
                                         >
-                                        <div class="barcode-field">
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
                                             <div class="barcode-buttons">
                                                 <button
                                                     type="button"
@@ -298,6 +301,10 @@
                                             />
                                         </div>
                                     </div>
+                                    <div
+                                        id="deregister-item-details"
+                                        class="item-details-result invisible"
+                                    ></div>
                                 </div>
                                 <div class="dialog-footer">
                                     <button
@@ -702,6 +709,23 @@
                     </button>
                     <button type="submit" value="register" class="green raised">
                         <span>Register</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- asks before deleting, see the deregister dialog in script.js -->
+        <dialog id="deregister-confirm-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Are You Sure?</h2>
+                    <p class="deregister-confirm-message"></p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="cancel" class="red raised">
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" value="delete" class="green raised">
+                        <span>Delete</span>
                     </button>
                 </div>
             </form>
