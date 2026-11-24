@@ -46,16 +46,19 @@ export async function changeStock(barcode, change) {
     return await send("PATCH", descriptorPath(barcode), { change: change });
 }
 
+// the item type's possible shelves, as a list of shelf names
+export async function getItemTypeLocations(barcode) {
+    return JSON.parse(await send("GET", descriptorPath(barcode) + "/shelves"));
+}
+
+// replaces the item type's possible shelves with `shelves`, a list of shelf names
+export async function setItemTypeLocations(barcode, shelves) {
+    return await send("PUT", descriptorPath(barcode) + "/shelves", shelves);
+}
+
 export async function addItemTypeLocation(barcode, shelf) {
     return await send(
         "PUT",
-        descriptorPath(barcode) + "/shelves/" + encodeURIComponent(shelf),
-    );
-}
-
-export async function removeItemTypeLocation(barcode, shelf) {
-    return await send(
-        "DELETE",
         descriptorPath(barcode) + "/shelves/" + encodeURIComponent(shelf),
     );
 }

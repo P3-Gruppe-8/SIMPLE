@@ -4,8 +4,9 @@ import {
     changeStock,
     deregisterItemType,
     getItemDetails,
+    getItemTypeLocations,
     registerItemType,
-    removeItemTypeLocation,
+    setItemTypeLocations,
 } from "./api.js";
 import { hide, show } from "./navigation.js";
 import { showToast } from "./toast.js";
@@ -171,30 +172,99 @@ function setUpDeregisterDialog() {
         });
 
     // form reset doesn't clear the looked-up item, so do it when the dialog closes
-    document.getElementById("deregister-dialog").addEventListener("close", () => {
-        itemToDelete = null;
-        deleteButton.disabled = false;
-        hide(document.getElementById("deregister-item-details"));
-    });
+    document
+        .getElementById("deregister-dialog")
+        .addEventListener("close", () => {
+            itemToDelete = null;
+            deleteButton.disabled = false;
+            hide(document.getElementById("deregister-item-details"));
+        });
 }
 
 function setUpLocationsDialog() {
+    const dialog = document.getElementById("locations-dialog");
+    const input = document.getElementById("locations-item-id");
+    const details = document.getElementById("locations-item-details");
+    const shelfList = document.getElementById("locations-shelves");
+    const addShelf = document.getElementById("locations-add-shelf");
+    const addShelfField = addShelf.closest(".form-field");
+    let shownBarcode = null; // the item type whose shelves are shown
+
+    // every scan shows that item type's shelves, replacing any unsaved changes
+    input.closest(".barcode-field").addEventListener("scan", async () => {
+        const barcode = input.value;
+        hideShelves();
+        const item = await lookUpItem(barcode, details);
+        if (!item || input.value !== barcode) return; // not found, or another scan came in meanwhile
+        let shelves;
+        try {
+            shelves = await getItemTypeLocations(barcode);
+        } catch (error) {
+            console.error(error);
+            details.textContent = "Couldn't load the shelves";
+            return;
+        }
+        if (input.value !== barcode) return;
+        details.textContent = item.name; // shows the user the name of the item they scanned for confirmation
+        shelfList.replaceChildren(...shelves.map(createShelfRow));
+        shownBarcode = barcode;
+        show(shelfList);
+        show(addShelfField);
+    });
+
+    // picking or scanning a shelf adds it to the top of the list
+    addShelf.addEventListener("change", () => {
+        const shelf = addShelf.value;
+        if (shelf && !shownShelves().includes(shelf)) {
+            shelfList.prepend(createShelfRow(shelf));
+        }
+        addShelf.value = ""; // back to the placeholder, ready for the next one
+    });
+
+    // a row with the shelf's name and a button to remove it
+    function createShelfRow(shelf) {
+        const row = document.createElement("li");
+        row.className = "shelf-row";
+        row.dataset.shelf = shelf;
+        const name = document.createElement("span");
+        name.className = "shelf-row-name";
+        name.textContent = shelf;
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "red raised";
+        const label = document.createElement("span");
+        label.textContent = "Remove";
+        removeButton.append(label);
+        removeButton.addEventListener("click", () => row.remove());
+        row.append(name, removeButton);
+        return row;
+    }
+
+    function shownShelves() {
+        return [...shelfList.children].map((row) => row.dataset.shelf);
+    }
+
+    function hideShelves() {
+        shownBarcode = null;
+        shelfList.replaceChildren();
+        hide(shelfList);
+        hide(addShelfField);
+    }
+
     document
         .getElementById("locations-dialog-form")
-        .addEventListener("submit", (event) => {
-            const barcode = document.getElementById("locations-item-id").value;
-            const shelf = document.getElementById("locations-shelf").value;
-            // the Add and Remove buttons both submit; their value says which was pressed
-            let request;
-            if (event.submitter.value === "add") {
-                request = addItemTypeLocation(barcode, shelf);
-            } else {
-                request = removeItemTypeLocation(barcode, shelf);
-            }
-            request
+        .addEventListener("submit", () => {
+            if (shownBarcode === null) return;
+            setItemTypeLocations(shownBarcode, shownShelves())
                 .then((text) => showToast(text))
                 .catch((error) => console.error(error));
         });
+
+    // form reset doesn't clear the shelves, so do it when the dialog closes
+    dialog.addEventListener("close", () => {
+        hideShelves();
+        hide(details);
+    });
 }
 
 function setUpItemDetailsDialog() {
@@ -202,7 +272,9 @@ function setUpItemDetailsDialog() {
         .getElementById("item-details-dialog-form")
         .addEventListener("submit", (event) => {
             event.preventDefault(); // keep the dialog open to show the details
-            const barcode = document.getElementById("item-details-item-id").value;
+            const barcode = document.getElementById(
+                "item-details-item-id",
+            ).value;
             lookUpItem(barcode, document.getElementById("item-details-result"));
         });
 

@@ -348,15 +348,14 @@
                             <form id="locations-dialog-form" method="dialog">
                                 <div class="dialog-body">
                                     <h2>Edit Item Type Locations</h2>
-                                    <p>
-                                        Add or remove a shelf where an item type
-                                        can be stored.
-                                    </p>
                                     <div class="form-field">
                                         <label for="locations-item-id"
                                             >Barcode</label
                                         >
-                                        <div class="barcode-field">
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
                                             <div class="barcode-buttons">
                                                 <button
                                                     type="button"
@@ -386,20 +385,28 @@
                                             />
                                         </div>
                                     </div>
-                                    <div class="form-field">
-                                        <label for="locations-shelf"
-                                            >Shelf</label
+                                    <div
+                                        id="locations-item-details"
+                                        class="item-details-result invisible"
+                                    ></div>
+                                    <div class="form-field invisible">
+                                        <label for="locations-add-shelf"
+                                            >Add Shelf</label
                                         >
                                         <select
-                                            id="locations-shelf"
+                                            id="locations-add-shelf"
                                             class="shelf-select"
-                                            required
                                         >
                                             <option value="" disabled selected>
                                                 Loading shelves...
                                             </option>
                                         </select>
                                     </div>
+                                    <!-- one row per possible shelf, see setUpLocationsDialog in dialogs.js -->
+                                    <ul
+                                        id="locations-shelves"
+                                        class="shelf-list invisible"
+                                    ></ul>
                                 </div>
                                 <div class="dialog-footer">
                                     <button
@@ -410,19 +417,8 @@
                                     >
                                         <span>Cancel</span>
                                     </button>
-                                    <button
-                                        type="submit"
-                                        value="remove"
-                                        class="green raised"
-                                    >
-                                        <span>Remove</span>
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        value="add"
-                                        class="green raised"
-                                    >
-                                        <span>Add</span>
+                                    <button type="submit" class="green raised">
+                                        <span>Save</span>
                                     </button>
                                 </div>
                             </form>
