@@ -32,6 +32,12 @@ public class DescriptorController {
             "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15),
             "5061013940870", new DescriptorDetails("5061013940870", "Monster Original Zero Sugar", 1000));
 
+    // the item type's name for messages, or the barcode if it isn't known
+    private static String nameOf(String barcode) {
+        var descriptor = DUMMY_DESCRIPTORS.get(barcode);
+        return descriptor == null ? barcode : descriptor.name();
+    }
+
     public void getOne(Context ctx) {
         var barcode = ctx.pathParam("barcode");
         var descriptor = DUMMY_DESCRIPTORS.get(barcode);
@@ -45,16 +51,16 @@ public class DescriptorController {
     public void delete(Context ctx) {
         requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
-        ctx.result("Deleted item type " + barcode);
+        ctx.result("Deleted item type " + nameOf(barcode));
     }
 
     public void update(Context ctx) {
         var barcode = ctx.pathParam("barcode");
         var patch = ctx.bodyAsClass(DescriptorPatch.class);
         if (patch.change() < 0) {
-            ctx.result("Wrote off " + -patch.change() + " " + barcode + "s");
+            ctx.result("Wrote off " + nameOf(barcode));
         } else if (patch.change() > 0) {
-            ctx.result("Restocked " + patch.change() + " " + barcode + "s");
+            ctx.result("Restocked " + nameOf(barcode));
         } else {
             ctx.status(HttpStatus.BAD_REQUEST).result("Nothing to change");
         }
@@ -64,13 +70,13 @@ public class DescriptorController {
         requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
-        ctx.result("Added shelf " + shelf + " to " + barcode);
+        ctx.result("Added shelf " + shelf + " to " + nameOf(barcode));
     }
 
     public void removeShelf(Context ctx) {
         requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
         var shelf = ctx.pathParam("shelf");
-        ctx.result("Removed shelf " + shelf + " from " + barcode);
+        ctx.result("Removed shelf " + shelf + " from " + nameOf(barcode));
     }
 }
