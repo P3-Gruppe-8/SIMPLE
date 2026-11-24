@@ -1,7 +1,6 @@
 package simple.dataaccess.jdbc;
 
 import java.sql.*;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
@@ -59,5 +58,6 @@ public class JdbcInventory implements InventoryRepository {
         }
 
         return new Inventory(consumables, loanables);
-    };
+    }
+    ;
 }
