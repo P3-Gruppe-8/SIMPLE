@@ -1,12 +1,87 @@
 // Alerts
-
 import { hideById, showById, showView } from "./navigation.js";
 
 let showNewAlerts = false;
 let currentAlertsArray = [];
 
+let date = new Date();
+let time = date.getTime();
+
+export let dummyAlertArray = [
+    {
+        alertType: "stock",
+        urgency: "info",
+        alertTextContent: "Printer Catridge quantity low (20)",
+        isNewAlert: "true",
+        activationTime: time,
+    },
+    {
+        alertType: "stock",
+        urgency: "warning",
+        alertTextContent: "Printer Catridge quantity very low (10)",
+        isNewAlert: "true",
+        activationTime: time + 100,
+    },
+    {
+        alertType: "stock",
+        urgency: "critical",
+        alertTextContent: "Printer Catridge quantity too low (5)",
+        isNewAlert: "true",
+        activationTime: time + 200,
+    },
+    {
+        alertType: "loan",
+        urgency: "info",
+        alertTextContent: "Loan by LTB of Laptop 5 ends tomorrow",
+        isNewAlert: "false",
+        activationTime: time + 300,
+    },
+    {
+        alertType: "loan",
+        urgency: "warning",
+        alertTextContent:
+            "Loan by LTB of Laptop 5 has not been returned, loan ended yesterday",
+        isNewAlert: "false",
+        activationTime: time + 400,
+    },
+    {
+        alertType: "loan",
+        urgency: "critical",
+        alertTextContent:
+            "Loan by LTB of Laptop 5 has not been returned, loan ended 1 week ago",
+        isNewAlert: "false",
+        activationTime: time + 500,
+    },
+    {
+        alertType: "inactivity",
+        urgency: "info",
+        alertTextContent: "Write off has not been used in 1 day(s)",
+        isNewAlert: "false",
+        activationTime: time + 600,
+    },
+    {
+        alertType: "inactivity",
+        urgency: "warning",
+        alertTextContent: "Write off has not been used in 3 day(s)",
+        isNewAlert: "false",
+        activationTime: time + 700,
+    },
+    {
+        alertType: "inactivity",
+        urgency: "critical",
+        alertTextContent: "Write off has not been used in 1 week(s)",
+        isNewAlert: "false",
+        activationTime: time + 800,
+    },
+];
+
+updateAlerts(dummyAlertArray);
+
 export function showAlertView(alertView) {
+    updateAlerts(currentAlertsArray);
+
     showView(alertView);
+
     hideById("alertButton");
     hideById("modeSwitch");
     hideById("newAlertsHeader");
@@ -23,6 +98,7 @@ export function showAlertView(alertView) {
 
     headerLabel.textContent = "NEW";
 
+    hasNewAlerts();
     let hasOldAlerts = hasOlderAlerts();
 
     if (hasOldAlerts) {
@@ -42,10 +118,15 @@ export function showAlertView(alertView) {
     }
 
     showById("newAlertsFooter");
+    ageAlerts();
     showNewAlerts = false;
 }
 
 function hasNewAlerts() {
+    /* 
+    checks if new alerts exist and then shows them
+    next time the alerts page is opened.
+    */
     for (let alert in currentAlertsArray) {
         const isNewAlert = currentAlertsArray[alert].isNewAlert;
 
@@ -54,13 +135,16 @@ function hasNewAlerts() {
             return;
         }
     }
+    showNewAlerts = false;
 }
 
 function hasOlderAlerts() {
     let hasOldAlerts = false;
 
     for (let alert in currentAlertsArray) {
-        if (currentAlertsArray[alert].isNewAlert === "false") {
+        const isOldAlert = currentAlertsArray[alert].isNewAlert;
+
+        if (isOldAlert === "false") {
             hasOldAlerts = true;
             return hasOldAlerts;
         }
@@ -68,20 +152,18 @@ function hasOlderAlerts() {
     return hasOldAlerts;
 }
 
-function ageAlerts(currentAlertsArray) {
+function ageAlerts() {
+    // ages alerts when they have been viewed
     for (let alert in currentAlertsArray) {
         const isNewAlert = currentAlertsArray[alert].isNewAlert;
 
         if (isNewAlert === "true") {
-            isNewAlert = "false";
-            return hasOldAlerts;
+            currentAlertsArray[alert].isNewAlert = "false";
         }
     }
-    console.log(currentAlertsArray);
 }
 
 /*
-
 let alert = {
     alertType: "stock" or "loan" or "inactivity",
     urgency: "info" or "warning" or "critical",
@@ -89,67 +171,6 @@ let alert = {
     newAlert: "true" or "false",
 }
     */
-
-export let dummyAlertArray = [
-    {
-        alertType: "stock",
-        urgency: "info",
-        alertTextContent: "Printer Catridge quantity low (20)",
-        isNewAlert: "true",
-    },
-    {
-        alertType: "stock",
-        urgency: "warning",
-        alertTextContent: "Printer Catridge quantity very low (10)",
-        isNewAlert: "true",
-    },
-    {
-        alertType: "stock",
-        urgency: "critical",
-        alertTextContent: "Printer Catridge quantity too low (5)",
-        isNewAlert: "true",
-    },
-    {
-        alertType: "loan",
-        urgency: "info",
-        alertTextContent: "Loan by LTB of Laptop 5 ends tomorrow",
-        isNewAlert: "false",
-    },
-    {
-        alertType: "loan",
-        urgency: "warning",
-        alertTextContent:
-            "Loan by LTB of Laptop 5 has not been returned, loan ended yesterday",
-        isNewAlert: "false",
-    },
-    {
-        alertType: "loan",
-        urgency: "critical",
-        alertTextContent:
-            "Loan by LTB of Laptop 5 has not been returned, loan ended 1 week ago",
-        isNewAlert: "false",
-    },
-    {
-        alertType: "inactivity",
-        urgency: "info",
-        alertTextContent: "Write off has not been used in 1 day(s)",
-        isNewAlert: "false",
-    },
-    {
-        alertType: "inactivity",
-        urgency: "warning",
-        alertTextContent: "Write off has not been used in 3 day(s)",
-        isNewAlert: "false",
-    },
-    {
-        alertType: "inactivity",
-        urgency: "critical",
-        alertTextContent: "Write off has not been used in 1 week(s)",
-        isNewAlert: "false",
-    },
-];
-
-updateAlerts(dummyAlertArray);
 
 function recieveAlerts(SSEAlertArray) {
     // function to handle alerts sent with SSE
@@ -161,6 +182,7 @@ export function updateAlerts(alertArray) {
     const sortedAlertArray = sortAlerts(alertArray);
     buildAlerts(sortedAlertArray);
     currentAlertsArray = sortedAlertArray;
+    hasNewAlerts();
 }
 
 function removeAlerts() {
@@ -178,19 +200,65 @@ function removeAlerts() {
 }
 
 function sortAlerts(alertArray) {
-    // sorts alerts each time alerts are updated
+    // sorts alerts each time alerts are updated;
+    alertArray.sort(sortForTime);
+    alertArray.sort(sortForUrgency);
+
     return alertArray;
+}
+
+function sortForTime(a, b) {
+    // used with the native toSorted() function
+    return b.activationTime - a.activationTime;
+}
+
+function sortForUrgency(a, b) {
+    // used with the native toSorted() function
+    let urgencyValue1 = 0;
+    let urgencyValue2 = 0;
+
+    switch (a.urgency) {
+        case "info":
+            break;
+        case "warning":
+            urgencyValue1 = 1;
+            break;
+        case "critical":
+            urgencyValue1 = 2;
+            break;
+        default:
+            throw new Error(
+                "could not get urgency value of alert when sorting",
+            );
+    }
+
+    switch (b.urgency) {
+        case "info":
+            break;
+        case "warning":
+            urgencyValue2 = 1;
+            break;
+        case "critical":
+            urgencyValue2 = 2;
+            break;
+        default:
+            throw new Error(
+                "could not get urgency value of alert when sorting",
+            );
+    }
+
+    return urgencyValue2 - urgencyValue1;
 }
 
 function buildAlerts(sortedAlertArray) {
     for (let alert in sortedAlertArray) {
         const alertObject = sortedAlertArray[alert];
-
         createAlert(alertObject);
     }
 }
 
 function createAlert(alertObject) {
+    // creates html elements and appends them dynamically
     const alertType = alertObject.alertType;
     const urgencyValue = alertObject.urgency;
 
@@ -255,6 +323,7 @@ function createAlert(alertObject) {
 
     if (isNewAlert === "true") {
         const newAlertsRow = document.getElementById("newAlertsRow");
+
         newAlertsRow.appendChild(newIconElement);
         newAlertsRow.appendChild(newAlertElement);
         return;
@@ -262,6 +331,7 @@ function createAlert(alertObject) {
 
     if (isNewAlert !== "true") {
         const oldAlertsRow = document.getElementById("oldAlertsRow");
+
         oldAlertsRow.appendChild(newIconElement);
         oldAlertsRow.appendChild(newAlertElement);
         return;
