@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import simple.domain.itemmanagement.Descriptor;
 
-public class descriptorMap {
+public class DescriptorMap {
     public static final Descriptor mapRow(ResultSet result) throws SQLException {
         return new Descriptor(
                 result.getInt("descriptor_id"),
