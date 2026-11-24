@@ -1,8 +1,7 @@
 package simple.service;
 
-import java.util.Optional;
 import java.time.OffsetDateTime;
-
+import java.util.Optional;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.LoanAgreementRepository;
@@ -26,11 +25,9 @@ public class LoanService {
 
         Optional<Loanable> loanable = dao.findByBarcode(loanAgreementRegistration.loanable_barcode());
 
-        if (loanable.isEmpty())
-            return false;
+        if (loanable.isEmpty()) return false;
 
-        if (loanable.get().deleted() != null)
-            return false;
+        if (loanable.get().deleted() != null) return false;
 
         repo.create(loanAgreementRegistration, loanable.get().id());
 
@@ -39,10 +36,8 @@ public class LoanService {
 
     public boolean changeDate(OffsetDateTime newDate, int loanAgreementId) {
 
-        if (newDate.isAfter(OffsetDateTime.now()))
-            repo.changeReturnDate(newDate, loanAgreementId);
-        else
-            return false;
+        if (newDate.isAfter(OffsetDateTime.now())) repo.changeReturnDate(newDate, loanAgreementId);
+        else return false;
 
         return true;
     }

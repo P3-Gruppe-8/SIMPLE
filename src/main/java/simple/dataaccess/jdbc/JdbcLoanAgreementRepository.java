@@ -2,7 +2,6 @@ package simple.dataaccess.jdbc;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
-
 import simple.dataaccess.config.Databaseconnection;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
