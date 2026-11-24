@@ -1,6 +1,8 @@
 package simple.dataaccess.jdbc;
 
 import java.sql.*;
+import java.time.OffsetDateTime;
+
 import simple.dataaccess.config.Databaseconnection;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
@@ -71,6 +73,38 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to create loan agreement: Unresponsive database", e);
+        }
+    }
+
+    public void changeReturnDate(OffsetDateTime newDate, int loanAgreementId) {
+
+        String sql = """
+                UPDATE loan_agreements
+                SET agreed_return_date = ?
+                WHERE loan_id = ?
+                """;
+
+        Databaseconnection db = new Databaseconnection();
+
+        try (Connection conn = db.getDbConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setObject(1, newDate);
+                statement.setInt(2, loanAgreementId);
+
+                int rowsAffected = statement.executeUpdate();
+
+                if (rowsAffected != 1) {
+                    throw new AffectedRowsException("Expected 1 row affected, but was " + rowsAffected);
+                }
+
+                conn.commit();
+            } catch (SQLException | RuntimeException e) {
+                conn.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to change return date", e);
         }
     }
 }
