@@ -1,3 +1,3 @@
 package simple.domain.employee;
 
-public class ITStaff extends Employee {}
+public record ITStaff(int id, String userName, String firstName, String lastName, int office_id) {}

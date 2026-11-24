@@ -37,7 +37,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                 return result.next() ? Optional.of(DescriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to change descriptor quantity", e);
+            throw new DataAccessException("Database error: Failed to change descriptor quantity", e);
         }
     }
 
@@ -62,7 +62,8 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                 return result.next() ? Optional.of(DescriptorMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to find descriptor by barcode: Unresponsive database", e);
+            throw new DataAccessException(
+                    "Database error: Failed to find descriptor by barcode: Unresponsive database", e);
         }
     }
 }

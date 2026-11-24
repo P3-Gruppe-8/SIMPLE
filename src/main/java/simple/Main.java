@@ -1,7 +1,9 @@
 package simple;
 
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.presentation.Server;
+import simple.service.ITStaffService;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,8 +13,15 @@ public class Main {
         // Applies pending database migrations before starting the server.
         db.migrate();
 
+        // Test af existsByUsername:
+
+        ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
+        System.out.println(itStaffService.existsByUsername("demo.anna", 1));
+        System.out.println(itStaffService.existsByUsername("demo.victor", 1));
+
         // Test af getOverviewByOffice
-        // InventoryService inventoryService = new InventoryService(new JdbcInventory());
+        // InventoryService inventoryService = new InventoryService(new
+        // JdbcInventory());
 
         // Inventory inventory = inventoryService.getOverviewByOffice(1);
 
