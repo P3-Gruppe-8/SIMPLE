@@ -3,7 +3,7 @@ package simple.dataaccess.jdbc;
 import java.sql.*;
 import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.ItstaffMap;
+import simple.dataaccess.jdbc.rowMapping.ITStaffMap;
 import simple.domain.dao.ITStaffDAO;
 import simple.domain.employee.ITStaff;
 import simple.domain.exception.DataAccessException;
@@ -29,7 +29,7 @@ public class JdbcITStaffDAO implements ITStaffDAO {
             statement.setInt(2, officeId);
 
             try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? Optional.of(ItstaffMap.mapRow(result)) : Optional.empty();
+                return result.next() ? Optional.of(ITStaffMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
             throw new DataAccessException("Database error: Failed to find IT staff by username and office", e);

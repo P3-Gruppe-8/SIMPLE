@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import simple.domain.employee.ITStaff;
 
-public class ItstaffMap {
+public class ITStaffMap {
     public static final ITStaff mapRow(ResultSet result) throws SQLException {
         return new ITStaff(
                 result.getInt("it_staff_id"),
