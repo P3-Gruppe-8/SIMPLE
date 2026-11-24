@@ -367,7 +367,7 @@ button.alerts {
 
     --alertColorInfo: rgb(189, 222, 233);
     --alertColorWarning: var(--yellow);
-    --alertColorCritical: rgb(255, 0, 0);
+    --alertColorCritical: var(--red);
 }
 
 .alert-header {
