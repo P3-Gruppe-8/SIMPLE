@@ -361,7 +361,8 @@ button.alerts {
 .alert-view {
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
     width: 100dvw;
 
     --alertColorInfo: rgb(189, 222, 233);
