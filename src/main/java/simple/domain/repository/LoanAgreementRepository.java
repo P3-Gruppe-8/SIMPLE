@@ -1,9 +1,5 @@
 package simple.domain.repository;
 
-import java.util.Date;
-import java.util.Optional;
-import simple.domain.itemmanagement.Loanable;
-import simple.domain.transactionmanagement.LoanAgreement;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public interface LoanAgreementRepository {
@@ -20,5 +16,4 @@ public interface LoanAgreementRepository {
     public void softDelete(String barcode);
 
     public void create(LoanAgreementRegistration loanAgreementRegistration, int loanable_id);
-
 }

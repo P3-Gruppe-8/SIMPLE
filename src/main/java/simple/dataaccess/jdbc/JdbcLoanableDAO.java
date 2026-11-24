@@ -1,13 +1,12 @@
 package simple.dataaccess.jdbc;
 
-import java.util.Optional;
-
 import java.sql.*;
+import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Loanable;
-import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 
 public class JdbcLoanableDAO implements LoanableDAO {
 
@@ -23,14 +22,13 @@ public class JdbcLoanableDAO implements LoanableDAO {
         Databaseconnection db = new Databaseconnection();
 
         try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql);) {
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
-            try (ResultSet result = statement.executeQuery();) {
+            try (ResultSet result = statement.executeQuery(); ) {
                 return result.next() ? Optional.of(LoanableMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to find loanable by barcode: Unresponsive database", e);
         }
-
     }
 }

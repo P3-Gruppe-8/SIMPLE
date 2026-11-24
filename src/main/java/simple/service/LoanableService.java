@@ -1,8 +1,8 @@
 package simple.service;
 
+import java.util.Optional;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.itemmanagement.Loanable;
-import java.util.Optional;
 
 public class LoanableService {
 
@@ -15,6 +15,5 @@ public class LoanableService {
     public Optional<Loanable> getLoanable(String barcode) {
 
         return dao.findByBarcode(barcode);
-
     }
 }

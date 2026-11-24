@@ -1,15 +1,11 @@
 package simple.dataaccess.jdbc;
 
-import simple.domain.repository.LoanAgreementRepository;
-import simple.domain.transactionmanagement.LoanAgreementRegistration;
-
 import java.sql.*;
-import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
+import simple.domain.repository.LoanAgreementRepository;
+import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
     public void softDelete(String barcode) {
@@ -34,8 +30,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
                 int rowsAffected = statement.executeUpdate();
 
                 if (rowsAffected != 1) {
-                    throw new AffectedRowsException(
-                            "Expected 1 row affected, but was " + rowsAffected);
+                    throw new AffectedRowsException("Expected 1 row affected, but was " + rowsAffected);
                 }
 
                 conn.commit();
@@ -46,7 +41,6 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
         } catch (SQLException e) {
             throw new DataAccessException("Failed to change return date", e);
         }
-
     }
 
     public void create(LoanAgreementRegistration loanAgreementRegistration, int loanable_id) {
@@ -68,8 +62,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
                 statement.setInt(4, loanable_id);
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected != 1) {
-                    throw new AffectedRowsException(
-                            "Expected 1 row affected, but was " + rowsAffected);
+                    throw new AffectedRowsException("Expected 1 row affected, but was " + rowsAffected);
                 }
                 conn.commit();
             } catch (SQLException | RuntimeException e) {
@@ -79,7 +72,5 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
         } catch (SQLException e) {
             throw new DataAccessException("Failed to create loan agreement: Unresponsive database", e);
         }
-
     }
-
 }

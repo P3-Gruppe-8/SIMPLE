@@ -10,5 +10,4 @@ public record LoanAgreement(
         String borrower,
         String note,
         OffsetDateTime actualReturnDate,
-        Loanable loanable) {
-}
+        Loanable loanable) {}
