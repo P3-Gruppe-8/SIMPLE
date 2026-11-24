@@ -159,8 +159,8 @@ button {
     cursor: pointer;
 }
 
-/* No focus ring after tapping, but keep it for keyboard users */
-button:focus:not(:focus-visible) {
+/* No focus ring except on text fields: scanners type like keyboards, so the browser would show it after every scan */
+:focus:not(input, textarea, select) {
     outline: none;
 }
 
