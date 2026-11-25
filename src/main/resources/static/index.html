@@ -54,7 +54,7 @@
                                     <p>Remove items from stock.</p>
                                     <div class="form-field">
                                         <label for="write-off-item-id"
-                                            >Item ID</label
+                                            >Barcode</label
                                         >
                                         <div
                                             class="barcode-field"
@@ -84,12 +84,17 @@
                                             </div>
                                             <input
                                                 type="text"
+                                                autocomplete="off"
                                                 id="write-off-item-id"
                                                 class="invisible"
                                             />
                                         </div>
                                     </div>
-                                    <div id="write-off-receipt" class="receipt">
+                                    <div
+                                        id="write-off-receipt"
+                                        class="receipt"
+                                        data-no-register
+                                    >
                                         <table>
                                             <tbody></tbody>
                                         </table>
@@ -131,7 +136,7 @@
                                     <p>Put items back into stock.</p>
                                     <div class="form-field">
                                         <label for="restock-item-id"
-                                            >Item ID</label
+                                            >Barcode</label
                                         >
                                         <div
                                             class="barcode-field"
@@ -161,6 +166,7 @@
                                             </div>
                                             <input
                                                 type="text"
+                                                autocomplete="off"
                                                 id="restock-item-id"
                                                 class="invisible"
                                             />
@@ -262,9 +268,12 @@
                                     <p>Remove an item type from the system.</p>
                                     <div class="form-field">
                                         <label for="deregister-item-id"
-                                            >Item ID</label
+                                            >Barcode</label
                                         >
-                                        <div class="barcode-field">
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
                                             <div class="barcode-buttons">
                                                 <button
                                                     type="button"
@@ -289,11 +298,16 @@
                                             </div>
                                             <input
                                                 type="text"
+                                                autocomplete="off"
                                                 id="deregister-item-id"
                                                 class="invisible"
                                             />
                                         </div>
                                     </div>
+                                    <div
+                                        id="deregister-item-details"
+                                        class="item-details-result invisible"
+                                    ></div>
                                 </div>
                                 <div class="dialog-footer">
                                     <button
@@ -337,107 +351,9 @@
                             <form id="locations-dialog-form" method="dialog">
                                 <div class="dialog-body">
                                     <h2>Edit Item Type Locations</h2>
-                                    <p>
-                                        Add or remove a shelf where an item type
-                                        can be stored.
-                                    </p>
                                     <div class="form-field">
                                         <label for="locations-item-id"
-                                            >Item ID</label
-                                        >
-                                        <div class="barcode-field">
-                                            <div class="barcode-buttons">
-                                                <button
-                                                    type="button"
-                                                    class="barcode-scan raised"
-                                                >
-                                                    <span
-                                                        class="barcode-scan-label"
-                                                        >Scan barcode</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="barcode-manual raised"
-                                                    title="Manual entry"
-                                                    aria-label="Manual entry"
-                                                >
-                                                    <img
-                                                        src="images/keyboard-solid-full.svg"
-                                                        class="barcode-manual-icon"
-                                                    />
-                                                </button>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                id="locations-item-id"
-                                                class="invisible"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label for="locations-shelf"
-                                            >Shelf</label
-                                        >
-                                        <select
-                                            id="locations-shelf"
-                                            class="shelf-select"
-                                            required
-                                        >
-                                            <option value="" disabled selected>
-                                                Loading shelves...
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dialog-footer">
-                                    <button
-                                        type="button"
-                                        commandfor="locations-dialog"
-                                        command="close"
-                                        class="red raised"
-                                    >
-                                        <span>Cancel</span>
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        value="remove"
-                                        class="green raised"
-                                    >
-                                        <span>Remove</span>
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        value="add"
-                                        class="green raised"
-                                    >
-                                        <span>Add</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </dialog>
-                    </div>
-
-                    <div class="button-row height-one-fifth">
-                        <button
-                            command="show-modal"
-                            commandfor="item-details-dialog"
-                            class="menu-button raised"
-                        >
-                            <img
-                                src="images/circle-info-solid-full.svg"
-                                class="button-icon"
-                            />
-                            <span class="button-label">Item Details</span>
-                        </button>
-                        <dialog id="item-details-dialog">
-                            <form id="item-details-dialog-form" method="dialog">
-                                <div class="dialog-body">
-                                    <h2>Item Details</h2>
-                                    <p>Look up an item type.</p>
-                                    <div class="form-field">
-                                        <label for="item-details-item-id"
-                                            >Item ID</label
+                                            >Barcode</label
                                         >
                                         <div
                                             class="barcode-field"
@@ -467,6 +383,102 @@
                                             </div>
                                             <input
                                                 type="text"
+                                                autocomplete="off"
+                                                id="locations-item-id"
+                                                class="invisible"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        id="locations-item-details"
+                                        class="item-details-result invisible"
+                                    ></div>
+                                    <div class="form-field invisible">
+                                        <label for="locations-add-shelf"
+                                            >Add Shelf</label
+                                        >
+                                        <select
+                                            id="locations-add-shelf"
+                                            class="shelf-select"
+                                        >
+                                            <option value="" disabled selected>
+                                                Loading shelves...
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- one row per possible shelf, see setUpLocationsDialog in dialogs.js -->
+                                    <ul
+                                        id="locations-shelves"
+                                        class="shelf-list invisible"
+                                    ></ul>
+                                </div>
+                                <div class="dialog-footer">
+                                    <button
+                                        type="button"
+                                        commandfor="locations-dialog"
+                                        command="close"
+                                        class="red raised"
+                                    >
+                                        <span>Cancel</span>
+                                    </button>
+                                    <button type="submit" class="green raised">
+                                        <span>Save</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </dialog>
+                    </div>
+
+                    <div class="button-row height-one-fifth">
+                        <button
+                            command="show-modal"
+                            commandfor="item-details-dialog"
+                            class="menu-button raised"
+                        >
+                            <img
+                                src="images/circle-info-solid-full.svg"
+                                class="button-icon"
+                            />
+                            <span class="button-label">Item Details</span>
+                        </button>
+                        <dialog id="item-details-dialog">
+                            <form id="item-details-dialog-form" method="dialog">
+                                <div class="dialog-body">
+                                    <h2>Item Details</h2>
+                                    <p>Look up an item type.</p>
+                                    <div class="form-field">
+                                        <label for="item-details-item-id"
+                                            >Barcode</label
+                                        >
+                                        <div
+                                            class="barcode-field"
+                                            data-keep-scanning
+                                        >
+                                            <div class="barcode-buttons">
+                                                <button
+                                                    type="button"
+                                                    class="barcode-scan raised"
+                                                >
+                                                    <span
+                                                        class="barcode-scan-label"
+                                                        >Scan barcode</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="barcode-manual raised"
+                                                    title="Manual entry"
+                                                    aria-label="Manual entry"
+                                                >
+                                                    <img
+                                                        src="images/keyboard-solid-full.svg"
+                                                        class="barcode-manual-icon"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                autocomplete="off"
                                                 id="item-details-item-id"
                                                 class="invisible"
                                             />
@@ -605,13 +617,17 @@
             <form id="register-consumable-dialog-form" method="dialog">
                 <div class="dialog-body">
                     <h2>Register Item Type</h2>
-                    <p>Register a new item type.</p>
                     <div class="form-field">
                         <label for="item-type-name">Item Type Name</label>
-                        <input type="text" id="item-type-name" required />
+                        <input
+                            type="text"
+                            id="item-type-name"
+                            autocomplete="off"
+                            required
+                        />
                     </div>
                     <div class="form-field">
-                        <label for="item-id">Item ID</label>
+                        <label for="item-id">Barcode</label>
                         <div class="barcode-field">
                             <div class="barcode-buttons">
                                 <button
@@ -634,7 +650,12 @@
                                     />
                                 </button>
                             </div>
-                            <input type="text" id="item-id" class="invisible" />
+                            <input
+                                type="text"
+                                id="item-id"
+                                class="invisible"
+                                autocomplete="off"
+                            />
                         </div>
                     </div>
                     <div class="form-field">
@@ -648,6 +669,21 @@
                                 Loading shelves...
                             </option>
                         </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="item-type-min-quantity"
+                            >Minimum Quantity</label
+                        >
+                        <input
+                            type="text"
+                            autocomplete="off"
+                            id="item-type-min-quantity"
+                            class="short-input"
+                            inputmode="numeric"
+                            pattern="[0-9]+"
+                            title="Whole number, e.g. 5"
+                            required
+                        />
                     </div>
                 </div>
                 <div class="dialog-footer">
@@ -665,7 +701,7 @@
                 </div>
             </form>
         </dialog>
-        <!-- shown when a receipt scan isn't a known item type, see askAboutUnknown in receipt.js -->
+        <!-- shown when a receipt scan isn't a known item type, filled in by askAboutUnknown in receipt.js -->
         <dialog id="unknown-barcode-dialog" class="msgbox">
             <form method="dialog">
                 <div class="dialog-body">
@@ -673,14 +709,35 @@
                     <p>
                         No item type has the barcode
                         <span class="unknown-barcode"></span>.
+                        <span class="unknown-barcode-question"
+                            >Do you want to register an item type for this
+                            barcode?</span
+                        >
                     </p>
                 </div>
                 <div class="dialog-footer">
                     <button type="submit" value="undo" class="red raised">
-                        <span>Undo Scan</span>
+                        <span>Undo</span>
                     </button>
                     <button type="submit" value="register" class="green raised">
-                        <span>Register Item Type</span>
+                        <span>Register</span>
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <!-- asks before deleting, see setUpDeregisterDialog in dialogs.js -->
+        <dialog id="deregister-confirm-dialog" class="msgbox">
+            <form method="dialog">
+                <div class="dialog-body">
+                    <h2>Are You Sure?</h2>
+                    <p class="deregister-confirm-message"></p>
+                </div>
+                <div class="dialog-footer">
+                    <button type="submit" value="cancel" class="red raised">
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" value="delete" class="green raised">
+                        <span>Delete</span>
                     </button>
                 </div>
             </form>
@@ -723,6 +780,7 @@
             <button type="button" class="toast raised">
                 <img src="images/check-solid-full.svg" class="toast-icon" />
                 <span class="toast-message"></span>
+                <span class="toast-count"></span>
             </button>
         </template>
         <script type="module" src="js/script.js"></script>
