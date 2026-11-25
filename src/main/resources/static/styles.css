@@ -451,6 +451,18 @@ dialog[open] {
     gap: 12px;
 }
 
+.barcode-buttons input {
+    flex: 1;
+}
+
+/* a scanned barcode; Safari fades disabled text unless told otherwise */
+.barcode-field input:disabled {
+    background-color: #e6e6e6;
+    color: var(--text-muted);
+    -webkit-text-fill-color: var(--text-muted);
+    opacity: 1;
+}
+
 /* the lip is drawn below the button, so leave room for it to match the input's height */
 .barcode-buttons button {
     --lip: 5px;
