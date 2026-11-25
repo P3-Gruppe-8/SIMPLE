@@ -14,7 +14,7 @@ import simple.domain.repository.InventoryRepository;
 public class JdbcInventory implements InventoryRepository {
 
     @Override
-    public Inventory getOverviewByOffice(int officeId) {
+    public Inventory getInventoryByOffice(int officeId) {
 
         ArrayList<Descriptor> consumables = new ArrayList<Descriptor>();
         ArrayList<Loanable> loanables = new ArrayList<Loanable>();
