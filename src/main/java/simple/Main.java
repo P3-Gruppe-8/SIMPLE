@@ -22,45 +22,45 @@ public class Main {
         // Applies pending database migrations before starting the server.
         db.migrate();
 
-        // Get alerts by office id test:
+        // // Get alerts by office id test:
 
-        AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new JdbcLoanAlertDAO());
+        // AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new JdbcLoanAlertDAO());
 
-        System.out.println("Stock alerts:");
-        alertService.getActiveByOfficeId(1).stockAlerts().forEach(System.out::println);
+        // System.out.println("Stock alerts:");
+        // alertService.getActiveByOfficeId(1).stockAlerts().forEach(System.out::println);
 
-        System.out.println("Loan alerts:");
-        alertService.getActiveByOfficeId(1).loanAlerts().forEach(System.out::println);
+        // System.out.println("Loan alerts:");
+        // alertService.getActiveByOfficeId(1).loanAlerts().forEach(System.out::println);
 
-        // Test af existsByUsername:
+        // // Test af existsByUsername:
 
-        ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
-        System.out.println(itStaffService.existsByUsername("demo.anna", 1));
-        System.out.println(itStaffService.existsByUsername("demo.victor", 1));
+        // ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
+        // System.out.println(itStaffService.existsByUsername("demo.anna", 1));
+        // System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
-        // Test af getOverviewByOffice
-        InventoryService inventoryService = new InventoryService(new JdbcInventory());
+        // // Test af getOverviewByOffice
+        // InventoryService inventoryService = new InventoryService(new JdbcInventory());
 
-        Inventory inventory = inventoryService.getOverviewByOffice(1);
+        // Inventory inventory = inventoryService.getOverviewByOffice(1);
 
-        System.out.println("Consumables:");
-        inventory.consumables().forEach(System.out::println);
+        // System.out.println("Consumables:");
+        // inventory.consumables().forEach(System.out::println);
 
-        System.out.println("Loanables:");
-        inventory.loanables().forEach(System.out::println);
+        // System.out.println("Loanables:");
+        // inventory.loanables().forEach(System.out::println);
 
-        // Tests af findByBarcode og changeQuantity på descriptor
+        // // Tests af findByBarcode og changeQuantity på descriptor
 
-        JdbcDescriptorRepository jdbcDescriptorRepository = new JdbcDescriptorRepository();
+        // JdbcDescriptorRepository jdbcDescriptorRepository = new JdbcDescriptorRepository();
 
-        Optional<Descriptor> descriptor1 = jdbcDescriptorRepository.findByBarcode("DEMO-USB-C-1M", 1);
+        // Optional<Descriptor> descriptor1 = jdbcDescriptorRepository.findByBarcode("DEMO-USB-C-1M", 1);
 
-        System.out.println("Quantaty før ændring: " + descriptor1.orElseThrow().quantity());
+        // System.out.println("Quantaty før ændring: " + descriptor1.orElseThrow().quantity());
 
-        descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
+        // descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
 
-        System.out.println(
-                "Quantaty efter ændring: " + descriptor1.orElseThrow().quantity());
+        // System.out.println(
+        //         "Quantaty efter ændring: " + descriptor1.orElseThrow().quantity());
 
         // Use port from environment variables if available,
         // Azure supplies this port because it is what it opens
