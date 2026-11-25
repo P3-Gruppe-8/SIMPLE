@@ -7,7 +7,7 @@ let currentAlertsArray = [];
 let date = new Date();
 let time = date.getTime();
 
-export let dummyAlertArray = [
+let dummyAlertArray = [
     {
         alertType: "stock",
         urgency: "info",
@@ -75,12 +75,17 @@ export let dummyAlertArray = [
     },
 ];
 
-updateAlerts(dummyAlertArray);
+currentAlertsArray = dummyAlertArray;
+
+updateAlerts(currentAlertsArray);
 
 export function showAlertView(alertView) {
     updateAlerts(currentAlertsArray);
 
     showView(alertView);
+
+    hideById("navbar");
+    showById("alertHeader");
 
     hideById("alertButton");
     hideById("modeSwitch");
@@ -121,6 +126,10 @@ export function showAlertView(alertView) {
     ageAlerts();
     showNewAlerts = false;
 }
+
+function insertAlertHeader() {}
+
+function removeAlertHeader() {}
 
 function hasNewAlerts() {
     /* 

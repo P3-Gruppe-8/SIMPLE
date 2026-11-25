@@ -107,6 +107,8 @@ export function previousView() {
     if (viewHistory.at(-1) === "alertView") {
         showById("alertButton");
         showById("modeSwitch");
+        hideById("alertHeader");
+        showById("navbar");
     }
 
     viewHistory.pop(); // the view we are leaving

@@ -9,7 +9,7 @@
     </head>
     <body>
         <header>
-            <nav class="navbar">
+            <nav id="navbar" class="navbar">
                 <ol>
                     <li class="navbar-element">
                         <img src="images/nowaco-logo.png" />
@@ -30,6 +30,14 @@
                     </li>
                 </ol>
             </nav>
+
+            <div id="alertHeader" class="alert-header invisible">
+                <img
+                    src="images/bell-solid-full.svg"
+                    class="alert-header-icon"
+                />
+                <p class="alert-header-label">Alerts</p>
+            </div>
         </header>
         <main>
             <div class="mode" id="supplyMode">
@@ -232,146 +240,19 @@
 
                 <!-- Alert view -->
                 <div class="view alert-view" id="alertView">
-                    <div class="alert-header">
-                        <img
-                            src="images/bell-solid-full.svg"
-                            class="alert-header-icon"
-                        />
-                        <p class="alert-header-label">Alerts</p>
-                    </div>
-
                     <!-- New Alerts -->
                     <div id="newAlertsHeader" class="new-alerts-header">
                         <p id="newAlertsHeaderLabel" class="new-alerts-label">
                             NEW
                         </p>
                     </div>
-                    <div id="newAlertsRow" class="alert-row-new">
-                        <div class="alert-box-icon stock-icon info">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock info">
-                            <p class="alert-label">
-                                stockAlert, INFO Test med flere mange ord for at
-                                se om det ser ordentligt ud endnu flere ord
-                            </p>
-                        </div>
-                        <div class="alert-box-icon stock-icon warning">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock warning">
-                            <p class="alert-label">stockAlert, WARNING</p>
-                        </div>
-                        <div class="alert-box-icon stock-icon critical">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock critical">
-                            <p class="alert-label">
-                                Længere tekst for at vise et eksempel på noget
-                            </p>
-                        </div>
-                    </div>
+                    <div id="newAlertsRow" class="alert-row-new"></div>
                     <div id="newAlertsFooter" class="new-alerts-footer">
                         <p class="new-alerts-label">EARLIER</p>
                     </div>
 
                     <!-- Old Alerts -->
-                    <div id="oldAlertsRow" class="alert-row-old">
-                        <div class="alert-box-icon stock-icon info">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock info">
-                            <p class="alert-label">stockAlert, INFO</p>
-                        </div>
-                        <div class="alert-box-icon stock-icon warning">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock warning">
-                            <p class="alert-label">stockAlert, WARNING</p>
-                        </div>
-                        <div class="alert-box-icon stock-icon critical">
-                            <img
-                                src="images/box-open-solid-full.svg"
-                                class="stock-img"
-                            />
-                        </div>
-                        <div class="alert-box stock critical">
-                            <p class="alert-label">stockAlert, CRITICAL</p>
-                        </div>
-
-                        <!------>
-                        <div class="alert-box-icon loan-icon info">
-                            <img
-                                src="images/address-book.svg"
-                                class="loan-img"
-                            />
-                        </div>
-                        <div class="alert-box loan info">
-                            <p class="alert-label">loanAlert, INFO</p>
-                        </div>
-                        <div class="alert-box-icon loan-icon warning">
-                            <img
-                                src="images/address-book.svg"
-                                class="loan-img"
-                            />
-                        </div>
-                        <div class="alert-box loan warning">
-                            <p class="alert-label">loanAlert, WARNING</p>
-                        </div>
-                        <div class="alert-box-icon loan-icon critical">
-                            <img
-                                src="images/address-book.svg"
-                                class="loan-img"
-                            />
-                        </div>
-                        <div class="alert-box loan critical">
-                            <p class="alert-label">loanAlert, CRITICAL</p>
-                        </div>
-
-                        <!------>
-                        <div class="alert-box-icon inactivity-icon info">
-                            <img
-                                src="images/activity.svg"
-                                class="inactivity-img"
-                            />
-                        </div>
-                        <div class="alert-box inactivity info">
-                            <p class="alert-label">inactivityAlert, INFO</p>
-                        </div>
-                        <div class="alert-box-icon inactivity-icon warning">
-                            <img
-                                src="images/activity.svg"
-                                class="inactivity-img"
-                            />
-                        </div>
-                        <div class="alert-box inactivity warning">
-                            <p class="alert-label">inactivityAlert, WARNING</p>
-                        </div>
-                        <div class="alert-box-icon inactivity-icon critical">
-                            <img
-                                src="images/activity.svg"
-                                class="inactivity-img"
-                            />
-                        </div>
-                        <div class="alert-box inactivity critical">
-                            <p class="alert-label">inactivityAlert, CRITICAL</p>
-                        </div>
-                    </div>
+                    <div id="oldAlertsRow" class="alert-row-old"></div>
                 </div>
 
                 <!-- After pressing "more options" in supply mode -->
