@@ -159,8 +159,8 @@ button {
     cursor: pointer;
 }
 
-/* No focus ring after tapping, but keep it for keyboard users */
-button:focus:not(:focus-visible) {
+/* No focus ring except on text fields: scanners type like keyboards, so the browser would show it after every scan */
+:focus:not(input, textarea, select) {
     outline: none;
 }
 
@@ -373,14 +373,21 @@ dialog.msgbox .dialog-footer button {
     height: 4rem;
 }
 
+/* sized by width, not the short button's height; keep msgbox labels short (one word) so they fit */
+dialog.msgbox .dialog-footer span {
+    font-size: clamp(1rem, 18cqw, 1.75rem);
+}
+
 dialog.msgbox h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 0;
 }
 
 dialog.msgbox p {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     margin: 0;
+    color: var(--black);
 }
 
 .unknown-barcode {
@@ -423,6 +430,11 @@ dialog[open] {
     border-radius: 12px;
 }
 
+.form-field .short-input {
+    align-self: flex-start;
+    width: 5ch;
+}
+
 .barcode-field {
     --field-height: 5rem;
     display: flex;
@@ -437,6 +449,18 @@ dialog[open] {
 .barcode-buttons {
     display: flex;
     gap: 12px;
+}
+
+.barcode-buttons input {
+    flex: 1;
+}
+
+/* a scanned barcode; Safari fades disabled text unless told otherwise */
+.barcode-field input:disabled {
+    background-color: #e6e6e6;
+    color: var(--text-muted);
+    -webkit-text-fill-color: var(--text-muted);
+    opacity: 1;
 }
 
 /* the lip is drawn below the button, so leave room for it to match the input's height */
@@ -504,15 +528,18 @@ dialog[open] {
 }
 
 dialog h2 {
-    font-size: clamp(1.75rem, 12cqi, 4rem);
+    font-size: clamp(1.75rem, 12cqi, 3.5rem);
+    font-weight: 800;
     text-align: center;
-    margin-bottom: -2rem;
+    margin-bottom: 1.2rem;
     margin-top: 1rem;
 }
 
 dialog p {
     font-size: clamp(1rem, 7cqi, 2rem);
     text-align: center;
+    margin-top: -2.85rem;
+    color: var(--text-muted);
 }
 
 dialog::backdrop {
@@ -558,6 +585,56 @@ dialog form {
     border: 3px solid var(--border);
     border-radius: 12px;
     white-space: pre-line; /* the server's line breaks separate the details */
+}
+
+/* the longest title, so it gets a smaller size to fit on one line */
+#locations-dialog h2 {
+    font-size: clamp(1rem, 6.5cqi, 3.5rem);
+    white-space: nowrap;
+}
+
+.shelf-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* takes the rest of the dialog's height, like a receipt */
+    flex: 1 1 0;
+    min-height: 6rem;
+    overflow-y: auto;
+}
+
+.shelf-list:empty::before {
+    content: "No shelves yet";
+    color: var(--text-muted);
+    font-size: clamp(1rem, 6cqi, 1.75rem);
+}
+
+.shelf-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px 8px 16px;
+    border: 3px solid var(--border);
+    border-radius: 12px;
+    font-size: clamp(1rem, 6cqi, 1.75rem);
+}
+
+/* long shelf names (up to 50 characters) wrap instead of pushing the button out */
+.shelf-row-name {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.shelf-row button {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(1rem, 5cqi, 1.5rem);
 }
 
 .receipt {
@@ -676,4 +753,13 @@ dialog form {
 .toast-message {
     margin: 0;
     overflow-wrap: anywhere;
+}
+
+.toast-count {
+    flex-shrink: 0;
+    font-weight: 800;
+}
+
+.toast-count:empty {
+    display: none;
 }

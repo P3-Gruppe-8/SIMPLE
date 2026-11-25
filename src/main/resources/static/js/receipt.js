@@ -1,6 +1,7 @@
 // A receipt: a table of scanned item types and how many of each
 import { getItemDetails } from "./api.js";
-import { isLoggedIn, logIn, loginIds } from "./navigation.js";
+import { logIn } from "./navigation.js";
+import { isLoggedIn, loginIds } from "./session.js";
 import { claimScans } from "./scanning.js";
 
 export function setUpReceipt(receipt) {
@@ -66,6 +67,14 @@ export function setUpReceipt(receipt) {
         const prompt = document.getElementById("unknown-barcode-dialog");
         prompt.querySelector(".unknown-barcode").textContent =
             row.dataset.barcode;
+        // nothing to write off for an item type that isn't registered, so write-off only offers undo
+        const canRegister = !("noRegister" in receipt.dataset);
+        prompt
+            .querySelector(".unknown-barcode-question")
+            .classList.toggle("invisible", !canRegister);
+        prompt
+            .querySelector('button[value="register"]')
+            .classList.toggle("invisible", !canRegister);
         prompt.returnValue = "";
         prompt.showModal();
         // while we ask about this barcode, other scans are ignored, so the worker deals with one item at a time
@@ -85,7 +94,7 @@ export function setUpReceipt(receipt) {
                     return;
                 }
             }
-            // this happens when they pressed "undo scan"
+            // this happens when they pressed "undo"
             row.remove();
             updateSubmitButton();
         } finally {
@@ -101,6 +110,7 @@ export function setUpReceipt(receipt) {
         const input = document.createElement("input");
         input.type = "text";
         input.inputMode = "numeric";
+        input.autocomplete = "off";
         input.value = 1;
         input.addEventListener(
             "change",

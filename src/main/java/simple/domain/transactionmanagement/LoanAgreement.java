@@ -1,3 +1,13 @@
 package simple.domain.transactionmanagement;
 
-public class LoanAgreement {}
+import java.time.OffsetDateTime;
+import simple.domain.itemmanagement.Loanable;
+
+public record LoanAgreement(
+        int id,
+        OffsetDateTime loanTime,
+        OffsetDateTime agreedReturnDate,
+        String borrower,
+        String note,
+        OffsetDateTime actualReturnDate,
+        Loanable loanable) {}
