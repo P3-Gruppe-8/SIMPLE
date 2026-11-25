@@ -43,7 +43,7 @@ export function setUpShelfSelect(select) {
         );
         if (known) {
             select.value = shelfId;
-            clearError(); // in case of a previous error
+            select.dispatchEvent(new Event("change")); // a scanned shelf counts as picking it; also clears a previous error
         } else {
             setPlaceholder(`Unknown shelf "${shelfId}"`, false);
             select.classList.add("invalid");

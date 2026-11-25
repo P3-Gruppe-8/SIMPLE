@@ -1,5 +1,6 @@
 package simple.domain.repository;
 
+import java.time.OffsetDateTime;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public interface LoanAgreementRepository {
@@ -16,4 +17,6 @@ public interface LoanAgreementRepository {
     public void softDelete(String barcode);
 
     public void create(LoanAgreementRegistration loanAgreementRegistration, int loanable_id);
+
+    public void changeReturnDate(OffsetDateTime newDate, int loanAgreementId);
 }

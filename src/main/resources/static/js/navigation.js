@@ -1,5 +1,6 @@
-// Mode switching, view history and login state.
+// Mode switching and view history.
 import { changeStock } from "./api.js";
+import { endSession, isLoggedIn, startSession } from "./session.js";
 import { showToast } from "./toast.js";
 import { showAlertView } from "./alerts.js";
 
@@ -53,14 +54,6 @@ export function showById(id) {
     show(element);
 }
 
-let loggedInAs = null;
-
-export const loginIds = ["victor nummer 2", "leon da boss"];
-
-export function isLoggedIn() {
-    return loggedInAs !== null;
-}
-
 // the first view of each mode is a "root view"
 const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
 let viewHistory = [];
@@ -74,12 +67,12 @@ export function setMode(id) {
     showById(id);
     if (id === "supplyMode") {
         showView("defaultView");
-        if (loggedInAs) {
+        if (isLoggedIn()) {
             showById("moreOptions");
             hideById("scanIdPrompt");
         }
     } else if (id === "loanMode") {
-        if (loggedInAs) {
+        if (isLoggedIn()) {
             showView("loanModeHomeScreen");
         } else {
             showView("loanModeLogInScreen");
@@ -103,7 +96,7 @@ export function showView(id) {
     } else {
         showById("backButton");
     }
-    if (isRootView && loggedInAs) {
+    if (isRootView && isLoggedIn()) {
         showById("logoutButton");
     } else {
         hideById("logoutButton");
@@ -124,7 +117,7 @@ export function previousView() {
 export function logIn(staffId) {
     const currentView = viewHistory.at(-1);
     if (!["defaultView", "loanModeLogInScreen"].includes(currentView)) return;
-    loggedInAs = staffId;
+    startSession(staffId);
     if (currentView === "defaultView") {
         hideById("scanIdPrompt");
         showById("moreOptions");
@@ -136,7 +129,7 @@ export function logIn(staffId) {
 
 export function logOut() {
     const currentView = viewHistory.at(-1);
-    loggedInAs = null;
+    endSession();
     showById("scanIdPrompt");
     hideById("moreOptions");
     hideById("logoutButton");

@@ -1,5 +1,6 @@
 package simple.service;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.itemmanagement.Loanable;
@@ -33,5 +34,11 @@ public class LoanService {
         return true;
     }
 
-    public void extend() {}
+    public boolean changeDate(OffsetDateTime newDate, int loanAgreementId) {
+
+        if (newDate.isAfter(OffsetDateTime.now())) repo.changeReturnDate(newDate, loanAgreementId);
+        else return false;
+
+        return true;
+    }
 }
