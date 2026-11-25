@@ -66,7 +66,7 @@ CREATE TABLE descriptors (
   -- Quantity is only saved for consumables, but is calculated for loanables when needed.
   quantity INTEGER CONSTRAINT positive_quantity CHECK (quantity >= 0),
   -- For relevant info about the descriptor, eg. model name
-  info_field VARCHAR(500),
+  descriptor_info_field VARCHAR(500),
   -- For loanables, a template can be stored for unique fields, eg. serial number.
   info_template VARCHAR(500),
   -- Soft delete, null if not deleted
@@ -104,7 +104,7 @@ CREATE TABLE loanables (
   -- "copy number" eg. laptop"3"
   unit_number INTEGER NOT NULL CONSTRAINT positive_unit_number CHECK (unit_number >= 0),
   -- The template from descriptor is filled out when adding loanables
-  info_field VARCHAR(800),
+  loanable_info_field VARCHAR(800),
   -- Soft delete, null if not deleted
   loanable_deleted TIMESTAMPTZ,
   descriptor_id INTEGER NOT NULL REFERENCES descriptors (descriptor_id) ON DELETE CASCADE,
@@ -154,7 +154,7 @@ WHERE actual_return_date IS NULL;
 CREATE TABLE stock_alerts (
   stock_alert_id SERIAL PRIMARY KEY,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  Raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   min_quantity INTEGER NOT NULL CHECK (min_quantity >= 0),
   -- Soft delete, null if not deleted
@@ -166,7 +166,7 @@ CREATE TABLE stock_alerts (
 CREATE TABLE loan_alerts (
   loan_alert_id SERIAL PRIMARY KEY,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   -- Soft delete, null if not deleted
   loan_alert_deleted TIMESTAMPTZ,
@@ -180,7 +180,7 @@ CREATE TABLE inactivity_alerts (
   alert_name VARCHAR(50) NOT NULL,
   log_types VARCHAR(500) NOT NULL,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   -- Minimum number of matching log entries within the interval.
   threshold_transactions INTEGER NOT NULL CHECK (threshold_transactions >= 0),

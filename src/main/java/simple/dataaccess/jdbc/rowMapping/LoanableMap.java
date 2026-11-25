@@ -15,7 +15,7 @@ public class LoanableMap {
                 result.getInt("loanable_id"),
                 result.getString("loanable_barcode"),
                 result.getInt("unit_number"),
-                result.getString("info_field"),
+                result.getString("loanable_info_field"),
                 result.getObject("loanable_deleted", OffsetDateTime.class),
                 descriptor,
                 result.getInt("shelf_id"));

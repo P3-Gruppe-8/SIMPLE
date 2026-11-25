@@ -1,6 +1,8 @@
 package simple.domain.repository;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import simple.domain.transactionmanagement.LoanAgreement;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public interface LoanAgreementRepository {
@@ -19,4 +21,6 @@ public interface LoanAgreementRepository {
     public void create(LoanAgreementRegistration loanAgreementRegistration, int loanable_id);
 
     public void changeReturnDate(OffsetDateTime newDate, int loanAgreementId);
+
+    public ArrayList<LoanAgreement> findAll(int officeId);
 }

@@ -2,8 +2,11 @@ package simple;
 
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
+import simple.dataaccess.jdbc.JdbcInventory;
+import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
 import simple.service.ITStaffService;
+import simple.service.InventoryService;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,16 +23,15 @@ public class Main {
         System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // Test af getOverviewByOffice
-        // InventoryService inventoryService = new InventoryService(new
-        // JdbcInventory());
+        InventoryService inventoryService = new InventoryService(new JdbcInventory());
 
-        // Inventory inventory = inventoryService.getOverviewByOffice(1);
+        Inventory inventory = inventoryService.getOverviewByOffice(1);
 
-        // System.out.println("Consumables:");
-        // inventory.consumables().forEach(System.out::println);
+        System.out.println("Consumables:");
+        inventory.consumables().forEach(System.out::println);
 
-        // System.out.println("Loanables:");
-        // inventory.loanables().forEach(System.out::println);
+        System.out.println("Loanables:");
+        inventory.loanables().forEach(System.out::println);
 
         // Tests af findByBarcode og changeQuantity på descriptor
 

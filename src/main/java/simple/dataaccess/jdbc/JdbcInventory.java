@@ -14,18 +14,17 @@ import simple.domain.repository.InventoryRepository;
 public class JdbcInventory implements InventoryRepository {
 
     @Override
-    public Inventory findOverviewByOffice(int officeId) {
+    public Inventory getOverviewByOffice(int officeId) {
 
         ArrayList<Descriptor> consumables = new ArrayList<Descriptor>();
         ArrayList<Loanable> loanables = new ArrayList<Loanable>();
 
-        // Left join makes a cartesian product between
-        String inventorySql = """
+        String Sql = """
                 SELECT descriptors.*,
                        loanables.loanable_id,
                        loanables.loanable_barcode,
                        loanables.unit_number,
-                       loanables.info_field AS loanable_info_field,
+                       loanables.loanable_info_field,
                        loanables.loanable_deleted,
                        loanables.shelf_id
                 FROM descriptors
@@ -41,7 +40,7 @@ public class JdbcInventory implements InventoryRepository {
         Databaseconnection databaseConnection = new Databaseconnection();
 
         try (Connection connection = databaseConnection.getDbConnection();
-                PreparedStatement statement = connection.prepareStatement(inventorySql)) {
+                PreparedStatement statement = connection.prepareStatement(Sql)) {
             statement.setInt(1, officeId);
 
             try (ResultSet result = statement.executeQuery()) {
