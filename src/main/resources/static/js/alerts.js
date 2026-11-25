@@ -127,10 +127,6 @@ export function showAlertView(alertView) {
     showNewAlerts = false;
 }
 
-function insertAlertHeader() {}
-
-function removeAlertHeader() {}
-
 function hasNewAlerts() {
     /* 
     checks if new alerts exist and then shows them
