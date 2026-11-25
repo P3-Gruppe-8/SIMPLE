@@ -48,7 +48,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
 
         String sql = """
                 INSERT INTO loan_agreement (loan_time, agreed_return_date, borrower, note, loanable_id)
-                VALUES (now(), ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         Databaseconnection db = new Databaseconnection();
@@ -57,10 +57,11 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
             conn.setAutoCommit(false);
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
 
-                statement.setObject(1, loanAgreementRegistration.agreed_return_date());
-                statement.setString(2, loanAgreementRegistration.borrower());
-                statement.setString(3, loanAgreementRegistration.note());
-                statement.setInt(4, loanable_id);
+                statement.setObject(1, OffsetDateTime.now());
+                statement.setObject(2, loanAgreementRegistration.agreed_return_date());
+                statement.setString(3, loanAgreementRegistration.borrower());
+                statement.setString(4, loanAgreementRegistration.note());
+                statement.setInt(5, loanable_id);
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected != 1) {
                     throw new AffectedRowsException("Expected 1 row affected, but was " + rowsAffected);
@@ -81,6 +82,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
                 UPDATE loan_agreements
                 SET agreed_return_date = ?
                 WHERE loan_id = ?
+                AND actual_return_date IS NULL
                 """;
 
         Databaseconnection db = new Databaseconnection();
