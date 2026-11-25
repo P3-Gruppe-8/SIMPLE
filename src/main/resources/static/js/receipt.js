@@ -110,6 +110,7 @@ export function setUpReceipt(receipt) {
         const input = document.createElement("input");
         input.type = "text";
         input.inputMode = "numeric";
+        input.autocomplete = "off";
         input.value = 1;
         input.addEventListener(
             "change",
