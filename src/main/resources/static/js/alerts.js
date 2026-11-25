@@ -91,7 +91,7 @@ export function showAlertView(alertView) {
     hideById("modeSwitch");
     hideById("newAlertsHeader");
     hideById("newAlertsRow");
-    hideById("newAlertsFooter");
+    hideById("oldAlertsHeader");
     hideById("oldAlertsRow");
 
     const headerLabel = document.getElementById("newAlertsHeaderLabel");
@@ -122,7 +122,7 @@ export function showAlertView(alertView) {
         return;
     }
 
-    showById("newAlertsFooter");
+    showById("oldAlertsHeader");
     ageAlerts();
     showNewAlerts = false;
 }
@@ -262,11 +262,11 @@ function sortForUrgency(a, b) {
 function buildAlerts(sortedAlertArray) {
     for (let alert in sortedAlertArray) {
         const alertObject = sortedAlertArray[alert];
-        createAlert(alertObject);
+        createAlert(alertObject, alert);
     }
 }
 
-function createAlert(alertObject) {
+function createAlert(alertObject, alert) {
     // creates html elements and appends them dynamically
     const alertType = alertObject.alertType;
     const urgencyValue = alertObject.urgency;
@@ -276,6 +276,8 @@ function createAlert(alertObject) {
 
     // create alert element
     const newAlertElement = document.createElement("div");
+    const newAlertElementId = "alertBox" + alert;
+    newAlertElement.id = newAlertElementId;
 
     let classString = "alert-box";
     const stockString = "stock";
