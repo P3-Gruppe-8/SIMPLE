@@ -2,11 +2,19 @@ package simple.dataaccess.jdbc;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
+import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
+import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.LoanAgreementRepository;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
+import simple.domain.transactionmanagement.LoanAgreement;
+import simple.dataaccess.jdbc.rowMapping.LoanAgreementMap;
 
 public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
     public void softDelete(String barcode) {
@@ -108,5 +116,36 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
         } catch (SQLException e) {
             throw new DataAccessException("Failed to change return date", e);
         }
+    }
+
+    public ArrayList<LoanAgreement> findAll(int officeId) {
+
+        ArrayList<LoanAgreement> loanAgreements = new ArrayList<LoanAgreement>();
+
+        String sql = """
+                SELECT loan_agreements.*, loanables.*, descriptors.*
+                FROM loan_agreements
+                JOIN loanables ON loan_agreements.loanable_id = loanables.loanable_id
+                JOIN descriptors ON loanables.descriptor_id = descriptors.descriptor_id
+                WHERE loan_agreements.actual_return_date IS NULL
+                AND descriptors.office_id = ?
+                """;
+
+        Databaseconnection databaseConnection = new Databaseconnection();
+
+        try (Connection connection = databaseConnection.getDbConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, officeId);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    loanAgreements.add(LoanAgreementMap.mapRow(result));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database error: Failed to retrieve loan agreements for office " + officeId,
+                    e);
+        }
+        return loanAgreements;
     }
 }
