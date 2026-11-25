@@ -13,7 +13,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
 
         String sql = """
                 UPDATE loan_agreements
-                SET actual_return_date = now()
+                SET actual_return_date = ?
                 FROM loanables
                 WHERE loan_agreements.loanable_id = loanables.loanable_id
                   AND loanables.loanable_barcode = ?
@@ -26,7 +26,8 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
         try (Connection conn = db.getDbConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, barcode);
+                statement.setObject(1, OffsetDateTime.now());
+                statement.setString(2, barcode);
 
                 int rowsAffected = statement.executeUpdate();
 
@@ -47,7 +48,7 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
     public void create(LoanAgreementRegistration loanAgreementRegistration, int loanable_id) {
 
         String sql = """
-                INSERT INTO loan_agreement (loan_time, agreed_return_date, borrower, note, loanable_id)
+                INSERT INTO loan_agreements (loan_time, agreed_return_date, borrower, note, loanable_id)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
