@@ -254,13 +254,13 @@ BEGIN
     -- Alert states correspond to seeded quantities.
 
     INSERT INTO stock_alerts
-        (urgency, active, muted,
+        (urgency, raised, muted,
          min_quantity, descriptor_id)
     VALUES
-        ('WARNING', FALSE, FALSE, 10, cable_id),
-        ('WARNING', TRUE, FALSE, 5, toner_id),
-        ('CRITICAL', TRUE, FALSE, 4, battery_id),
-        ('WARNING', FALSE, FALSE, 5, aarhus_cable_id);
+        ('WARNING', NULL, FALSE, 10, cable_id),
+        ('WARNING', CURRENT_TIMESTAMP, FALSE, 5, toner_id),
+        ('CRITICAL', CURRENT_TIMESTAMP, FALSE, 4, battery_id),
+        ('WARNING', NULL, FALSE, 5, aarhus_cable_id);
 
 
     -- =========================================
@@ -268,13 +268,13 @@ BEGIN
     -- =========================================
 
     -- Current loan is not overdue.
-    -- Overdue loan has an active warning.
+    -- Overdue loan has a raised warning.
 
     INSERT INTO loan_alerts
-        (urgency, active, muted, loan_id)
+        (urgency, raised, muted, loan_id)
     VALUES
-        ('WARNING', FALSE, FALSE, current_loan_id),
-        ('WARNING', TRUE, FALSE, overdue_loan_id);
+        ('WARNING', NULL, FALSE, current_loan_id),
+        ('WARNING', CURRENT_TIMESTAMP - INTERVAL '3 days', FALSE, overdue_loan_id);
 
 
     -- =========================================

@@ -3,5 +3,5 @@ package simple.domain.repository;
 import simple.domain.alert.AlertOverview;
 
 public interface AlertRepository {
-    AlertOverview findActiveByOffice(int officeId);
+    AlertOverview findActiveAlertsByOffice(int officeId);
 }

@@ -154,7 +154,7 @@ WHERE actual_return_date IS NULL;
 CREATE TABLE stock_alerts (
   stock_alert_id SERIAL PRIMARY KEY,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  Raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   min_quantity INTEGER NOT NULL CHECK (min_quantity >= 0),
   -- Soft delete, null if not deleted
@@ -166,7 +166,7 @@ CREATE TABLE stock_alerts (
 CREATE TABLE loan_alerts (
   loan_alert_id SERIAL PRIMARY KEY,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   -- Soft delete, null if not deleted
   loan_alert_deleted TIMESTAMPTZ,
@@ -180,7 +180,7 @@ CREATE TABLE inactivity_alerts (
   alert_name VARCHAR(50) NOT NULL,
   log_types VARCHAR(500) NOT NULL,
   urgency VARCHAR(10) NOT NULL CONSTRAINT valid_urgency CHECK (urgency in ('INFO', 'WARNING', 'CRITICAL')),
-  active BOOLEAN NOT NULL,
+  raised TIMESTAMPTZ,
   muted BOOLEAN NOT NULL,
   -- Minimum number of matching log entries within the interval.
   threshold_transactions INTEGER NOT NULL CHECK (threshold_transactions >= 0),
