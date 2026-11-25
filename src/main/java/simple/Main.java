@@ -5,8 +5,6 @@ import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcInventory;
-import simple.domain.itemmanagement.Inventory;
-import simple.dataaccess.jdbc.JdbcInventory;
 import simple.dataaccess.jdbc.JdbcLoanAlertDAO;
 import simple.dataaccess.jdbc.JdbcStockAlertDAO;
 import simple.domain.itemmanagement.Descriptor;
