@@ -3,7 +3,6 @@ package simple.dataaccess.jdbc.rowMapping;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
-
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.transactionmanagement.LoanAgreement;
 
@@ -20,6 +19,5 @@ public class LoanAgreementMap {
                 result.getString("note"),
                 result.getObject("actual_return_date", OffsetDateTime.class),
                 loanable);
-                
     }
 }

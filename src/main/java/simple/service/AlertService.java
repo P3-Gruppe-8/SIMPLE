@@ -1,12 +1,11 @@
 package simple.service;
 
 import java.util.ArrayList;
-
 import simple.domain.alert.AlertOverview;
 import simple.domain.alert.LoanAlert;
 import simple.domain.alert.StockAlert;
-import simple.domain.dao.StockAlertDAO;
 import simple.domain.dao.LoanAlertDAO;
+import simple.domain.dao.StockAlertDAO;
 
 public class AlertService {
     private final StockAlertDAO stockAlertDAO;

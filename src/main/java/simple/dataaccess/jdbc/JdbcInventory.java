@@ -57,5 +57,6 @@ public class JdbcInventory implements InventoryRepository {
         }
 
         return new Inventory(consumables, loanables);
-    };
+    }
+    ;
 }

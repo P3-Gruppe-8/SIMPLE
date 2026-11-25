@@ -5,12 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.StockAlertMap;
 import simple.domain.alert.StockAlert;
-import simple.domain.exception.DataAccessException;
 import simple.domain.dao.StockAlertDAO;
+import simple.domain.exception.DataAccessException;
 
 public class JdbcStockAlertDAO implements StockAlertDAO {
 

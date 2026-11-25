@@ -1,13 +1,12 @@
 package simple;
 
 import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.JdbcStockAlertDAO;
-import simple.dataaccess.jdbc.JdbcLoanAlertDAO;
 import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcInventory;
+import simple.dataaccess.jdbc.JdbcLoanAlertDAO;
+import simple.dataaccess.jdbc.JdbcStockAlertDAO;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
@@ -54,16 +53,14 @@ public class Main {
 
         JdbcDescriptorRepository jdbcDescriptorRepository = new JdbcDescriptorRepository();
 
-        Optional<Descriptor> descriptor1 = jdbcDescriptorRepository
-                .findByBarcode("DEMO-USB-C-1M", 1);
+        Optional<Descriptor> descriptor1 = jdbcDescriptorRepository.findByBarcode("DEMO-USB-C-1M", 1);
 
-        System.out.println("Quantaty før ændring: " +
-                descriptor1.orElseThrow().quantity());
+        System.out.println("Quantaty før ændring: " + descriptor1.orElseThrow().quantity());
 
         descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
 
-        System.out.println("Quantaty efter ændring: " +
-                descriptor1.orElseThrow().quantity());
+        System.out.println(
+                "Quantaty efter ændring: " + descriptor1.orElseThrow().quantity());
 
         // Use port from environment variables if available,
         // Azure supplies this port because it is what it opens
