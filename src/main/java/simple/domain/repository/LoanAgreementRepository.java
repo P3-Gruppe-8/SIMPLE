@@ -2,7 +2,6 @@ package simple.domain.repository;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-
 import simple.domain.transactionmanagement.LoanAgreement;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
 

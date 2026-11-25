@@ -3,7 +3,6 @@ package simple.dataaccess.jdbc.rowMapping;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
-
 import simple.domain.alert.LoanAlert;
 import simple.domain.alert.Urgency;
 import simple.domain.transactionmanagement.LoanAgreement;

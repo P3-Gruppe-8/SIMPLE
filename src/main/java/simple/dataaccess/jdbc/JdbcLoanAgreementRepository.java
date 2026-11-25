@@ -3,18 +3,13 @@ package simple.dataaccess.jdbc;
 import java.sql.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
-
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
-import simple.dataaccess.jdbc.rowMapping.LoanableMap;
+import simple.dataaccess.jdbc.rowMapping.LoanAgreementMap;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
-import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.LoanAgreementRepository;
-import simple.domain.transactionmanagement.LoanAgreementRegistration;
 import simple.domain.transactionmanagement.LoanAgreement;
-import simple.dataaccess.jdbc.rowMapping.LoanAgreementMap;
+import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
     public void softDelete(String barcode) {
@@ -143,8 +138,8 @@ public class JdbcLoanAgreementRepository implements LoanAgreementRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Database error: Failed to retrieve loan agreements for office " + officeId,
-                    e);
+            throw new DataAccessException(
+                    "Database error: Failed to retrieve loan agreements for office " + officeId, e);
         }
         return loanAgreements;
     }

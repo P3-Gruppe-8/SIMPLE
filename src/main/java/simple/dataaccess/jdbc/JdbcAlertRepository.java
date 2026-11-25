@@ -5,10 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.StockAlertMap;
 import simple.dataaccess.jdbc.rowMapping.LoanAlertMap;
+import simple.dataaccess.jdbc.rowMapping.StockAlertMap;
 import simple.domain.alert.AlertOverview;
 import simple.domain.alert.LoanAlert;
 import simple.domain.alert.StockAlert;
@@ -27,13 +26,11 @@ public class JdbcAlertRepository implements AlertRepository {
 
             return new AlertOverview(stockAlerts, loanAlerts);
         } catch (SQLException e) {
-            throw new DataAccessException(
-                    "Failed to load active alerts for office " + officeId, e);
+            throw new DataAccessException("Failed to load active alerts for office " + officeId, e);
         }
     }
 
-    private ArrayList<StockAlert> findStockAlerts(Connection connection, int officeId)
-            throws SQLException {
+    private ArrayList<StockAlert> findStockAlerts(Connection connection, int officeId) throws SQLException {
         String sql = """
                 SELECT stock_alerts.*, descriptors.*
                 FROM stock_alerts
@@ -62,8 +59,7 @@ public class JdbcAlertRepository implements AlertRepository {
         return stockAlerts;
     }
 
-    private ArrayList<LoanAlert> findLoanAlerts(Connection connection, int officeId)
-            throws SQLException {
+    private ArrayList<LoanAlert> findLoanAlerts(Connection connection, int officeId) throws SQLException {
         String sql = """
                 SELECT loan_alerts.*, loan_agreements.*, loanables.*, descriptors.*
                 FROM loan_alerts

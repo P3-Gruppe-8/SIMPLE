@@ -23,8 +23,7 @@ public class Main {
         System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // Test af getOverviewByOffice
-        InventoryService inventoryService = new InventoryService(new
-        JdbcInventory());
+        InventoryService inventoryService = new InventoryService(new JdbcInventory());
 
         Inventory inventory = inventoryService.getOverviewByOffice(1);
 
