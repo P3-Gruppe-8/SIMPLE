@@ -1,10 +1,17 @@
 package simple;
 
+import java.util.Optional;
+
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.JdbcStockAlertDAO;
+import simple.dataaccess.jdbc.JdbcLoanAlertDAO;
+import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcInventory;
+import simple.domain.itemmanagement.Descriptor;
 import simple.domain.itemmanagement.Inventory;
 import simple.presentation.Server;
+import simple.service.AlertService;
 import simple.service.ITStaffService;
 import simple.service.InventoryService;
 
@@ -16,6 +23,16 @@ public class Main {
         // Applies pending database migrations before starting the server.
         db.migrate();
 
+        // Get alerts by office id test:
+
+        AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new JdbcLoanAlertDAO());
+
+        System.out.println("Stock alerts:");
+        alertService.getActiveByOfficeId(1).stockAlerts().forEach(System.out::println);
+
+        System.out.println("Loan alerts:");
+        alertService.getActiveByOfficeId(1).loanAlerts().forEach(System.out::println);
+
         // Test af existsByUsername:
 
         ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
@@ -23,8 +40,7 @@ public class Main {
         System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // Test af getOverviewByOffice
-        InventoryService inventoryService = new InventoryService(new
-        JdbcInventory());
+        InventoryService inventoryService = new InventoryService(new JdbcInventory());
 
         Inventory inventory = inventoryService.getOverviewByOffice(1);
 
@@ -36,19 +52,18 @@ public class Main {
 
         // Tests af findByBarcode og changeQuantity på descriptor
 
-        // JdbcDescriptorRepository jdbcDescriptorRepository = new
-        // JdbcDescriptorRepository();
+        JdbcDescriptorRepository jdbcDescriptorRepository = new JdbcDescriptorRepository();
 
-        // Optional<Descriptor> descriptor1 = jdbcDescriptorRepository
-        // .findByBarcode("DEMO-USB-C-1M", 1);
+        Optional<Descriptor> descriptor1 = jdbcDescriptorRepository
+                .findByBarcode("DEMO-USB-C-1M", 1);
 
-        // System.out.println("Quantaty før ændring: " +
-        // descriptor1.orElseThrow().quantity());
+        System.out.println("Quantaty før ændring: " +
+                descriptor1.orElseThrow().quantity());
 
-        // descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
+        descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
 
-        // System.out.println("Quantaty efter ændring: " +
-        // descriptor1.orElseThrow().quantity());
+        System.out.println("Quantaty efter ændring: " +
+                descriptor1.orElseThrow().quantity());
 
         // Use port from environment variables if available,
         // Azure supplies this port because it is what it opens

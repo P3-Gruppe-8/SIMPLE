@@ -11,6 +11,6 @@ public class InventoryService {
     }
 
     public Inventory getOverviewByOffice(int officeId) {
-        return inventoryRepository.getOverviewByOffice(officeId);
+        return inventoryRepository.getInventoryByOffice(officeId);
     }
 }
