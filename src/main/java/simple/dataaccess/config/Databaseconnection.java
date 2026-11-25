@@ -1,10 +1,9 @@
 package simple.dataaccess.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import simple.domain.exception.DataAccessException;
-
 import java.sql.*;
 import org.flywaydb.core.Flyway;
+import simple.domain.exception.DataAccessException;
 
 public class Databaseconnection {
 
@@ -73,7 +72,7 @@ public class Databaseconnection {
             conn.rollback();
         } catch (SQLException e) {
             throw new DataAccessException("Unable to perform rollback on database", e);
-        } 
+        }
     }
 
     public void executeCommit(Connection conn) {
@@ -81,6 +80,6 @@ public class Databaseconnection {
             conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Unable to perform commit on database", e);
-        }        
+        }
     }
 }

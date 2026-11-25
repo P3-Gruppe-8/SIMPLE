@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
-
+import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.repository.DescriptorRepository;
@@ -72,7 +72,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     AND db.office_id = ?;
                 """;
 
-        try (PreparedStatement statement = conn.prepareStatement(sql);) {
+        try (PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery()) {
@@ -100,7 +100,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     AND office_id = ?
                 """;
 
-        try (PreparedStatement statement = conn.prepareStatement(sql);) {
+        try (PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setInt(1, descriptor_id);
             statement.setInt(2, office_id);
             int result = statement.executeUpdate();
@@ -111,7 +111,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             } else {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
-                throw new DataAccessException("Failed to delete descriptor: 0 or more than 1 row affected");
+                throw new AffectedRowsException("Failed to delete descriptor: 0 or more than 1 row affected");
             }
         } catch (SQLException e) {
             db.executeRollback(conn);
@@ -120,8 +120,13 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         }
     }
 
-    public boolean createNew(String descriptor_name, boolean is_loanable, String info_field, int office_id,
-            String barcode, int shelf_id) {
+    public boolean createNew(
+            String descriptor_name,
+            boolean is_loanable,
+            String info_field,
+            int office_id,
+            String barcode,
+            int shelf_id) {
 
         Databaseconnection db = new Databaseconnection();
 
@@ -208,7 +213,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                 INSERT INTO descriptor_barcodes (barcode_key, descriptor_id, office_id)
                 VALUES (?, ?, ?)
                 """;
-        try (PreparedStatement statement = conn.prepareStatement(sql);) {
+        try (PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
             statement.setInt(2, descriptor_id);
             statement.setInt(3, office_id);
@@ -219,7 +224,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             } else {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
-                throw new DataAccessException("Failed to add barcode to descriptor: 0 or more than 1 row affected");
+                throw new AffectedRowsException("Failed to add barcode to descriptor: 0 or more than 1 row affected");
             }
         } catch (SQLException e) {
             db.executeRollback(conn);

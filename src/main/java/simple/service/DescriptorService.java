@@ -1,7 +1,6 @@
 package simple.service;
 
 import java.util.Optional;
-
 import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.domain.itemmanagement.Descriptor;
 
@@ -21,7 +20,12 @@ public class DescriptorService {
         }
     }
 
-    public void register(String descriptor_name, boolean is_loanable, String info_field, int office_id, String barcode,
+    public void register(
+            String descriptor_name,
+            boolean is_loanable,
+            String info_field,
+            int office_id,
+            String barcode,
             int shelf_id) {
         JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
         boolean result = jdbc.createNew(descriptor_name, is_loanable, info_field, office_id, barcode, shelf_id);
@@ -32,12 +36,9 @@ public class DescriptorService {
         Optional<Descriptor> opt_descriptor = jdbc.changeQuantity(barcode, office_id, change);
     }
 
-    public void getItemDetails(String barcode) {
-    }
+    public void getItemDetails(String barcode) {}
 
-    public void removeShelf(String barcode, int shelf_id) {
-    }
+    public void removeShelf(String barcode, int shelf_id) {}
 
-    public void addShelf(String barcode, int shelf_id) {
-    }
+    public void addShelf(String barcode, int shelf_id) {}
 }
