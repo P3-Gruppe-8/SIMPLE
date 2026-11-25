@@ -13,15 +13,15 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
     @Override
     public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta) {
         String sql = """
-                UPDATE descriptors AS d
-                SET quantity = d.quantity + ?
-                FROM descriptor_barcodes AS b
-                WHERE b.descriptor_id = d.descriptor_id
-                  AND b.barcode_key = ?
-                  AND b.office_id = ?
-                  AND d.is_loanable = false
-                  AND d.quantity IS NOT NULL
-                RETURNING d.*
+                UPDATE descriptors
+                SET quantity = descriptors.quantity + ?
+                FROM descriptor_barcodes
+                WHERE descriptor_barcodes.descriptor_id = descriptors.descriptor_id
+                  AND descriptor_barcodes.barcode_key = ?
+                  AND descriptor_barcodes.office_id = ?
+                  AND descriptors.is_loanable = false
+                  AND descriptors.quantity IS NOT NULL
+                RETURNING descriptors.*
                 """;
 
         Databaseconnection db = new Databaseconnection();
@@ -45,13 +45,13 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
     public Optional<Descriptor> findByBarcode(String barcode, int office_id) {
         Databaseconnection db = new Databaseconnection();
         String sql = """
-                SELECT d.*
-                FROM descriptors d
-                JOIN descriptor_barcodes db
-                    ON d.descriptor_id = db.descriptor_id
-                    AND d.office_id = db.office_id
-                WHERE db.barcode_key = ?
-                    AND db.office_id = ?;
+                SELECT descriptors.*
+                FROM descriptors
+                JOIN descriptor_barcodes
+                    ON descriptors.descriptor_id = descriptor_barcodes.descriptor_id
+                    AND descriptors.office_id = descriptor_barcodes.office_id
+                WHERE descriptor_barcodes.barcode_key = ?
+                    AND descriptor_barcodes.office_id = ?;
                 """;
 
         try (Connection conn = db.getDbConnection();
