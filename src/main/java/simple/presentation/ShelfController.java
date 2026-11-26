@@ -16,11 +16,11 @@ public class ShelfController {
         this.shelfService = shelfService;
     }
 
-    public void getAll(Context ctx) {
+    public void getAll(Context context) {
         List<String> names = new ArrayList<>();
-        for (Shelf shelf : shelfService.getAllByOffice(requireOfficeId(ctx))) {
+        for (Shelf shelf : shelfService.getAllByOffice(requireOfficeId(context))) {
             names.add(shelf.name());
         }
-        ctx.json(names);
+        context.json(names);
     }
 }

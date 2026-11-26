@@ -29,76 +29,77 @@ public class DescriptorController {
         return new NotFoundResponse("No item type with barcode " + barcode);
     }
 
-    public void create(Context ctx) {
-        requireStaffId(ctx); // TODO: pass to the service
-        var registration = ctx.bodyAsClass(DescriptorRegistration.class);
+    public void create(Context context) {
+        requireStaffId(context); // TODO: pass to the service
+        var registration = context.bodyAsClass(DescriptorRegistration.class);
         // the register dialog only registers consumables, and has no info field yet
         try {
             descriptorService.register(
                     registration.name(),
                     false,
                     null,
-                    requireOfficeId(ctx),
+                    requireOfficeId(context),
                     registration.barcode(),
                     registration.shelf());
         } catch (NotFoundException e) {
-            ctx.status(HttpStatus.NOT_FOUND).result(e.getMessage());
+            context.status(HttpStatus.NOT_FOUND).result(e.getMessage());
             return;
         } catch (AlreadyExistsException e) {
-            ctx.status(HttpStatus.CONFLICT).result(e.getMessage());
+            context.status(HttpStatus.CONFLICT).result(e.getMessage());
             return;
         }
-        ctx.status(HttpStatus.CREATED).result("Registered " + registration.name());
+        context.status(HttpStatus.CREATED).result("Registered " + registration.name());
     }
 
-    public void getOne(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
+    public void getOne(Context context) {
+        var barcode = context.pathParam("barcode");
         Descriptor descriptor = descriptorService
-                .findByBarcode(barcode, requireOfficeId(ctx))
+                .findByBarcode(barcode, requireOfficeId(context))
                 .orElseThrow(() -> noSuchItemType(barcode));
-        ctx.json(new DescriptorDetails(barcode, descriptor.name(), descriptor.quantity()));
+        context.json(new DescriptorDetails(barcode, descriptor.name(), descriptor.quantity()));
     }
 
-    public void delete(Context ctx) {
-        requireStaffId(ctx);
-        var barcode = ctx.pathParam("barcode");
-        Descriptor deleted =
-                descriptorService.deregister(barcode, requireOfficeId(ctx)).orElseThrow(() -> noSuchItemType(barcode));
-        ctx.result("Deleted item type " + deleted.name());
+    public void delete(Context context) {
+        requireStaffId(context);
+        var barcode = context.pathParam("barcode");
+        Descriptor deleted = descriptorService
+                .deregister(barcode, requireOfficeId(context))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        context.result("Deleted item type " + deleted.name());
     }
 
-    private static int requirePositiveAmount(Context ctx) {
-        var change = ctx.bodyAsClass(StockChange.class);
+    private static int requirePositiveAmount(Context context) {
+        var change = context.bodyAsClass(StockChange.class);
         if (change.amount() < 1) {
             throw new BadRequestResponse("The amount must be at least 1");
         }
         return change.amount();
     }
 
-    public void restock(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        int amount = requirePositiveAmount(ctx);
+    public void restock(Context context) {
+        var barcode = context.pathParam("barcode");
+        int amount = requirePositiveAmount(context);
         Descriptor descriptor = descriptorService
-                .restock(barcode, requireOfficeId(ctx), amount)
+                .restock(barcode, requireOfficeId(context), amount)
                 .orElseThrow(() -> noSuchItemType(barcode));
-        ctx.result("Restocked " + descriptor.name());
+        context.result("Restocked " + descriptor.name());
     }
 
-    public void writeOff(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        int amount = requirePositiveAmount(ctx);
-        int officeId = requireOfficeId(ctx);
+    public void writeOff(Context context) {
+        var barcode = context.pathParam("barcode");
+        int amount = requirePositiveAmount(context);
+        int officeId = requireOfficeId(context);
         try {
             Descriptor descriptor =
                     descriptorService.writeOff(barcode, officeId, amount).orElseThrow(() -> noSuchItemType(barcode));
-            ctx.result("Wrote off " + descriptor.name());
+            context.result("Wrote off " + descriptor.name());
         } catch (QuantityException e) {
             String name = barcode;
             Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, officeId);
             if (descriptor.isPresent()) {
                 name = descriptor.get().name();
             }
-            ctx.status(HttpStatus.CONFLICT).result("Not enough " + name + " in stock");
+            context.status(HttpStatus.CONFLICT).result("Not enough " + name + " in stock");
         }
     }
 
@@ -108,31 +109,31 @@ public class DescriptorController {
             "5060337502290", List.of("b1"),
             "5741000142899", List.of("c1", "c2", "c3"));
 
-    public void getPossibleShelves(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
+    public void getPossibleShelves(Context context) {
+        var barcode = context.pathParam("barcode");
         // TODO: descriptorService.getPossibleShelves(barcode)
-        descriptorService.findByBarcode(barcode, requireOfficeId(ctx)).orElseThrow(() -> noSuchItemType(barcode));
-        ctx.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
+        descriptorService.findByBarcode(barcode, requireOfficeId(context)).orElseThrow(() -> noSuchItemType(barcode));
+        context.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
     }
 
     // replaces the whole possible shelves list
-    public void setPossibleShelves(Context ctx) {
-        requireStaffId(ctx);
-        var barcode = ctx.pathParam("barcode");
-        var shelves = ctx.bodyAsClass(String[].class);
+    public void setPossibleShelves(Context context) {
+        requireStaffId(context);
+        var barcode = context.pathParam("barcode");
+        var shelves = context.bodyAsClass(String[].class);
         // TODO: descriptorService.setPossibleShelves(barcode, shelves), in one database
         // transaction
         Descriptor descriptor = descriptorService
-                .findByBarcode(barcode, requireOfficeId(ctx))
+                .findByBarcode(barcode, requireOfficeId(context))
                 .orElseThrow(() -> noSuchItemType(barcode));
-        ctx.result("Updated the possible shelves of " + descriptor.name());
+        context.result("Updated the possible shelves of " + descriptor.name());
     }
 
     // adds one shelf to a descriptor's possible shelves list
-    public void addShelf(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        var shelf = ctx.pathParam("shelf");
+    public void addShelf(Context context) {
+        var barcode = context.pathParam("barcode");
+        var shelf = context.pathParam("shelf");
         // TODO: descriptorService.addShelf(barcode, shelf)
-        ctx.result("Added shelf " + shelf + " to " + barcode);
+        context.result("Added shelf " + shelf + " to " + barcode);
     }
 }

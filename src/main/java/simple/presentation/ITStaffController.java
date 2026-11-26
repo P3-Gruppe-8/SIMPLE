@@ -14,12 +14,12 @@ public class ITStaffController {
         this.itStaffService = itStaffService;
     }
 
-    public void checkExists(Context ctx) {
-        var username = ctx.pathParam("username");
-        if (itStaffService.existsByUsername(username, requireOfficeId(ctx))) {
-            ctx.result(username);
+    public void checkExists(Context context) {
+        var username = context.pathParam("username");
+        if (itStaffService.existsByUsername(username, requireOfficeId(context))) {
+            context.result(username);
         } else {
-            ctx.status(HttpStatus.NOT_FOUND).result("Unknown staff ID " + username);
+            context.status(HttpStatus.NOT_FOUND).result("Unknown staff ID " + username);
         }
     }
 }

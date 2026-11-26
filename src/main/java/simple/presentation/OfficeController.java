@@ -11,7 +11,7 @@ public class OfficeController {
         this.officeService = officeService;
     }
 
-    public void getAll(Context ctx) {
-        ctx.json(officeService.getAll());
+    public void getAll(Context context) {
+        context.json(officeService.getAll());
     }
 }

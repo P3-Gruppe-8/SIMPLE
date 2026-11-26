@@ -25,8 +25,8 @@ public class Server {
             ShelfController shelfController) {
 
         var app = Javalin.create(config -> {
-            config.requestLogger.http(
-                    (ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
+            config.requestLogger.http((context, ms) ->
+                    log.info("{} {} -> {} ({} ms)", context.method(), context.path(), context.statusCode(), ms));
             // When run from the repo, serve the source folder straight from disk for hot
             // reloads
             if (Files.isDirectory(Path.of(DEV_STATIC_DIR))) {
@@ -40,12 +40,12 @@ public class Server {
             } else {
                 config.staticFiles.add("/static", Location.CLASSPATH);
             }
-            config.routes.get("/", ctx -> ctx.redirect("index.html"));
-            config.routes.get("/ping", ctx -> ctx.result("Pong!"));
+            config.routes.get("/", context -> context.redirect("index.html"));
+            config.routes.get("/ping", context -> context.result("Pong!"));
 
-            config.routes.exception(DataAccessException.class, (e, ctx) -> {
-                log.error("Database error on {} {}", ctx.method(), ctx.path(), e);
-                ctx.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
+            config.routes.exception(DataAccessException.class, (e, context) -> {
+                log.error("Database error on {} {}", context.method(), context.path(), e);
+                context.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
             });
 
             config.routes.apiBuilder(() -> {
