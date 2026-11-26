@@ -46,9 +46,16 @@ export async function deregisterItemType(barcode) {
     return await send("DELETE", descriptorPath(barcode));
 }
 
-// negative writes off, positive restocks
-export async function changeStock(barcode, change) {
-    return await send("PATCH", descriptorPath(barcode), { change: change });
+export async function restock(barcode, amount) {
+    return await send("POST", descriptorPath(barcode) + "/restock", {
+        amount: amount,
+    });
+}
+
+export async function writeOff(barcode, amount) {
+    return await send("POST", descriptorPath(barcode) + "/write-off", {
+        amount: amount,
+    });
 }
 
 // the item type's possible shelves, as a list of shelf names

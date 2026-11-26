@@ -1,12 +1,13 @@
 // Submit handlers and behaviour for the menu dialogs.
 import {
     addItemTypeLocation,
-    changeStock,
     deregisterItemType,
     getItemDetails,
     getItemTypeLocations,
     registerItemType,
+    restock,
     setItemTypeLocations,
+    writeOff,
 } from "./api.js";
 import { hide, show } from "./navigation.js";
 import { showErrorToast, showToast } from "./toast.js";
@@ -58,7 +59,7 @@ function setUpWriteOffDialog() {
         .addEventListener("submit", () => {
             const receipt = document.getElementById("write-off-receipt");
             showReceiptResults("Write Off", getReceiptItems(receipt), (item) =>
-                changeStock(item.barcode, -item.amount),
+                writeOff(item.barcode, item.amount),
             );
         });
 }
@@ -73,7 +74,7 @@ function setUpRestockDialog() {
                 "Restock",
                 getReceiptItems(receipt),
                 async (item) => {
-                    await changeStock(item.barcode, item.amount);
+                    await restock(item.barcode, item.amount);
                     // adding a shelf is idempotent, so it's fine if the item type already has it
                     if (shelf) {
                         await addItemTypeLocation(item.barcode, shelf);

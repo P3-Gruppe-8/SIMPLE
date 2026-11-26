@@ -1,5 +1,5 @@
 // Mode switching and view history.
-import { changeStock, checkStaff } from "./api.js";
+import { checkStaff, writeOff } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
 import { showErrorToast, showToast } from "./toast.js";
 import { loadOffices } from "./debug.js";
@@ -185,7 +185,7 @@ export function logOut() {
 
 export function quickWriteOff(barcode) {
     if (viewHistory.at(-1) !== "defaultView") return;
-    changeStock(barcode, -1)
+    writeOff(barcode, 1)
         .then((text) => showToast(text))
         .catch((error) => {
             console.error(error);

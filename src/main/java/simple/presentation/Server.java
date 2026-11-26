@@ -53,7 +53,8 @@ public class Server {
                     post(descriptorController::create);
                     path("/{barcode}", () -> {
                         get(descriptorController::getOne);
-                        patch(descriptorController::update);
+                        post("/restock", descriptorController::restock);
+                        post("/write-off", descriptorController::writeOff);
                         delete(descriptorController::delete);
                         path("/shelves", () -> {
                             get(descriptorController::getPossibleShelves);

@@ -3,6 +3,7 @@ package simple.presentation;
 import static simple.presentation.RequestHeaders.requireOfficeId;
 import static simple.presentation.RequestHeaders.requireStaffId;
 
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
@@ -66,34 +67,39 @@ public class DescriptorController {
         ctx.result("Deleted item type " + deleted.name());
     }
 
-    public void update(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        var patch = ctx.bodyAsClass(DescriptorPatch.class);
-        if (patch.change() == 0) {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Nothing to change");
-            return;
+    private static int requirePositiveAmount(Context ctx) {
+        var change = ctx.bodyAsClass(StockChange.class);
+        if (change.amount() < 1) {
+            throw new BadRequestResponse("The amount must be at least 1");
         }
+        return change.amount();
+    }
 
-        Optional<Descriptor> changed;
+    public void restock(Context ctx) {
+        var barcode = ctx.pathParam("barcode");
+        int amount = requirePositiveAmount(ctx);
+        Descriptor descriptor = descriptorService
+                .restock(barcode, requireOfficeId(ctx), amount)
+                .orElseThrow(() -> noSuchItemType(barcode));
+        ctx.result("Restocked " + descriptor.name());
+    }
+
+    public void writeOff(Context ctx) {
+        var barcode = ctx.pathParam("barcode");
+        int amount = requirePositiveAmount(ctx);
+        int officeId = requireOfficeId(ctx);
         try {
-            if (patch.change() < 0) {
-                changed = descriptorService.writeOff(barcode, requireOfficeId(ctx), -patch.change());
-            } else {
-                changed = descriptorService.restock(barcode, requireOfficeId(ctx), patch.change());
-            }
+            Descriptor descriptor =
+                    descriptorService.writeOff(barcode, officeId, amount).orElseThrow(() -> noSuchItemType(barcode));
+            ctx.result("Wrote off " + descriptor.name());
         } catch (QuantityException e) {
             String name = barcode;
-            Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, requireOfficeId(ctx));
+            Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, officeId);
             if (descriptor.isPresent()) {
                 name = descriptor.get().name();
             }
             ctx.status(HttpStatus.CONFLICT).result("Not enough " + name + " in stock");
-            return;
         }
-
-        Descriptor descriptor = changed.orElseThrow(() -> noSuchItemType(barcode));
-        String verb = patch.change() < 0 ? "Wrote off " : "Restocked ";
-        ctx.result(verb + descriptor.name());
     }
 
     // TODO: replace when shelves come from the database
