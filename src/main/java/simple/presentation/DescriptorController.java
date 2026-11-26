@@ -5,6 +5,7 @@ import static simple.presentation.RequestHeaders.requireStaffId;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.NotFoundResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,8 +24,8 @@ public class DescriptorController {
         this.descriptorService = descriptorService;
     }
 
-    private static void notFound(Context ctx, String barcode) {
-        ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
+    private static NotFoundResponse noSuchItemType(String barcode) {
+        return new NotFoundResponse("No item type with barcode " + barcode);
     }
 
     public void create(Context ctx) {
@@ -51,24 +52,18 @@ public class DescriptorController {
 
     public void getOne(Context ctx) {
         var barcode = ctx.pathParam("barcode");
-        Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, requireOfficeId(ctx));
-        if (descriptor.isEmpty()) {
-            notFound(ctx, barcode);
-            return;
-        }
-        Descriptor found = descriptor.get();
-        ctx.json(new DescriptorDetails(barcode, found.name(), found.quantity()));
+        Descriptor descriptor = descriptorService
+                .findByBarcode(barcode, requireOfficeId(ctx))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        ctx.json(new DescriptorDetails(barcode, descriptor.name(), descriptor.quantity()));
     }
 
     public void delete(Context ctx) {
         requireStaffId(ctx);
         var barcode = ctx.pathParam("barcode");
-        Optional<Descriptor> deleted = descriptorService.deregister(barcode, requireOfficeId(ctx));
-        if (deleted.isEmpty()) {
-            notFound(ctx, barcode);
-            return;
-        }
-        ctx.result("Deleted item type " + deleted.get().name());
+        Descriptor deleted =
+                descriptorService.deregister(barcode, requireOfficeId(ctx)).orElseThrow(() -> noSuchItemType(barcode));
+        ctx.result("Deleted item type " + deleted.name());
     }
 
     public void update(Context ctx) {
@@ -96,12 +91,9 @@ public class DescriptorController {
             return;
         }
 
-        if (changed.isEmpty()) {
-            notFound(ctx, barcode);
-            return;
-        }
+        Descriptor descriptor = changed.orElseThrow(() -> noSuchItemType(barcode));
         String verb = patch.change() < 0 ? "Wrote off " : "Restocked ";
-        ctx.result(verb + changed.get().name());
+        ctx.result(verb + descriptor.name());
     }
 
     // TODO: replace when shelves come from the database
@@ -113,11 +105,8 @@ public class DescriptorController {
     public void getPossibleShelves(Context ctx) {
         var barcode = ctx.pathParam("barcode");
         // TODO: descriptorService.getPossibleShelves(barcode)
-        if (descriptorService.findByBarcode(barcode, requireOfficeId(ctx)).isEmpty()) {
-            notFound(ctx, barcode);
-        } else {
-            ctx.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
-        }
+        descriptorService.findByBarcode(barcode, requireOfficeId(ctx)).orElseThrow(() -> noSuchItemType(barcode));
+        ctx.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
     }
 
     // replaces the whole possible shelves list
@@ -127,12 +116,10 @@ public class DescriptorController {
         var shelves = ctx.bodyAsClass(String[].class);
         // TODO: descriptorService.setPossibleShelves(barcode, shelves), in one database
         // transaction
-        Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, requireOfficeId(ctx));
-        if (descriptor.isEmpty()) {
-            notFound(ctx, barcode);
-        } else {
-            ctx.result("Updated the possible shelves of " + descriptor.get().name());
-        }
+        Descriptor descriptor = descriptorService
+                .findByBarcode(barcode, requireOfficeId(ctx))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        ctx.result("Updated the possible shelves of " + descriptor.name());
     }
 
     // adds one shelf to a descriptor's possible shelves list
