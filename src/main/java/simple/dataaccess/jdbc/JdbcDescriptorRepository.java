@@ -6,6 +6,7 @@ import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.domain.exception.AffectedRowsException;
 import simple.domain.exception.DataAccessException;
+import simple.domain.exception.QuantityException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.repository.DescriptorRepository;
 
@@ -50,11 +51,11 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             if ("23514".equals(e.getSQLState())) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
-                throw new DataAccessException("Failed to change descriptor quantity", e);
+                throw new QuantityException("Not enough in stock", e);
             }
             db.executeRollback(conn);
             db.closeConnection(conn);
-            return Optional.empty();
+            throw new DataAccessException("Failed to change descriptor quantity", e);
         }
     }
 
