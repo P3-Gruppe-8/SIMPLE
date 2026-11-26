@@ -3,19 +3,21 @@ package simple.presentation;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.staticfiles.Location;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
+import simple.domain.exception.DataAccessException;
 
 public class Server {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final String DEV_STATIC_DIR = "src/main/resources/static";
 
-    public static void start(int port, OfficeController officeController) {
+    public static void start(int port, DescriptorController descriptorController, OfficeController officeController) {
 
         var app = Javalin.create(config -> {
             config.requestLogger.http(
@@ -36,7 +38,11 @@ public class Server {
             config.routes.get("/", ctx -> ctx.redirect("index.html"));
             config.routes.get("/ping", ctx -> ctx.result("Pong!"));
 
-            var descriptorController = new DescriptorController();
+            config.routes.exception(DataAccessException.class, (e, ctx) -> {
+                log.error("Database error on {} {}", ctx.method(), ctx.path(), e);
+                ctx.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
+            });
+
             var shelfController = new ShelfController();
             config.routes.apiBuilder(() -> {
                 path("/descriptors", () -> {

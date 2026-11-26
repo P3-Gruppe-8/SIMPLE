@@ -1,10 +1,13 @@
 package simple;
 
 import simple.dataaccess.config.Databaseconnection;
+import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcOfficeDAO;
+import simple.presentation.DescriptorController;
 import simple.presentation.OfficeController;
 import simple.presentation.Server;
+import simple.service.DescriptorService;
 import simple.service.ITStaffService;
 import simple.service.OfficeService;
 
@@ -55,8 +58,9 @@ public class Main {
         String portValue = System.getenv("PORT");
         int port = (portValue == null || portValue.isBlank()) ? 7070 : Integer.parseInt(portValue);
 
+        DescriptorService descriptorService = new DescriptorService(new JdbcDescriptorRepository());
         OfficeService officeService = new OfficeService(new JdbcOfficeDAO());
 
-        Server.start(port, new OfficeController(officeService));
+        Server.start(port, new DescriptorController(descriptorService), new OfficeController(officeService));
     }
 }
