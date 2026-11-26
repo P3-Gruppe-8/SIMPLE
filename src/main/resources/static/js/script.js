@@ -6,15 +6,6 @@ import { setUpShelfSelect } from "./shelfSelect.js";
 import { setUpReceipt } from "./receipt.js";
 import { setUpDialogs } from "./dialogs.js";
 
-const consumableIds = [
-    "5056784902424",
-    "5060337502290",
-    "5741000142899",
-    "consumable 67",
-    "consumable 42",
-]; // monster rio punch, hvid monner.........
-const loanableIds = ["loanable 01", "loanable 02"];
-
 disableEnterToSubmit();
 
 document.querySelectorAll(".barcode-field").forEach(setUpBarcodeField);
@@ -31,9 +22,7 @@ addBarcodeListener((barcode) => {
     }
     if (loginIds.includes(barcode)) {
         logIn(barcode);
-    }
-    if (consumableIds.includes(barcode)) {
-        console.log("which is in the consumable list");
+    } else {
         quickWriteOff(barcode);
     }
 });

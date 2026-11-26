@@ -182,6 +182,7 @@ export function logOut() {
 }
 
 export function quickWriteOff(barcode) {
+    if (viewHistory.at(-1) !== "defaultView") return;
     changeStock(barcode, -1)
         .then((text) => showToast(text))
         .catch((error) => {
