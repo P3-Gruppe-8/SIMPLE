@@ -96,26 +96,36 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         Databaseconnection db = new Databaseconnection();
         Connection conn = db.newConnection(false);
 
-        String sql = """
+        String sqlDeleteDescriptor = """
                 UPDATE descriptors
                 SET descriptor_deleted = now()
                 WHERE descriptor_id = ?
                     AND office_id = ?
                 """;
 
-        try (PreparedStatement statement = conn.prepareStatement(sql); ) {
-            statement.setInt(1, descriptor_id);
-            statement.setInt(2, office_id);
-            int result = statement.executeUpdate();
-            if (result == 1) {
-                db.executeCommit(conn);
-                db.closeConnection(conn);
-                return true;
-            } else {
+        String sqlDeleteBarcodes = """
+                DELETE FROM descriptor_barcodes
+                WHERE descriptor_id = ?
+                    AND office_id = ?
+                """;
+
+        try (PreparedStatement deleteDescriptor = conn.prepareStatement(sqlDeleteDescriptor);
+                PreparedStatement deleteBarcodes = conn.prepareStatement(sqlDeleteBarcodes)) {
+            deleteDescriptor.setInt(1, descriptor_id);
+            deleteDescriptor.setInt(2, office_id);
+            if (deleteDescriptor.executeUpdate() != 1) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
                 throw new AffectedRowsException("Failed to delete descriptor: 0 or more than 1 row affected");
             }
+
+            deleteBarcodes.setInt(1, descriptor_id);
+            deleteBarcodes.setInt(2, office_id);
+            deleteBarcodes.executeUpdate();
+
+            db.executeCommit(conn);
+            db.closeConnection(conn);
+            return true;
         } catch (SQLException e) {
             db.executeRollback(conn);
             db.closeConnection(conn);
