@@ -15,9 +15,9 @@ public class Main {
 
         // Test af existsByUsername:
 
-        ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
-        System.out.println(itStaffService.existsByUsername("demo.anna", 1));
-        System.out.println(itStaffService.existsByUsername("demo.victor", 1));
+        // ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
+        // System.out.println(itStaffService.existsByUsername("demo.anna", 1));
+        // System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // Test af getOverviewByOffice
         // InventoryService inventoryService = new InventoryService(new
