@@ -3,23 +3,30 @@ package simple.presentation;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.staticfiles.Location;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.Main;
+import simple.domain.exception.DataAccessException;
 
 public class Server {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final String DEV_STATIC_DIR = "src/main/resources/static";
 
-    public static void start(int port) {
+    public static void start(
+            int port,
+            DescriptorController descriptorController,
+            ITStaffController itStaffController,
+            OfficeController officeController,
+            ShelfController shelfController) {
 
-        var app = Javalin.create(config -> {
-            config.requestLogger.http(
-                    (ctx, ms) -> log.info("{} {} -> {} ({} ms)", ctx.method(), ctx.path(), ctx.statusCode(), ms));
+        Javalin app = Javalin.create(config -> {
+            config.requestLogger.http((context, ms) ->
+                    log.info("{} {} -> {} ({} ms)", context.method(), context.path(), context.statusCode(), ms));
             // When run from the repo, serve the source folder straight from disk for hot
             // reloads
             if (Files.isDirectory(Path.of(DEV_STATIC_DIR))) {
@@ -33,17 +40,21 @@ public class Server {
             } else {
                 config.staticFiles.add("/static", Location.CLASSPATH);
             }
-            config.routes.get("/", ctx -> ctx.redirect("index.html"));
-            config.routes.get("/ping", ctx -> ctx.result("Pong!"));
+            config.routes.get("/", context -> context.redirect("index.html"));
+            config.routes.get("/ping", context -> context.result("Pong!"));
 
-            var descriptorController = new DescriptorController();
-            var shelfController = new ShelfController();
+            config.routes.exception(DataAccessException.class, (e, context) -> {
+                log.error("Database error on {} {}", context.method(), context.path(), e);
+                context.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
+            });
+
             config.routes.apiBuilder(() -> {
                 path("/descriptors", () -> {
                     post(descriptorController::create);
                     path("/{barcode}", () -> {
                         get(descriptorController::getOne);
-                        patch(descriptorController::update);
+                        post("/restock", descriptorController::restock);
+                        post("/write-off", descriptorController::writeOff);
                         delete(descriptorController::delete);
                         path("/shelves", () -> {
                             get(descriptorController::getPossibleShelves);
@@ -56,6 +67,12 @@ public class Server {
                 });
                 path("/shelves", () -> {
                     get(shelfController::getAll);
+                });
+                path("/staff/{username}", () -> {
+                    get(itStaffController::checkExists);
+                });
+                path("/offices", () -> {
+                    get(officeController::getAll);
                 });
             });
         });

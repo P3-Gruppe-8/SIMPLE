@@ -1,3 +1,3 @@
 package simple.domain.itemmanagement;
 
-public class Office {}
+public record Office(int id, String name) {}

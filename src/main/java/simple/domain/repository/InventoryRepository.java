@@ -4,5 +4,5 @@ import simple.domain.itemmanagement.Inventory;
 
 public interface InventoryRepository {
 
-    public Inventory findOverviewByOffice(int officeId);
+    public Inventory getInventoryByOffice(int officeId);
 }

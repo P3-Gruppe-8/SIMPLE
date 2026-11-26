@@ -14,12 +14,7 @@ public interface DescriptorRepository {
      * public Optional<Descriptor> findByName(String name);
      *
      * public List<Descriptor> findAll();
-     *
-     * public void create(Descriptor descriptor);
-     *
-     * public void delete(String barcode);
      */
-    public Optional<Descriptor> findByBarcode(String barcode, int office_id);
 
     /**
      * Adjusts the stored stock quantity by the given amount.
@@ -33,4 +28,16 @@ public interface DescriptorRepository {
      *         including when the resulting quantity would be negative
      */
     public Optional<Descriptor> changeQuantity(String barcode, int officeId, int delta);
+
+    public Optional<Descriptor> findByBarcode(String barcode, int office_id);
+
+    public boolean softDelete(int descriptor_id, int office_id);
+
+    public boolean createNew(
+            String descriptor_name,
+            boolean is_loanable,
+            String info_field,
+            int office_id,
+            String barcode,
+            String shelfName);
 }

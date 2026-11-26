@@ -1,7 +1,7 @@
 // A receipt: a table of scanned item types and how many of each
 import { getItemDetails } from "./api.js";
 import { logIn } from "./navigation.js";
-import { isLoggedIn, loginIds } from "./session.js";
+import { isLoggedIn, staffUsername } from "./session.js";
 import { claimScans } from "./scanning.js";
 
 export function setUpReceipt(receipt) {
@@ -203,14 +203,21 @@ async function askForStaffId() {
     message.textContent = "Scan your staff ID to register a new item type.";
     let loggedIn = false;
     // with a pattern, this claim gets chosen instead of the receipt's own pattern-less one (see findClaim in scanning.js)
-    const release = claimScans((barcode) => {
-        if (loginIds.includes(barcode)) {
-            logIn(barcode);
-            loggedIn = isLoggedIn(); // logIn refuses outside the root views
-            dialog.close();
-        } else {
+    const release = claimScans(async (barcode) => {
+        const username = staffUsername(barcode);
+        if (username === null) {
             message.textContent = "That isn't a staff ID. Try again.";
+            return;
         }
+        try {
+            await logIn(username);
+        } catch (error) {
+            console.error(error);
+            message.textContent = error.message + ". Try again.";
+            return;
+        }
+        loggedIn = isLoggedIn(); // logIn refuses outside the root views
+        dialog.close();
     }, /.*/); // the pattern matches everything
     dialog.showModal();
     await waitForClose(dialog);

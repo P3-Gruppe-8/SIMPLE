@@ -1,3 +1,5 @@
+import { logKey, logScan } from "./debug.js";
+
 // scanners type a whole barcode in a few ms
 const SCAN_KEY_GAP_MS = 75;
 
@@ -53,6 +55,7 @@ export function addBarcodeListener(onScan) {
             return;
         }
         const currentTime = Date.now();
+        logKey(e, currentTime - lastKeyTime);
         if (currentTime - lastKeyTime > SCAN_KEY_GAP_MS) {
             buffer = ""; // we only care about super fast keystrokes
         }
@@ -62,7 +65,7 @@ export function addBarcodeListener(onScan) {
             valueBeforeScan = e.target.value;
         }
         if (e.key === " " && buffer !== "" && !inTextField) {
-            e.preventDefault(); // a space inside a scan (e.g. "leon da boss") would otherwise press the focused button
+            e.preventDefault(); // a space inside a scan (e.g. "nowaco staff anna") would otherwise press the focused button
         }
         if (e.key === "Enter" && buffer.length >= MIN_BARCODE_LENGTH) {
             e.preventDefault();
@@ -78,6 +81,7 @@ export function addBarcodeListener(onScan) {
                 // if there are no claims in the claims array we just give the barcode to the global handler
                 onScan(buffer);
             }
+            logScan(buffer);
             buffer = "";
             return;
         }

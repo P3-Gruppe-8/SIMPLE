@@ -1,8 +1,9 @@
 // Mode switching and view history.
-import { changeStock } from "./api.js";
+import { checkStaff, writeOff } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
-import { showToast } from "./toast.js";
 import { showAlertView } from "./alerts.js";
+import { showErrorToast, showToast } from "./toast.js";
+import { loadOffices } from "./debug.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
@@ -35,6 +36,22 @@ document.getElementById("logoutButton").addEventListener("click", logOut);
 document
     .getElementById("alertButton")
     .addEventListener("click", () => showAlertView("alertView"));
+document.getElementById("debugButton").addEventListener("click", showDebugView);
+
+// tapping the logo reveals the hidden debug button for 2 seconds
+const DEBUG_BUTTON_VISIBLE_MS = 2000;
+let debugButtonTimer;
+document.getElementById("logo").addEventListener("click", () => {
+    if (viewHistory.at(-1) === "debugView") {
+        return;
+    }
+    showById("debugButton");
+    clearTimeout(debugButtonTimer);
+    debugButtonTimer = setTimeout(
+        () => hideById("debugButton"),
+        DEBUG_BUTTON_VISIBLE_MS,
+    );
+});
 
 export function hide(element) {
     element.classList.add("invisible");
@@ -54,6 +71,8 @@ export function showById(id) {
     show(element);
 }
 
+let currentMode = null;
+
 // the first view of each mode is a "root view"
 const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
 let viewHistory = [];
@@ -65,6 +84,7 @@ export function setMode(id) {
         hide(mode);
     }
     showById(id);
+    currentMode = id;
     if (id === "supplyMode") {
         showView("defaultView");
         if (isLoggedIn()) {
@@ -110,16 +130,36 @@ export function previousView() {
         hideById("alertHeader");
         showById("navbar");
     }
+    if (viewHistory.at(-1) === "debugView") {
+        showById(currentMode);
+        showById("alertButton");
+        showById("modeSwitch");
+    }
 
     viewHistory.pop(); // the view we are leaving
     let previousViewId = viewHistory.pop(); // showView pushes it back on
     showView(previousViewId);
 }
 
-export function logIn(staffId) {
+// the debug view lives outside the modes, so the current mode is hidden while it is open
+export function showDebugView() {
+    if (viewHistory.at(-1) === "debugView") {
+        return;
+    }
+    hideById(currentMode);
+    showView("debugView");
+    loadOffices();
+    hideById("debugButton");
+    hideById("alertButton");
+    hideById("modeSwitch");
+}
+
+// throws if the server doesn't know the username
+export async function logIn(username) {
     const currentView = viewHistory.at(-1);
     if (!["defaultView", "loanModeLogInScreen"].includes(currentView)) return;
-    startSession(staffId);
+    await checkStaff(username);
+    startSession(username);
     if (currentView === "defaultView") {
         hideById("scanIdPrompt");
         showById("moreOptions");
@@ -141,7 +181,11 @@ export function logOut() {
 }
 
 export function quickWriteOff(barcode) {
-    changeStock(barcode, -1)
+    if (viewHistory.at(-1) !== "defaultView") return;
+    writeOff(barcode, 1)
         .then((text) => showToast(text))
-        .catch((error) => console.error(error));
+        .catch((error) => {
+            console.error(error);
+            showErrorToast(error.message);
+        });
 }

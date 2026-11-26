@@ -55,19 +55,19 @@ BEGIN
     INSERT INTO it_staffs
         (username, first_name, last_name, office_id)
     VALUES
-        ('demo.anna', 'Anna', 'Nielsen', aalborg_id)
+        ('anna', 'Anna', 'Nielsen', aalborg_id)
     RETURNING it_staff_id INTO anna_id;
 
     INSERT INTO it_staffs
         (username, first_name, last_name, office_id)
     VALUES
-        ('demo.peter', 'Peter', 'Hansen', aalborg_id)
+        ('peter', 'Peter', 'Hansen', aalborg_id)
     RETURNING it_staff_id INTO peter_id;
 
     INSERT INTO it_staffs
         (username, first_name, last_name, office_id)
     VALUES
-        ('demo.sofie', 'Sofie', 'Larsen', aarhus_id);
+        ('sofie', 'Sofie', 'Larsen', aarhus_id);
 
 
     -- =========================================
@@ -77,19 +77,19 @@ BEGIN
     -- Shelf names also serve as barcode identifiers.
 
     INSERT INTO shelves (shelf_name, room_name, office_id)
-    VALUES ('AAL-SUP-01', 'IT storage', aalborg_id)
+    VALUES ('supply 1', 'IT storage', aalborg_id)
     RETURNING shelf_id INTO aalborg_supply_a;
 
     INSERT INTO shelves (shelf_name, room_name, office_id)
-    VALUES ('AAL-SUP-02', 'IT storage', aalborg_id)
+    VALUES ('supply 2', 'IT storage', aalborg_id)
     RETURNING shelf_id INTO aalborg_supply_b;
 
     INSERT INTO shelves (shelf_name, room_name, office_id)
-    VALUES ('AAL-LOAN-01', 'IT storage', aalborg_id)
+    VALUES ('loan 1', 'IT storage', aalborg_id)
     RETURNING shelf_id INTO aalborg_loan_shelf;
 
     INSERT INTO shelves (shelf_name, room_name, office_id)
-    VALUES ('AAR-SUP-01', 'IT storage', aarhus_id)
+    VALUES ('supply 1', 'IT storage', aarhus_id)
     RETURNING shelf_id INTO aarhus_supply;
 
 
@@ -102,7 +102,7 @@ BEGIN
 
     INSERT INTO descriptors
         (descriptor_name, is_loanable, quantity,
-         info_field, office_id)
+         descriptor_info_field, office_id)
     VALUES
         ('USB-C cable', FALSE, 24,
          'USB-C to USB-C, 1 metre', aalborg_id)
@@ -110,7 +110,7 @@ BEGIN
 
     INSERT INTO descriptors
         (descriptor_name, is_loanable, quantity,
-         info_field, office_id)
+         descriptor_info_field, office_id)
     VALUES
         ('Black toner', FALSE, 2,
          'Black toner cartridge', aalborg_id)
@@ -118,7 +118,7 @@ BEGIN
 
     INSERT INTO descriptors
         (descriptor_name, is_loanable, quantity,
-         info_field, office_id)
+         descriptor_info_field, office_id)
     VALUES
         ('AA batteries', FALSE, 0,
          'Pack of 4 AA batteries', aalborg_id)
@@ -129,7 +129,7 @@ BEGIN
 
     INSERT INTO descriptors
         (descriptor_name, is_loanable, quantity,
-         info_field, info_template, office_id)
+         descriptor_info_field, info_template, office_id)
     VALUES
         ('Loan laptop', TRUE, NULL,
          '14-inch laptop with charger',
@@ -141,7 +141,7 @@ BEGIN
 
     INSERT INTO descriptors
         (descriptor_name, is_loanable, quantity,
-         info_field, office_id)
+         descriptor_info_field, office_id)
     VALUES
         ('USB-C cable', FALSE, 12,
          'USB-C to USB-C, 1 metre', aarhus_id)
@@ -159,10 +159,10 @@ BEGIN
     INSERT INTO descriptor_barcodes
         (barcode_key, descriptor_id, office_id)
     VALUES
-        ('DEMO-USB-C-1M', cable_id, aalborg_id),
-        ('DEMO-TONER-BK', toner_id, aalborg_id),
-        ('DEMO-AA-4PK', battery_id, aalborg_id),
-        ('DEMO-USB-C-1M', aarhus_cable_id, aarhus_id);
+        ('2001000000012', cable_id, aalborg_id),
+        ('2001000000029', toner_id, aalborg_id),
+        ('2001000000036', battery_id, aalborg_id),
+        ('2001000000012', aarhus_cable_id, aarhus_id);
 
 
     -- =========================================
@@ -189,26 +189,26 @@ BEGIN
     -- Available laptop stored on a shelf.
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, loanable_info_field, descriptor_id, shelf_id)
     VALUES
-        ('DEMO-LAPTOP-001', 1,
+        ('04a3f21a6b5c80', 1,
          'Serial number: DEMO-L001',
          laptop_id, aalborg_loan_shelf);
 
     -- Borrowed laptops have no current shelf.
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, loanable_info_field, descriptor_id, shelf_id)
     VALUES
-        ('DEMO-LAPTOP-002', 2,
+        ('04b71e9a2c4d80', 2,
          'Serial number: DEMO-L002',
          laptop_id, NULL)
     RETURNING loanable_id INTO borrowed_laptop_id;
 
     INSERT INTO loanables
-        (loanable_barcode, unit_number, info_field, descriptor_id, shelf_id)
+        (loanable_barcode, unit_number, loanable_info_field, descriptor_id, shelf_id)
     VALUES
-        ('DEMO-LAPTOP-003', 3,
+        ('04c58b3e7f1a80', 3,
          'Serial number: DEMO-L003',
          laptop_id, NULL)
     RETURNING loanable_id INTO overdue_laptop_id;
@@ -254,13 +254,13 @@ BEGIN
     -- Alert states correspond to seeded quantities.
 
     INSERT INTO stock_alerts
-        (urgency, active, muted,
+        (urgency, raised, muted,
          min_quantity, descriptor_id)
     VALUES
-        ('WARNING', FALSE, FALSE, 10, cable_id),
-        ('WARNING', TRUE, FALSE, 5, toner_id),
-        ('CRITICAL', TRUE, FALSE, 4, battery_id),
-        ('WARNING', FALSE, FALSE, 5, aarhus_cable_id);
+        ('WARNING', NULL, FALSE, 10, cable_id),
+        ('WARNING', CURRENT_TIMESTAMP, FALSE, 5, toner_id),
+        ('CRITICAL', CURRENT_TIMESTAMP, FALSE, 4, battery_id),
+        ('WARNING', NULL, FALSE, 5, aarhus_cable_id);
 
 
     -- =========================================
@@ -268,13 +268,13 @@ BEGIN
     -- =========================================
 
     -- Current loan is not overdue.
-    -- Overdue loan has an active warning.
+    -- Overdue loan has a raised warning.
 
     INSERT INTO loan_alerts
-        (urgency, active, muted, loan_id)
+        (urgency, raised, muted, loan_id)
     VALUES
-        ('WARNING', FALSE, FALSE, current_loan_id),
-        ('WARNING', TRUE, FALSE, overdue_loan_id);
+        ('WARNING', NULL, FALSE, current_loan_id),
+        ('WARNING', CURRENT_TIMESTAMP - INTERVAL '3 days', FALSE, overdue_loan_id);
 
 
     -- =========================================

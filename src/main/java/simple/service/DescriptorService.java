@@ -1,19 +1,45 @@
 package simple.service;
 
-import simple.dataaccess.jdbc.JdbcDescriptorRepository;
+import java.util.Optional;
+import simple.domain.itemmanagement.Descriptor;
+import simple.domain.repository.DescriptorRepository;
 
 public class DescriptorService {
+    private final DescriptorRepository descriptorRepository;
 
-    public void writeOff(String barcode, int change) {
-
-        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
+    public DescriptorService(DescriptorRepository descriptorRepository) {
+        this.descriptorRepository = descriptorRepository;
     }
 
-    public void deregister(String barcode) {}
+    public Optional<Descriptor> findByBarcode(String barcode, int officeId) {
+        return descriptorRepository.findByBarcode(barcode, officeId);
+    }
 
-    public void register(String barcode) {}
+    public Optional<Descriptor> writeOff(String barcode, int officeId, int amount) {
+        return descriptorRepository.changeQuantity(barcode, officeId, -amount);
+    }
 
-    public void restock(String barcode, int amount) {}
+    public Optional<Descriptor> restock(String barcode, int officeId, int amount) {
+        return descriptorRepository.changeQuantity(barcode, officeId, amount);
+    }
+
+    public Optional<Descriptor> deregister(String barcode, int officeId) {
+        Optional<Descriptor> descriptor = descriptorRepository.findByBarcode(barcode, officeId);
+        if (descriptor.isPresent()) {
+            descriptorRepository.softDelete(descriptor.get().id(), officeId);
+        }
+        return descriptor;
+    }
+
+    public void register(
+            String descriptorName,
+            boolean isLoanable,
+            String infoField,
+            int officeId,
+            String barcode,
+            String shelfName) {
+        descriptorRepository.createNew(descriptorName, isLoanable, infoField, officeId, barcode, shelfName);
+    }
 
     public void getItemDetails(String barcode) {}
 

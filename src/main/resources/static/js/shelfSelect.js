@@ -2,7 +2,7 @@
 import { getShelves } from "./api.js";
 import { claimScans } from "./scanning.js";
 
-// shelf codes look like "nowaco shelf XX, where XX is the shelf ID.
+// shelf codes look like "nowaco shelf XX, where XX is the shelf name.
 // this is a regular expression, which can be used to check if text is shaped a certain way.
 const SHELF_CODE = /^nowaco shelf (.+)$/;
 
@@ -34,18 +34,18 @@ export function setUpShelfSelect(select) {
 
     // called when a barcode in the format "nowaco shelf XX" is scanned
     async function selectScannedShelf(barcode) {
-        const shelfId = barcode.match(SHELF_CODE)[1]; // [1] gets the captured value, which is the part inside the (parentheses) in a regular expression. see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+        const shelfName = barcode.match(SHELF_CODE)[1]; // [1] gets the captured value, which is the part inside the (parentheses) in a regular expression. see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
         await shelvesLoaded; // we finally use this value here to ensure loading has finished before we do all our logic with the dropdown
 
         // only shelves the server knows about can be picked, so a bad code can't sneak in
         const known = [...select.options].some(
-            (option) => !option.disabled && option.value === shelfId,
+            (option) => !option.disabled && option.value === shelfName,
         );
         if (known) {
-            select.value = shelfId;
+            select.value = shelfName;
             select.dispatchEvent(new Event("change")); // a scanned shelf counts as picking it; also clears a previous error
         } else {
-            setPlaceholder(`Unknown shelf "${shelfId}"`, false);
+            setPlaceholder(`Unknown shelf "${shelfName}"`, false);
             select.classList.add("invalid");
         }
     }

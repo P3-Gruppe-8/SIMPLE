@@ -1,10 +1,12 @@
 package simple.service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.repository.LoanAgreementRepository;
+import simple.domain.transactionmanagement.LoanAgreement;
 import simple.domain.transactionmanagement.LoanAgreementRegistration;
 
 public class LoanService {
@@ -40,5 +42,10 @@ public class LoanService {
         else return false;
 
         return true;
+    }
+
+    public ArrayList<LoanAgreement> getAllLoans(int officeId) {
+
+        return repo.findAll(officeId);
     }
 }

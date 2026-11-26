@@ -1,8 +1,9 @@
 // Calls to the backend's REST API.
 import { getStaffId } from "./session.js";
+import { getOfficeId } from "./office.js";
 
 // sends a request, with `body` as JSON if given, and returns the server's text reply.
-// when someone is logged in, their staff ID is included in a header
+// when someone is logged in, their staff ID is included in a header, and so is the tablet's office.
 async function send(method, path, body) {
     const options = { method: method, headers: {} };
     if (body !== undefined) {
@@ -12,10 +13,14 @@ async function send(method, path, body) {
     if (getStaffId() !== null) {
         options.headers["X-Staff-Id"] = getStaffId();
     }
+    if (getOfficeId() !== null) {
+        options.headers["X-Office-Id"] = getOfficeId();
+    }
     const response = await fetch(path, options);
     if (!response.ok) {
+        const reply = await response.text();
         const error = new Error(
-            method + " " + path + " failed: " + response.status,
+            reply || method + " " + path + " failed: " + response.status,
         );
         error.status = response.status; // so callers can tell e.g. 404 from other failures
         throw error;
@@ -41,9 +46,16 @@ export async function deregisterItemType(barcode) {
     return await send("DELETE", descriptorPath(barcode));
 }
 
-// negative writes off, positive restocks
-export async function changeStock(barcode, change) {
-    return await send("PATCH", descriptorPath(barcode), { change: change });
+export async function restock(barcode, amount) {
+    return await send("POST", descriptorPath(barcode) + "/restock", {
+        amount: amount,
+    });
+}
+
+export async function writeOff(barcode, amount) {
+    return await send("POST", descriptorPath(barcode) + "/write-off", {
+        amount: amount,
+    });
 }
 
 // the item type's possible shelves, as a list of shelf names
@@ -63,10 +75,17 @@ export async function addItemTypeLocation(barcode, shelf) {
     );
 }
 
+// the office's shelves, as a list of shelf names
 export async function getShelves() {
-    const response = await fetch("shelves");
-    if (!response.ok) {
-        throw new Error("getShelves failed: " + response.status);
-    }
-    return await response.json();
+    return JSON.parse(await send("GET", "shelves"));
+}
+
+// the offices as a list of { id, name }
+export async function getOffices() {
+    return JSON.parse(await send("GET", "offices"));
+}
+
+// succeeds if the username belongs to IT staff in the tablet's office, and throws otherwise
+export async function checkStaff(username) {
+    return await send("GET", "staff/" + encodeURIComponent(username));
 }
