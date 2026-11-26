@@ -149,7 +149,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             try {
                 String sqlCreateDescriptor = """
                         INSERT INTO descriptors
-                        (descriptor_name, is_loanable, quantity, info_field, office_id)
+                        (descriptor_name, is_loanable, quantity, descriptor_info_field, office_id)
                         VALUES (?, ?, 0, ?, ?)
                         RETURNING descriptor_id
                         """;
