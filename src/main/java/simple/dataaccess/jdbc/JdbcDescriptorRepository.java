@@ -25,6 +25,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                   AND b.office_id = ?
                   AND d.is_loanable = false
                   AND d.quantity IS NOT NULL
+                  AND d.descriptor_deleted IS NULL
                 RETURNING d.*
                 """;
 
@@ -69,19 +70,20 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     ON d.descriptor_id = db.descriptor_id
                     AND d.office_id = db.office_id
                 WHERE db.barcode_key = ?
-                    AND db.office_id = ?;
+                    AND db.office_id = ?
+                    AND d.descriptor_deleted IS NULL;
                 """;
 
         try (PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery()) {
-                db.closeConnection(conn);
+                Optional<Descriptor> descriptor = Optional.empty();
                 if (result.next()) {
-                    return Optional.of(DescriptorMap.mapRow(result));
-                } else {
-                    return Optional.empty();
+                    descriptor = Optional.of(DescriptorMap.mapRow(result));
                 }
+                db.closeConnection(conn);
+                return descriptor;
             }
         } catch (SQLException e) {
             db.closeConnection(conn);
