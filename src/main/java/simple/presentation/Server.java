@@ -20,6 +20,7 @@ public class Server {
     public static void start(
             int port,
             DescriptorController descriptorController,
+            ITStaffController itStaffController,
             OfficeController officeController,
             ShelfController shelfController) {
 
@@ -65,6 +66,9 @@ public class Server {
                 });
                 path("/shelves", () -> {
                     get(shelfController::getAll);
+                });
+                path("/staff/{username}", () -> {
+                    get(itStaffController::checkExists);
                 });
                 path("/offices", () -> {
                     get(officeController::getAll);

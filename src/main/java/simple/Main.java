@@ -6,6 +6,7 @@ import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcOfficeDAO;
 import simple.dataaccess.jdbc.JdbcShelfDAO;
 import simple.presentation.DescriptorController;
+import simple.presentation.ITStaffController;
 import simple.presentation.OfficeController;
 import simple.presentation.Server;
 import simple.presentation.ShelfController;
@@ -21,12 +22,6 @@ public class Main {
 
         // Applies pending database migrations before starting the server.
         db.migrate();
-
-        // Test af existsByUsername:
-
-        ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
-        System.out.println(itStaffService.existsByUsername("demo.anna", 1));
-        System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // Test af getOverviewByOffice
         // InventoryService inventoryService = new InventoryService(new
@@ -62,12 +57,14 @@ public class Main {
         int port = (portValue == null || portValue.isBlank()) ? 7070 : Integer.parseInt(portValue);
 
         DescriptorService descriptorService = new DescriptorService(new JdbcDescriptorRepository());
+        ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
         OfficeService officeService = new OfficeService(new JdbcOfficeDAO());
         ShelfService shelfService = new ShelfService(new JdbcShelfDAO());
 
         Server.start(
                 port,
                 new DescriptorController(descriptorService),
+                new ITStaffController(itStaffService),
                 new OfficeController(officeService),
                 new ShelfController(shelfService));
     }

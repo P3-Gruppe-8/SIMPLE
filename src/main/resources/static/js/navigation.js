@@ -1,5 +1,5 @@
 // Mode switching and view history.
-import { changeStock } from "./api.js";
+import { changeStock, checkStaff } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
 import { showErrorToast, showToast } from "./toast.js";
 import { loadOffices } from "./debug.js";
@@ -157,10 +157,12 @@ export function showDebugView() {
     hideById("modeSwitch");
 }
 
-export function logIn(staffId) {
+// throws if the server doesn't know the username
+export async function logIn(username) {
     const currentView = viewHistory.at(-1);
     if (!["defaultView", "loanModeLogInScreen"].includes(currentView)) return;
-    startSession(staffId);
+    await checkStaff(username);
+    startSession(username);
     if (currentView === "defaultView") {
         hideById("scanIdPrompt");
         showById("moreOptions");

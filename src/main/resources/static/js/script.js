@@ -1,5 +1,6 @@
 import { logIn, quickWriteOff } from "./navigation.js";
-import { loginIds } from "./session.js";
+import { staffUsername } from "./session.js";
+import { showErrorToast } from "./toast.js";
 import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
 import { setUpBarcodeField } from "./barcodeField.js";
 import { setUpShelfSelect } from "./shelfSelect.js";
@@ -20,8 +21,12 @@ addBarcodeListener((barcode) => {
     if (document.querySelector("dialog[open]")) {
         return;
     }
-    if (loginIds.includes(barcode)) {
-        logIn(barcode);
+    const username = staffUsername(barcode);
+    if (username !== null) {
+        logIn(username).catch((error) => {
+            console.error(error);
+            showErrorToast(error.message);
+        });
     } else {
         quickWriteOff(barcode);
     }

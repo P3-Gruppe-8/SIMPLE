@@ -77,3 +77,8 @@ export async function getShelves() {
 export async function getOffices() {
     return JSON.parse(await send("GET", "offices"));
 }
+
+// succeeds if the username belongs to IT staff in the tablet's office, and throws otherwise
+export async function checkStaff(username) {
+    return await send("GET", "staff/" + encodeURIComponent(username));
+}
