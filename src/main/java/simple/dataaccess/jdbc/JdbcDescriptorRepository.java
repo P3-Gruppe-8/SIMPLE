@@ -73,8 +73,8 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     ON descriptors.descriptor_id = descriptor_barcodes.descriptor_id
                     AND descriptors.office_id = descriptor_barcodes.office_id
                 WHERE descriptor_barcodes.barcode_key = ?
-                    AND descriptor_barcodes.office_id = ?;
-                    AND descriptor.descriptor_deleted IS NULL;
+                    AND descriptor_barcodes.office_id = ?
+                    AND descriptors.descriptor_deleted IS NULL
                 """;
 
         try (PreparedStatement statement = conn.prepareStatement(sql); ) {
