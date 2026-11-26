@@ -5,7 +5,9 @@ import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.domain.exception.AffectedRowsException;
+import simple.domain.exception.AlreadyExistsException;
 import simple.domain.exception.DataAccessException;
+import simple.domain.exception.NotFoundException;
 import simple.domain.exception.QuantityException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.repository.DescriptorRepository;
@@ -139,7 +141,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             String info_field,
             int office_id,
             String barcode,
-            int shelf_id) {
+            String shelfName) {
 
         Databaseconnection db = new Databaseconnection();
 
@@ -190,17 +192,22 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
 
                 String sqlAddShelf = """
                         INSERT INTO descriptor_shelves (descriptor_id, shelf_id)
-                        VALUES (?, ?)
+                        SELECT ?, shelf_id
+                        FROM shelves
+                        WHERE shelf_name = ?
+                          AND office_id = ?
+                          AND shelf_deleted IS NULL
                         """;
 
                 try (PreparedStatement statement = conn.prepareStatement(sqlAddShelf)) {
                     statement.setInt(1, descriptor_id);
-                    statement.setInt(2, shelf_id);
+                    statement.setString(2, shelfName);
+                    statement.setInt(3, office_id);
 
                     if (statement.executeUpdate() != 1) {
                         db.executeRollback(conn);
                         db.closeConnection(conn);
-                        throw new SQLException("Unable to create descriptor: Failed to add shelf");
+                        throw new NotFoundException("No shelf named " + shelfName);
                     }
                 }
 
@@ -211,6 +218,9 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             } catch (SQLException e) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
+                if ("23505".equals(e.getSQLState())) {
+                    throw new AlreadyExistsException("An item type with this name or barcode already exists", e);
+                }
                 throw new DataAccessException("Unable to create descriptor: Failed to create descriptor", e);
             }
         } catch (SQLException e) {

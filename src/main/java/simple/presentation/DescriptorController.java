@@ -8,6 +8,8 @@ import io.javalin.http.HttpStatus;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import simple.domain.exception.AlreadyExistsException;
+import simple.domain.exception.NotFoundException;
 import simple.domain.exception.QuantityException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.service.DescriptorService;
@@ -28,8 +30,23 @@ public class DescriptorController {
     public void create(Context ctx) {
         requireStaffId(ctx); // TODO: pass to the service
         var registration = ctx.bodyAsClass(DescriptorRegistration.class);
-        // TODO: call descriptorService.register once shelves come from the database
-        ctx.status(HttpStatus.CREATED).result("Successfully registered " + registration.name());
+        // the register dialog only registers consumables, and has no info field yet
+        try {
+            descriptorService.register(
+                    registration.name(),
+                    false,
+                    null,
+                    requireOfficeId(ctx),
+                    registration.barcode(),
+                    registration.shelf());
+        } catch (NotFoundException e) {
+            ctx.status(HttpStatus.NOT_FOUND).result(e.getMessage());
+            return;
+        } catch (AlreadyExistsException e) {
+            ctx.status(HttpStatus.CONFLICT).result(e.getMessage());
+            return;
+        }
+        ctx.status(HttpStatus.CREATED).result("Registered " + registration.name());
     }
 
     public void getOne(Context ctx) {

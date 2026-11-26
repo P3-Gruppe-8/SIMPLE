@@ -4,12 +4,15 @@ import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
 import simple.dataaccess.jdbc.JdbcOfficeDAO;
+import simple.dataaccess.jdbc.JdbcShelfDAO;
 import simple.presentation.DescriptorController;
 import simple.presentation.OfficeController;
 import simple.presentation.Server;
+import simple.presentation.ShelfController;
 import simple.service.DescriptorService;
 import simple.service.ITStaffService;
 import simple.service.OfficeService;
+import simple.service.ShelfService;
 
 public class Main {
     public static void main(String[] args) {
@@ -60,7 +63,12 @@ public class Main {
 
         DescriptorService descriptorService = new DescriptorService(new JdbcDescriptorRepository());
         OfficeService officeService = new OfficeService(new JdbcOfficeDAO());
+        ShelfService shelfService = new ShelfService(new JdbcShelfDAO());
 
-        Server.start(port, new DescriptorController(descriptorService), new OfficeController(officeService));
+        Server.start(
+                port,
+                new DescriptorController(descriptorService),
+                new OfficeController(officeService),
+                new ShelfController(shelfService));
     }
 }

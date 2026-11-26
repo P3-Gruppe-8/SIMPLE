@@ -17,7 +17,11 @@ public class Server {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final String DEV_STATIC_DIR = "src/main/resources/static";
 
-    public static void start(int port, DescriptorController descriptorController, OfficeController officeController) {
+    public static void start(
+            int port,
+            DescriptorController descriptorController,
+            OfficeController officeController,
+            ShelfController shelfController) {
 
         var app = Javalin.create(config -> {
             config.requestLogger.http(
@@ -43,7 +47,6 @@ public class Server {
                 ctx.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
             });
 
-            var shelfController = new ShelfController();
             config.routes.apiBuilder(() -> {
                 path("/descriptors", () -> {
                     post(descriptorController::create);

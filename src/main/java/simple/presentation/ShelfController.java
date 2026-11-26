@@ -1,28 +1,26 @@
 package simple.presentation;
 
-import io.javalin.http.Context;
-import java.util.List;
+import static simple.presentation.RequestHeaders.requireOfficeId;
 
-/**
- * Handles the /shelves routes. TODO: placeholder until shelves come from the
- * domain.
- */
+import io.javalin.http.Context;
+import java.util.ArrayList;
+import java.util.List;
+import simple.domain.itemmanagement.Shelf;
+import simple.service.ShelfService;
+
+/** Handles the /shelves routes. */
 public class ShelfController {
+    private final ShelfService shelfService;
+
+    public ShelfController(ShelfService shelfService) {
+        this.shelfService = shelfService;
+    }
 
     public void getAll(Context ctx) {
-        ctx.json(List.of(
-                "a1",
-                "a2",
-                "a3",
-                "Lager A3",
-                "b1",
-                "Kælderrum ved serverrummet, øverste hylde",
-                "b2",
-                "c1",
-                "c2",
-                "Reolsystem-Nordfløj-Mellemgang-Sektion12",
-                "c3",
-                "IT-kontor skab 2",
-                "g2"));
+        List<String> names = new ArrayList<>();
+        for (Shelf shelf : shelfService.getAllByOffice(requireOfficeId(ctx))) {
+            names.add(shelf.name());
+        }
+        ctx.json(names);
     }
 }

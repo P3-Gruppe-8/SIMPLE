@@ -9,7 +9,7 @@ import {
     setItemTypeLocations,
 } from "./api.js";
 import { hide, show } from "./navigation.js";
-import { showToast } from "./toast.js";
+import { showErrorToast, showToast } from "./toast.js";
 import { getReceiptItems, showReceiptResults } from "./receipt.js";
 
 export function setUpDialogs() {
@@ -45,7 +45,10 @@ function setUpRegisterDialog() {
             };
             registerItemType(itemType)
                 .then((text) => showToast(text))
-                .catch((error) => console.error(error));
+                .catch((error) => {
+                    console.error(error);
+                    showErrorToast(error.message);
+                });
         });
 }
 

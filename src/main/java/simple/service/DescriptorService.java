@@ -32,8 +32,13 @@ public class DescriptorService {
     }
 
     public void register(
-            String descriptorName, boolean isLoanable, String infoField, int officeId, String barcode, int shelfId) {
-        descriptorRepository.createNew(descriptorName, isLoanable, infoField, officeId, barcode, shelfId);
+            String descriptorName,
+            boolean isLoanable,
+            String infoField,
+            int officeId,
+            String barcode,
+            String shelfName) {
+        descriptorRepository.createNew(descriptorName, isLoanable, infoField, officeId, barcode, shelfName);
     }
 
     public void getItemDetails(String barcode) {}

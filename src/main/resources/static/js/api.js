@@ -68,12 +68,9 @@ export async function addItemTypeLocation(barcode, shelf) {
     );
 }
 
+// the office's shelves, as a list of shelf names
 export async function getShelves() {
-    const response = await fetch("shelves");
-    if (!response.ok) {
-        throw new Error("getShelves failed: " + response.status);
-    }
-    return await response.json();
+    return JSON.parse(await send("GET", "shelves"));
 }
 
 // the offices as a list of { id, name }
