@@ -1,39 +1,39 @@
 package simple.service;
 
 import java.util.Optional;
-import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.domain.itemmanagement.Descriptor;
+import simple.domain.repository.DescriptorRepository;
 
 public class DescriptorService {
-    public void writeOff(String barcode, int office_id, int change) {
-        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        Optional<Descriptor> opt_descriptor = jdbc.changeQuantity(barcode, office_id, -change);
+    private final DescriptorRepository descriptorRepository;
+
+    public DescriptorService(DescriptorRepository descriptorRepository) {
+        this.descriptorRepository = descriptorRepository;
     }
 
-    public void deregister(String barcode, int office_id) {
-        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        Optional<Descriptor> opt_descriptor = jdbc.findByBarcode(barcode, office_id);
+    public Optional<Descriptor> findByBarcode(String barcode, int officeId) {
+        return descriptorRepository.findByBarcode(barcode, officeId);
+    }
 
-        if (opt_descriptor.isPresent()) {
-            Descriptor descriptor = opt_descriptor.get();
-            boolean result = jdbc.softDelete(descriptor.id(), descriptor.office_id());
+    public Optional<Descriptor> writeOff(String barcode, int officeId, int amount) {
+        return descriptorRepository.changeQuantity(barcode, officeId, -amount);
+    }
+
+    public Optional<Descriptor> restock(String barcode, int officeId, int amount) {
+        return descriptorRepository.changeQuantity(barcode, officeId, amount);
+    }
+
+    public Optional<Descriptor> deregister(String barcode, int officeId) {
+        Optional<Descriptor> descriptor = descriptorRepository.findByBarcode(barcode, officeId);
+        if (descriptor.isPresent()) {
+            descriptorRepository.softDelete(descriptor.get().id(), officeId);
         }
+        return descriptor;
     }
 
     public void register(
-            String descriptor_name,
-            boolean is_loanable,
-            String info_field,
-            int office_id,
-            String barcode,
-            int shelf_id) {
-        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        boolean result = jdbc.createNew(descriptor_name, is_loanable, info_field, office_id, barcode, shelf_id);
-    }
-
-    public void restock(String barcode, int office_id, int change) {
-        JdbcDescriptorRepository jdbc = new JdbcDescriptorRepository();
-        Optional<Descriptor> opt_descriptor = jdbc.changeQuantity(barcode, office_id, change);
+            String descriptorName, boolean isLoanable, String infoField, int officeId, String barcode, int shelfId) {
+        descriptorRepository.createNew(descriptorName, isLoanable, infoField, officeId, barcode, shelfId);
     }
 
     public void getItemDetails(String barcode) {}
