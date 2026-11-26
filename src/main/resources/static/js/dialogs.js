@@ -271,22 +271,16 @@ function setUpLocationsDialog() {
 }
 
 function setUpItemDetailsDialog() {
-    document
-        .getElementById("item-details-dialog-form")
-        .addEventListener("submit", (event) => {
-            event.preventDefault(); // keep the dialog open to show the details
-            const barcode = document.getElementById(
-                "item-details-item-id",
-            ).value;
-            lookUpItem(barcode, document.getElementById("item-details-result"));
-        });
+    const input = document.getElementById("item-details-item-id");
 
     // every scan looks the item up straight away
-    document
-        .getElementById("item-details-item-id")
+    input
         .closest(".barcode-field")
         .addEventListener("scan", () =>
-            document.getElementById("item-details-dialog-form").requestSubmit(),
+            lookUpItem(
+                input.value,
+                document.getElementById("item-details-result"),
+            ),
         );
 
     // form reset doesn't clear the details, so do it when the dialog closes
