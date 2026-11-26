@@ -451,7 +451,7 @@ button.alerts {
 .alert-box {
     display: flex;
     outline: 0px solid;
-    border-radius: 30px;
+    border-radius: 20px;
     align-items: center;
     padding: 1em;
     overflow: hidden;
