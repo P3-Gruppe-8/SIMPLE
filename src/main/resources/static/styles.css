@@ -417,9 +417,7 @@ button.alerts {
 }
 
 .alert-row-new {
-    outline: 1px solid rgb(200, 200, 200);
-    background-color: whitesmoke;
-    box-shadow: 0px 0px 9px 0px black;
+    outline: 0px solid rgb(200, 200, 200);
     padding: 1em;
     border-radius: 20px;
     margin-left: 1em;
@@ -432,9 +430,7 @@ button.alerts {
 }
 
 .alert-row-old {
-    outline: 1px solid rgb(200, 200, 200);
-    background-color: whitesmoke;
-    box-shadow: 0px 0px 9px 0px black;
+    outline: 0px solid rgb(200, 200, 200);
     padding: 1em;
     border-radius: 20px;
     margin: 1em;
