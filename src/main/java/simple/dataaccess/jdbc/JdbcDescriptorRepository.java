@@ -164,8 +164,6 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
 
                     try (ResultSet rs = statement.executeQuery()) {
                         if (!rs.next()) {
-                            db.executeRollback(conn);
-                            db.closeConnection(conn);
                             throw new SQLException("Unable to create descriptor: No descriptor ID returned");
                         }
                         descriptor_id = rs.getInt("descriptor_id");
@@ -184,8 +182,6 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     statement.setInt(3, office_id);
 
                     if (statement.executeUpdate() != 1) {
-                        db.executeRollback(conn);
-                        db.closeConnection(conn);
                         throw new SQLException("Unable to create descriptor: Failed to add barcode");
                     }
                 }
@@ -206,25 +202,22 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
 
                     if (statement.executeUpdate() != 1) {
                         db.executeRollback(conn);
-                        db.closeConnection(conn);
                         throw new NotFoundException("No shelf named " + shelfName);
                     }
                 }
 
                 db.executeCommit(conn);
-                db.closeConnection(conn);
                 return true;
 
             } catch (SQLException e) {
                 db.executeRollback(conn);
-                db.closeConnection(conn);
                 if ("23505".equals(e.getSQLState())) {
                     throw new AlreadyExistsException("An item type with this name or barcode already exists", e);
                 }
                 throw new DataAccessException("Unable to create descriptor: Failed to create descriptor", e);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Unable to create descriptor: Failed to connect to database", e);
+            throw new DataAccessException("Unable to create descriptor: Failed to close connection", e);
         }
     }
 
