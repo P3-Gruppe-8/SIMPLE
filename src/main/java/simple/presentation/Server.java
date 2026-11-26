@@ -24,7 +24,7 @@ public class Server {
             OfficeController officeController,
             ShelfController shelfController) {
 
-        var app = Javalin.create(config -> {
+        Javalin app = Javalin.create(config -> {
             config.requestLogger.http((context, ms) ->
                     log.info("{} {} -> {} ({} ms)", context.method(), context.path(), context.statusCode(), ms));
             // When run from the repo, serve the source folder straight from disk for hot

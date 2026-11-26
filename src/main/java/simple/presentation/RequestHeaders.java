@@ -8,7 +8,7 @@ import io.javalin.http.UnauthorizedResponse;
 public class RequestHeaders {
 
     public static String requireStaffId(Context context) {
-        var staffId = context.header("X-Staff-Id");
+        String staffId = context.header("X-Staff-Id");
         if (staffId == null || staffId.isBlank()) {
             throw new UnauthorizedResponse("Scan your staff ID first");
         }
@@ -17,7 +17,7 @@ public class RequestHeaders {
 
     // the tablet's office, chosen in the debug menu
     public static int requireOfficeId(Context context) {
-        var officeId = context.header("X-Office-Id");
+        String officeId = context.header("X-Office-Id");
         if (officeId == null || officeId.isBlank()) {
             throw new BadRequestResponse("Choose an office in the debug menu first");
         }

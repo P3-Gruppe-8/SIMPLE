@@ -15,7 +15,7 @@ public class ITStaffController {
     }
 
     public void checkExists(Context context) {
-        var username = context.pathParam("username");
+        String username = context.pathParam("username");
         if (itStaffService.existsByUsername(username, requireOfficeId(context))) {
             context.result(username);
         } else {

@@ -31,7 +31,7 @@ public class DescriptorController {
 
     public void create(Context context) {
         requireStaffId(context); // TODO: pass to the service
-        var registration = context.bodyAsClass(DescriptorRegistration.class);
+        DescriptorRegistration registration = context.bodyAsClass(DescriptorRegistration.class);
         // the register dialog only registers consumables, and has no info field yet
         try {
             descriptorService.register(
@@ -52,7 +52,7 @@ public class DescriptorController {
     }
 
     public void getOne(Context context) {
-        var barcode = context.pathParam("barcode");
+        String barcode = context.pathParam("barcode");
         Descriptor descriptor = descriptorService
                 .findByBarcode(barcode, requireOfficeId(context))
                 .orElseThrow(() -> noSuchItemType(barcode));
@@ -61,7 +61,7 @@ public class DescriptorController {
 
     public void delete(Context context) {
         requireStaffId(context);
-        var barcode = context.pathParam("barcode");
+        String barcode = context.pathParam("barcode");
         Descriptor deleted = descriptorService
                 .deregister(barcode, requireOfficeId(context))
                 .orElseThrow(() -> noSuchItemType(barcode));
@@ -69,7 +69,7 @@ public class DescriptorController {
     }
 
     private static int requirePositiveAmount(Context context) {
-        var change = context.bodyAsClass(StockChange.class);
+        StockChange change = context.bodyAsClass(StockChange.class);
         if (change.amount() < 1) {
             throw new BadRequestResponse("The amount must be at least 1");
         }
@@ -77,7 +77,7 @@ public class DescriptorController {
     }
 
     public void restock(Context context) {
-        var barcode = context.pathParam("barcode");
+        String barcode = context.pathParam("barcode");
         int amount = requirePositiveAmount(context);
         Descriptor descriptor = descriptorService
                 .restock(barcode, requireOfficeId(context), amount)
@@ -86,7 +86,7 @@ public class DescriptorController {
     }
 
     public void writeOff(Context context) {
-        var barcode = context.pathParam("barcode");
+        String barcode = context.pathParam("barcode");
         int amount = requirePositiveAmount(context);
         int officeId = requireOfficeId(context);
         try {
@@ -110,7 +110,7 @@ public class DescriptorController {
             "5741000142899", List.of("c1", "c2", "c3"));
 
     public void getPossibleShelves(Context context) {
-        var barcode = context.pathParam("barcode");
+        String barcode = context.pathParam("barcode");
         // TODO: descriptorService.getPossibleShelves(barcode)
         descriptorService.findByBarcode(barcode, requireOfficeId(context)).orElseThrow(() -> noSuchItemType(barcode));
         context.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
@@ -119,8 +119,8 @@ public class DescriptorController {
     // replaces the whole possible shelves list
     public void setPossibleShelves(Context context) {
         requireStaffId(context);
-        var barcode = context.pathParam("barcode");
-        var shelves = context.bodyAsClass(String[].class);
+        String barcode = context.pathParam("barcode");
+        String[] shelves = context.bodyAsClass(String[].class);
         // TODO: descriptorService.setPossibleShelves(barcode, shelves), in one database
         // transaction
         Descriptor descriptor = descriptorService
@@ -131,8 +131,8 @@ public class DescriptorController {
 
     // adds one shelf to a descriptor's possible shelves list
     public void addShelf(Context context) {
-        var barcode = context.pathParam("barcode");
-        var shelf = context.pathParam("shelf");
+        String barcode = context.pathParam("barcode");
+        String shelf = context.pathParam("shelf");
         // TODO: descriptorService.addShelf(barcode, shelf)
         context.result("Added shelf " + shelf + " to " + barcode);
     }
