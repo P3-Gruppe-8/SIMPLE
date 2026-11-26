@@ -2,7 +2,7 @@
 
 let loggedInAs = null;
 
-// staff ID cards look like "nowaco staff USERNAME", like the shelf codes
+// staff ID codes look like "nowaco staff USERNAME", like the shelf codes
 const STAFF_CODE = /^nowaco staff (.+)$/;
 
 export function staffUsername(barcode) {

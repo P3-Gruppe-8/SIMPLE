@@ -1,7 +1,7 @@
 // A receipt: a table of scanned item types and how many of each
 import { getItemDetails } from "./api.js";
-import { logIn } from "./navigation.js";
-import { isLoggedIn, staffUsername } from "./session.js";
+import { isLoggedIn } from "./session.js";
+import { askForStaffId } from "./staffIdDialog.js";
 import { claimScans } from "./scanning.js";
 
 export function setUpReceipt(receipt) {
@@ -86,7 +86,13 @@ export function setUpReceipt(receipt) {
 
             const wantsToRegister = prompt.returnValue === "register";
             // because of the way conditionals are evaluated, this auto-runs the ask for id part specifically if the user is not logged in but pressed "register item type".
-            if (wantsToRegister && (isLoggedIn() || (await askForStaffId()))) {
+            if (
+                wantsToRegister &&
+                (isLoggedIn() ||
+                    (await askForStaffId(
+                        "Scan or type your staff ID to register a new item type.",
+                    )))
+            ) {
                 const name = await registerUnknown(row.dataset.barcode);
                 if (name !== null) {
                     nameCell.textContent = name;
@@ -194,35 +200,6 @@ async function registerUnknown(barcode) {
     await waitForClose(dialog);
     form.removeEventListener("submit", onSubmit);
     return name;
-}
-
-// lets someone who isn't logged in scan their staff ID. returns whether they logged in.
-async function askForStaffId() {
-    const dialog = document.getElementById("staff-id-dialog");
-    const message = dialog.querySelector(".staff-id-message");
-    message.textContent = "Scan your staff ID to register a new item type.";
-    let loggedIn = false;
-    // with a pattern, this claim gets chosen instead of the receipt's own pattern-less one (see findClaim in scanning.js)
-    const release = claimScans(async (barcode) => {
-        const username = staffUsername(barcode);
-        if (username === null) {
-            message.textContent = "That isn't a staff ID. Try again.";
-            return;
-        }
-        try {
-            await logIn(username);
-        } catch (error) {
-            console.error(error);
-            message.textContent = error.message + ". Try again.";
-            return;
-        }
-        loggedIn = isLoggedIn(); // logIn refuses outside the root views
-        dialog.close();
-    }, /.*/); // the pattern matches everything
-    dialog.showModal();
-    await waitForClose(dialog);
-    release();
-    return loggedIn;
 }
 
 function waitForClose(dialog) {

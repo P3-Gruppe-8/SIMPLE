@@ -777,12 +777,51 @@
                 </div>
             </form>
         </dialog>
-        <!-- registering needs a login, see askForStaffId in receipt.js -->
+        <!-- the log in prompt, see staffIdDialog.js -->
         <dialog id="staff-id-dialog" class="msgbox">
             <form method="dialog">
                 <div class="dialog-body">
                     <h2>Log In</h2>
                     <p class="staff-id-message"></p>
+                    <div class="form-field">
+                        <label for="staff-id-entry">Staff ID</label>
+                        <div
+                            class="barcode-field"
+                            data-keep-scanning
+                            data-scan-pattern="^nowaco staff "
+                        >
+                            <div class="barcode-buttons">
+                                <button
+                                    type="button"
+                                    class="barcode-scan raised"
+                                >
+                                    <span class="barcode-scan-label"
+                                        >Scan staff ID</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="barcode-manual raised"
+                                    title="Manual entry"
+                                    aria-label="Manual entry"
+                                >
+                                    <img
+                                        src="images/keyboard-solid-full.svg"
+                                        class="barcode-manual-icon"
+                                    />
+                                </button>
+                            </div>
+                            <input
+                                type="text"
+                                id="staff-id-entry"
+                                class="invisible"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div class="dialog-footer">
                     <button type="submit" value="cancel" class="red raised">

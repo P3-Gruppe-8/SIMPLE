@@ -25,11 +25,11 @@ export function claimScans(handler, pattern = null) {
 }
 
 // just like claimScans, but released automatically after one scan.
-export function claimNextScan(handler) {
+export function claimNextScan(handler, pattern = null) {
     const release = claimScans((barcode) => {
         release();
         handler(barcode);
-    });
+    }, pattern);
     return release;
 }
 

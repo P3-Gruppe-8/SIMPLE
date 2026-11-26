@@ -20,6 +20,10 @@ export function setUpBarcodeField(field) {
     buttons.insertBefore(input, manualButton);
     // fields marked data-keep-scanning take every scan, not just the first
     const keepScanning = "keepScanning" in field.dataset;
+    // a pattern lets this field's claim win over claims without one (see findClaim in scanning.js)
+    const scanPattern = field.dataset.scanPattern
+        ? new RegExp(field.dataset.scanPattern)
+        : null;
 
     // the value of this variable will be a function which, when called, removes the claim from the claims list.
     let cancelCapture = null;
@@ -48,7 +52,7 @@ export function setUpBarcodeField(field) {
                 showScanned(); // so the user can see if the scan messed up
             }
             field.dispatchEvent(new Event("scan")); // lets the page react to the scan
-        });
+        }, scanPattern);
     }
 
     function stopAwaiting() {
