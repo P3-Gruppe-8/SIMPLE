@@ -1,8 +1,9 @@
 // Calls to the backend's REST API.
 import { getStaffId } from "./session.js";
+import { getOfficeId } from "./office.js";
 
 // sends a request, with `body` as JSON if given, and returns the server's text reply.
-// when someone is logged in, their staff ID is included in a header
+// when someone is logged in, their staff ID is included in a header, and so is the tablet's office.
 async function send(method, path, body) {
     const options = { method: method, headers: {} };
     if (body !== undefined) {
@@ -11,6 +12,9 @@ async function send(method, path, body) {
     }
     if (getStaffId() !== null) {
         options.headers["X-Staff-Id"] = getStaffId();
+    }
+    if (getOfficeId() !== null) {
+        options.headers["X-Office-Id"] = getOfficeId();
     }
     const response = await fetch(path, options);
     if (!response.ok) {
@@ -69,4 +73,9 @@ export async function getShelves() {
         throw new Error("getShelves failed: " + response.status);
     }
     return await response.json();
+}
+
+// the offices as a list of { id, name }
+export async function getOffices() {
+    return JSON.parse(await send("GET", "offices"));
 }

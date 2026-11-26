@@ -2,6 +2,7 @@
 import { changeStock } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
 import { showToast } from "./toast.js";
+import { loadOffices } from "./debug.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
 const modeOptions = document.querySelectorAll(".mode-option");
@@ -150,6 +151,7 @@ export function showDebugView() {
     }
     hideById(currentMode);
     showView("debugView");
+    loadOffices();
     hideById("debugButton");
     hideById("alertButton");
     hideById("modeSwitch");

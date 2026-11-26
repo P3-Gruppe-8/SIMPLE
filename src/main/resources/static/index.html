@@ -35,11 +35,22 @@
             </nav>
         </header>
         <main>
-            <!-- Debug menu: shows what the global keydown listener receives -->
+            <!-- Debug menu: tablet setup and what the global keydown listener receives -->
             <div class="view debug-view invisible" id="debugView">
-                <h2>Keydown log</h2>
-                <p>Press keys or scan a barcode. Newest first.</p>
-                <ol id="debugKeyLog" class="debug-key-log" reversed></ol>
+                <section class="debug-section">
+                    <h2>Keydown log</h2>
+                    <p>Press keys or scan a barcode. Newest first.</p>
+                    <ol id="debugKeyLog" class="debug-key-log" reversed></ol>
+                </section>
+                <section class="debug-section form-field">
+                    <h2>Office</h2>
+                    <p>The office this tablet belongs to.</p>
+                    <select id="debugOffice">
+                        <option value="" disabled selected>
+                            Loading offices...
+                        </option>
+                    </select>
+                </section>
             </div>
             <div class="mode" id="supplyMode">
                 <!-- The default supply mode view -->

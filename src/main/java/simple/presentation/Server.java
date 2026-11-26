@@ -15,7 +15,7 @@ public class Server {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final String DEV_STATIC_DIR = "src/main/resources/static";
 
-    public static void start(int port) {
+    public static void start(int port, OfficeController officeController) {
 
         var app = Javalin.create(config -> {
             config.requestLogger.http(
@@ -56,6 +56,9 @@ public class Server {
                 });
                 path("/shelves", () -> {
                     get(shelfController::getAll);
+                });
+                path("/offices", () -> {
+                    get(officeController::getAll);
                 });
             });
         });

@@ -2,8 +2,11 @@ package simple;
 
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
+import simple.dataaccess.jdbc.JdbcOfficeDAO;
+import simple.presentation.OfficeController;
 import simple.presentation.Server;
 import simple.service.ITStaffService;
+import simple.service.OfficeService;
 
 public class Main {
     public static void main(String[] args) {
@@ -52,6 +55,8 @@ public class Main {
         String portValue = System.getenv("PORT");
         int port = (portValue == null || portValue.isBlank()) ? 7070 : Integer.parseInt(portValue);
 
-        Server.start(port);
+        OfficeService officeService = new OfficeService(new JdbcOfficeDAO());
+
+        Server.start(port, new OfficeController(officeService));
     }
 }
