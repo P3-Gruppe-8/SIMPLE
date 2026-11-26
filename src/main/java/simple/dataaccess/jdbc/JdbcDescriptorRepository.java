@@ -20,16 +20,16 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         Connection conn = db.newConnection(false);
 
         String sql = """
-                UPDATE descriptors AS d
-                SET quantity = d.quantity + ?
-                FROM descriptor_barcodes AS b
-                WHERE b.descriptor_id = d.descriptor_id
-                  AND b.barcode_key = ?
-                  AND b.office_id = ?
-                  AND d.is_loanable = false
-                  AND d.quantity IS NOT NULL
-                  AND d.descriptor_deleted IS NULL
-                RETURNING d.*
+                UPDATE descriptors
+                SET quantity = descriptors.quantity + ?
+                FROM descriptor_barcodes
+                WHERE descriptor_barcodes.descriptor_id = descriptors.descriptor_id
+                  AND descriptor_barcodes.barcode_key = ?
+                  AND descriptor_barcodes.office_id = ?
+                  AND descriptors.is_loanable = false
+                  AND descriptors.quantity IS NOT NULL
+                  AND descriptors.descriptor_deleted IS NULL
+                RETURNING descriptors.*
                 """;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -67,14 +67,14 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         Connection conn = db.newConnection(true);
 
         String sql = """
-                SELECT d.*
-                FROM descriptors d
-                JOIN descriptor_barcodes db
-                    ON d.descriptor_id = db.descriptor_id
-                    AND d.office_id = db.office_id
-                WHERE db.barcode_key = ?
-                    AND db.office_id = ?
-                    AND d.descriptor_deleted IS NULL;
+                SELECT descriptors.*
+                FROM descriptors
+                JOIN descriptor_barcodes
+                    ON descriptors.descriptor_id = descriptor_barcodes.descriptor_id
+                    AND descriptors.office_id = descriptor_barcodes.office_id
+                WHERE descriptor_barcodes.barcode_key = ?
+                    AND descriptor_barcodes.office_id = ?;
+                    AND descriptor.descriptor_deleted IS NULL;
                 """;
 
         try (PreparedStatement statement = conn.prepareStatement(sql); ) {
