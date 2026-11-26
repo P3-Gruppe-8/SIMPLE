@@ -111,8 +111,10 @@ export function showAlertView(alertView) {
     }
 
     if (!showNewAlerts) {
+        document.getElementById("oldAlertsRow").style.paddingTop = "0.8em";
         return;
     }
+    document.getElementById("oldAlertsRow").style.paddingTop = "0em";
 
     showById("newAlertsHeader");
     showById("newAlertsRow");
