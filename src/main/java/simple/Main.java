@@ -41,12 +41,12 @@ public class Main {
         // JdbcDescriptorRepository();
 
         // Optional<Descriptor> descriptor1 = jdbcDescriptorRepository
-        // .findByBarcode("DEMO-USB-C-1M", 1);
+        // .findByBarcode("2001000000012", 1);
 
         // System.out.println("Quantaty før ændring: " +
         // descriptor1.orElseThrow().quantity());
 
-        // descriptor1 = jdbcDescriptorRepository.changeQuantity("DEMO-USB-C-1M", 1, 1);
+        // descriptor1 = jdbcDescriptorRepository.changeQuantity("2001000000012", 1, 1);
 
         // System.out.println("Quantaty efter ændring: " +
         // descriptor1.orElseThrow().quantity());

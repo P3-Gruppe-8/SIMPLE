@@ -65,7 +65,7 @@ export function addBarcodeListener(onScan) {
             valueBeforeScan = e.target.value;
         }
         if (e.key === " " && buffer !== "" && !inTextField) {
-            e.preventDefault(); // a space inside a scan (e.g. "nowaco staff demo.anna") would otherwise press the focused button
+            e.preventDefault(); // a space inside a scan (e.g. "nowaco staff anna") would otherwise press the focused button
         }
         if (e.key === "Enter" && buffer.length >= MIN_BARCODE_LENGTH) {
             e.preventDefault();
