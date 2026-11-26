@@ -12,7 +12,10 @@
             <nav class="navbar">
                 <ol>
                     <li class="navbar-element">
-                        <img src="images/nowaco-logo.png" />
+                        <img src="images/nowaco-logo.png" id="logo" />
+                        <button class="debug-button invisible" id="debugButton">
+                            Debug
+                        </button>
                     </li>
                     <li class="navbar-element">
                         <div class="mode-switch" id="modeSwitch">
@@ -32,6 +35,12 @@
             </nav>
         </header>
         <main>
+            <!-- Debug menu: shows what the global keydown listener receives -->
+            <div class="view debug-view invisible" id="debugView">
+                <h2>Keydown log</h2>
+                <p>Press keys or scan a barcode. Newest first.</p>
+                <ol id="debugKeyLog" class="debug-key-log" reversed></ol>
+            </div>
             <div class="mode" id="supplyMode">
                 <!-- The default supply mode view -->
                 <div class="view button-col" id="defaultView">

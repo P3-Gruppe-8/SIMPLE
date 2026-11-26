@@ -34,6 +34,22 @@ document.getElementById("logoutButton").addEventListener("click", logOut);
 document
     .getElementById("alertButton")
     .addEventListener("click", () => showAlertView("alertView"));
+document.getElementById("debugButton").addEventListener("click", showDebugView);
+
+// tapping the logo reveals the hidden debug button for 2 seconds
+const DEBUG_BUTTON_VISIBLE_MS = 2000;
+let debugButtonTimer;
+document.getElementById("logo").addEventListener("click", () => {
+    if (viewHistory.at(-1) === "debugView") {
+        return;
+    }
+    showById("debugButton");
+    clearTimeout(debugButtonTimer);
+    debugButtonTimer = setTimeout(
+        () => hideById("debugButton"),
+        DEBUG_BUTTON_VISIBLE_MS,
+    );
+});
 
 export function hide(element) {
     element.classList.add("invisible");
@@ -53,6 +69,8 @@ export function showById(id) {
     show(element);
 }
 
+let currentMode = null;
+
 // the first view of each mode is a "root view"
 const rootViews = ["defaultView", "loanModeLogInScreen", "loanModeHomeScreen"];
 let viewHistory = [];
@@ -64,6 +82,7 @@ export function setMode(id) {
         hide(mode);
     }
     showById(id);
+    currentMode = id;
     if (id === "supplyMode") {
         showView("defaultView");
         if (isLoggedIn()) {
@@ -107,6 +126,11 @@ export function previousView() {
         showById("alertButton");
         showById("modeSwitch");
     }
+    if (viewHistory.at(-1) === "debugView") {
+        showById(currentMode);
+        showById("alertButton");
+        showById("modeSwitch");
+    }
 
     viewHistory.pop(); // the view we are leaving
     let previousViewId = viewHistory.pop(); // showView pushes it back on
@@ -115,6 +139,18 @@ export function previousView() {
 
 export function showAlertView(alertView) {
     showView(alertView);
+    hideById("alertButton");
+    hideById("modeSwitch");
+}
+
+// the debug view lives outside the modes, so the current mode is hidden while it is open
+export function showDebugView() {
+    if (viewHistory.at(-1) === "debugView") {
+        return;
+    }
+    hideById(currentMode);
+    showView("debugView");
+    hideById("debugButton");
     hideById("alertButton");
     hideById("modeSwitch");
 }
