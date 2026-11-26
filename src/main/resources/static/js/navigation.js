@@ -1,7 +1,7 @@
 // Mode switching and view history.
 import { changeStock } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
-import { showToast } from "./toast.js";
+import { showErrorToast, showToast } from "./toast.js";
 import { loadOffices } from "./debug.js";
 
 const modeSwitch = document.getElementById("modeSwitch");
@@ -184,5 +184,8 @@ export function logOut() {
 export function quickWriteOff(barcode) {
     changeStock(barcode, -1)
         .then((text) => showToast(text))
-        .catch((error) => console.error(error));
+        .catch((error) => {
+            console.error(error);
+            showErrorToast(error.message);
+        });
 }
