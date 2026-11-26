@@ -39,5 +39,5 @@ public interface DescriptorRepository {
             String info_field,
             int office_id,
             String barcode,
-            int shelf_id);
+            String shelfName);
 }

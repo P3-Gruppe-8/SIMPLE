@@ -12,7 +12,10 @@
             <nav class="navbar">
                 <ol>
                     <li class="navbar-element">
-                        <img src="images/nowaco-logo.png" />
+                        <img src="images/nowaco-logo.png" id="logo" />
+                        <button class="debug-button invisible" id="debugButton">
+                            Debug
+                        </button>
                     </li>
                     <li class="navbar-element">
                         <div class="mode-switch" id="modeSwitch">
@@ -32,6 +35,23 @@
             </nav>
         </header>
         <main>
+            <!-- Debug menu: tablet setup and what the global keydown listener receives -->
+            <div class="view debug-view invisible" id="debugView">
+                <section class="debug-section">
+                    <h2>Keydown log</h2>
+                    <p>Press keys or scan a barcode. Newest first.</p>
+                    <ol id="debugKeyLog" class="debug-key-log" reversed></ol>
+                </section>
+                <section class="debug-section form-field">
+                    <h2>Office</h2>
+                    <p>The office this tablet belongs to.</p>
+                    <select id="debugOffice">
+                        <option value="" disabled selected>
+                            Loading offices...
+                        </option>
+                    </select>
+                </section>
+            </div>
             <div class="mode" id="supplyMode">
                 <!-- The default supply mode view -->
                 <div class="view button-col" id="defaultView">
@@ -498,9 +518,6 @@
                                     >
                                         <span>Close</span>
                                     </button>
-                                    <button type="submit" class="green raised">
-                                        <span>Show</span>
-                                    </button>
                                 </div>
                             </form>
                         </dialog>
@@ -786,13 +803,13 @@
         <script type="module" src="js/script.js"></script>
         <!-- TODO: dev helper, remove before handover. -->
         <script>
-            const IT = "victor nummer 2";
-            const IT2 = "leon da boss";
-            const CO = "consumable 42";
-            const CO2 = "consumable 67";
-            const LO = "loanable 01";
-            const LO2 = "loanable 02";
-            const SH = "nowaco shelf a1";
+            const IT = "nowaco staff anna";
+            const IT2 = "nowaco staff peter";
+            const CO = "2001000000012";
+            const CO2 = "2001000000029";
+            const LO = "04a3f21a6b5c80";
+            const LO2 = "04b71e9a2c4d80";
+            const SH = "nowaco shelf supply 1";
 
             // types the code and Enter as fast keystrokes, like a scanner does
             function s(code) {

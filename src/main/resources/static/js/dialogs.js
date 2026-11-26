@@ -1,15 +1,16 @@
 // Submit handlers and behaviour for the menu dialogs.
 import {
     addItemTypeLocation,
-    changeStock,
     deregisterItemType,
     getItemDetails,
     getItemTypeLocations,
     registerItemType,
+    restock,
     setItemTypeLocations,
+    writeOff,
 } from "./api.js";
 import { hide, show } from "./navigation.js";
-import { showToast } from "./toast.js";
+import { showErrorToast, showToast } from "./toast.js";
 import { getReceiptItems, showReceiptResults } from "./receipt.js";
 
 export function setUpDialogs() {
@@ -45,7 +46,10 @@ function setUpRegisterDialog() {
             };
             registerItemType(itemType)
                 .then((text) => showToast(text))
-                .catch((error) => console.error(error));
+                .catch((error) => {
+                    console.error(error);
+                    showErrorToast(error.message);
+                });
         });
 }
 
@@ -55,7 +59,7 @@ function setUpWriteOffDialog() {
         .addEventListener("submit", () => {
             const receipt = document.getElementById("write-off-receipt");
             showReceiptResults("Write Off", getReceiptItems(receipt), (item) =>
-                changeStock(item.barcode, -item.amount),
+                writeOff(item.barcode, item.amount),
             );
         });
 }
@@ -70,7 +74,7 @@ function setUpRestockDialog() {
                 "Restock",
                 getReceiptItems(receipt),
                 async (item) => {
-                    await changeStock(item.barcode, item.amount);
+                    await restock(item.barcode, item.amount);
                     // adding a shelf is idempotent, so it's fine if the item type already has it
                     if (shelf) {
                         await addItemTypeLocation(item.barcode, shelf);
@@ -268,22 +272,16 @@ function setUpLocationsDialog() {
 }
 
 function setUpItemDetailsDialog() {
-    document
-        .getElementById("item-details-dialog-form")
-        .addEventListener("submit", (event) => {
-            event.preventDefault(); // keep the dialog open to show the details
-            const barcode = document.getElementById(
-                "item-details-item-id",
-            ).value;
-            lookUpItem(barcode, document.getElementById("item-details-result"));
-        });
+    const input = document.getElementById("item-details-item-id");
 
     // every scan looks the item up straight away
-    document
-        .getElementById("item-details-item-id")
+    input
         .closest(".barcode-field")
         .addEventListener("scan", () =>
-            document.getElementById("item-details-dialog-form").requestSubmit(),
+            lookUpItem(
+                input.value,
+                document.getElementById("item-details-result"),
+            ),
         );
 
     // form reset doesn't clear the details, so do it when the dialog closes

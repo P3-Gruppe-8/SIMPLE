@@ -5,7 +5,10 @@ import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.domain.exception.AffectedRowsException;
+import simple.domain.exception.AlreadyExistsException;
 import simple.domain.exception.DataAccessException;
+import simple.domain.exception.NotFoundException;
+import simple.domain.exception.QuantityException;
 import simple.domain.itemmanagement.Descriptor;
 import simple.domain.repository.DescriptorRepository;
 
@@ -25,6 +28,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                   AND descriptor_barcodes.office_id = ?
                   AND descriptors.is_loanable = false
                   AND descriptors.quantity IS NOT NULL
+                  AND descriptors.descriptor_deleted IS NULL
                 RETURNING descriptors.*
                 """;
 
@@ -49,11 +53,11 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             if ("23514".equals(e.getSQLState())) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
-                throw new DataAccessException("Failed to change descriptor quantity", e);
+                throw new QuantityException("Not enough in stock", e);
             }
             db.executeRollback(conn);
             db.closeConnection(conn);
-            return Optional.empty();
+            throw new DataAccessException("Failed to change descriptor quantity", e);
         }
     }
 
@@ -70,18 +74,19 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     AND descriptors.office_id = descriptor_barcodes.office_id
                 WHERE descriptor_barcodes.barcode_key = ?
                     AND descriptor_barcodes.office_id = ?;
+                    AND descriptor.descriptor_deleted IS NULL;
                 """;
 
         try (PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
             statement.setInt(2, office_id);
             try (ResultSet result = statement.executeQuery()) {
-                db.closeConnection(conn);
+                Optional<Descriptor> descriptor = Optional.empty();
                 if (result.next()) {
-                    return Optional.of(DescriptorMap.mapRow(result));
-                } else {
-                    return Optional.empty();
+                    descriptor = Optional.of(DescriptorMap.mapRow(result));
                 }
+                db.closeConnection(conn);
+                return descriptor;
             }
         } catch (SQLException e) {
             db.closeConnection(conn);
@@ -93,26 +98,36 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
         Databaseconnection db = new Databaseconnection();
         Connection conn = db.newConnection(false);
 
-        String sql = """
+        String sqlDeleteDescriptor = """
                 UPDATE descriptors
                 SET descriptor_deleted = now()
                 WHERE descriptor_id = ?
                     AND office_id = ?
                 """;
 
-        try (PreparedStatement statement = conn.prepareStatement(sql); ) {
-            statement.setInt(1, descriptor_id);
-            statement.setInt(2, office_id);
-            int result = statement.executeUpdate();
-            if (result == 1) {
-                db.executeCommit(conn);
-                db.closeConnection(conn);
-                return true;
-            } else {
+        String sqlDeleteBarcodes = """
+                DELETE FROM descriptor_barcodes
+                WHERE descriptor_id = ?
+                    AND office_id = ?
+                """;
+
+        try (PreparedStatement deleteDescriptor = conn.prepareStatement(sqlDeleteDescriptor);
+                PreparedStatement deleteBarcodes = conn.prepareStatement(sqlDeleteBarcodes)) {
+            deleteDescriptor.setInt(1, descriptor_id);
+            deleteDescriptor.setInt(2, office_id);
+            if (deleteDescriptor.executeUpdate() != 1) {
                 db.executeRollback(conn);
                 db.closeConnection(conn);
                 throw new AffectedRowsException("Failed to delete descriptor: 0 or more than 1 row affected");
             }
+
+            deleteBarcodes.setInt(1, descriptor_id);
+            deleteBarcodes.setInt(2, office_id);
+            deleteBarcodes.executeUpdate();
+
+            db.executeCommit(conn);
+            db.closeConnection(conn);
+            return true;
         } catch (SQLException e) {
             db.executeRollback(conn);
             db.closeConnection(conn);
@@ -126,7 +141,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             String info_field,
             int office_id,
             String barcode,
-            int shelf_id) {
+            String shelfName) {
 
         Databaseconnection db = new Databaseconnection();
 
@@ -149,8 +164,6 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
 
                     try (ResultSet rs = statement.executeQuery()) {
                         if (!rs.next()) {
-                            db.executeRollback(conn);
-                            db.closeConnection(conn);
                             throw new SQLException("Unable to create descriptor: No descriptor ID returned");
                         }
                         descriptor_id = rs.getInt("descriptor_id");
@@ -169,39 +182,42 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
                     statement.setInt(3, office_id);
 
                     if (statement.executeUpdate() != 1) {
-                        db.executeRollback(conn);
-                        db.closeConnection(conn);
                         throw new SQLException("Unable to create descriptor: Failed to add barcode");
                     }
                 }
 
                 String sqlAddShelf = """
                         INSERT INTO descriptor_shelves (descriptor_id, shelf_id)
-                        VALUES (?, ?)
+                        SELECT ?, shelf_id
+                        FROM shelves
+                        WHERE shelf_name = ?
+                          AND office_id = ?
+                          AND shelf_deleted IS NULL
                         """;
 
                 try (PreparedStatement statement = conn.prepareStatement(sqlAddShelf)) {
                     statement.setInt(1, descriptor_id);
-                    statement.setInt(2, shelf_id);
+                    statement.setString(2, shelfName);
+                    statement.setInt(3, office_id);
 
                     if (statement.executeUpdate() != 1) {
                         db.executeRollback(conn);
-                        db.closeConnection(conn);
-                        throw new SQLException("Unable to create descriptor: Failed to add shelf");
+                        throw new NotFoundException("No shelf named " + shelfName);
                     }
                 }
 
                 db.executeCommit(conn);
-                db.closeConnection(conn);
                 return true;
 
             } catch (SQLException e) {
                 db.executeRollback(conn);
-                db.closeConnection(conn);
+                if ("23505".equals(e.getSQLState())) {
+                    throw new AlreadyExistsException("An item type with this name or barcode already exists", e);
+                }
                 throw new DataAccessException("Unable to create descriptor: Failed to create descriptor", e);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Unable to create descriptor: Failed to connect to database", e);
+            throw new DataAccessException("Unable to create descriptor: Failed to close connection", e);
         }
     }
 

@@ -2,7 +2,16 @@
 
 let loggedInAs = null;
 
-export const loginIds = ["victor nummer 2", "leon da boss"];
+// staff ID cards look like "nowaco staff USERNAME", like the shelf codes
+const STAFF_CODE = /^nowaco staff (.+)$/;
+
+export function staffUsername(barcode) {
+    const match = barcode.match(STAFF_CODE);
+    if (match === null) {
+        return null;
+    }
+    return match[1];
+}
 
 export function isLoggedIn() {
     return loggedInAs !== null;

@@ -1,108 +1,139 @@
 package simple.presentation;
 
+import static simple.presentation.RequestHeaders.requireOfficeId;
+import static simple.presentation.RequestHeaders.requireStaffId;
+
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import io.javalin.http.UnauthorizedResponse;
+import io.javalin.http.NotFoundResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import simple.domain.exception.AlreadyExistsException;
+import simple.domain.exception.NotFoundException;
+import simple.domain.exception.QuantityException;
+import simple.domain.itemmanagement.Descriptor;
+import simple.service.DescriptorService;
 
-/**
- * Handles the /descriptors routes. TODO: placeholders until the service layer
- * exists.
- */
+/** Handles the /descriptors routes. */
 public class DescriptorController {
 
-    private static String requireStaffId(Context ctx) {
-        var staffId = ctx.header("X-Staff-Id");
-        if (staffId == null || staffId.isBlank()) {
-            throw new UnauthorizedResponse("Scan your staff ID first");
+    private final DescriptorService descriptorService;
+
+    public DescriptorController(DescriptorService descriptorService) {
+        this.descriptorService = descriptorService;
+    }
+
+    private static NotFoundResponse noSuchItemType(String barcode) {
+        return new NotFoundResponse("No item type with barcode " + barcode);
+    }
+
+    public void create(Context context) {
+        requireStaffId(context); // TODO: pass to the service
+        DescriptorRegistration registration = context.bodyAsClass(DescriptorRegistration.class);
+        // the register dialog only registers consumables, and has no info field yet
+        try {
+            descriptorService.register(
+                    registration.name(),
+                    false,
+                    null,
+                    requireOfficeId(context),
+                    registration.barcode(),
+                    registration.shelf());
+        } catch (NotFoundException e) {
+            context.status(HttpStatus.NOT_FOUND).result(e.getMessage());
+            return;
+        } catch (AlreadyExistsException e) {
+            context.status(HttpStatus.CONFLICT).result(e.getMessage());
+            return;
         }
-        return staffId;
+        context.status(HttpStatus.CREATED).result("Registered " + registration.name());
     }
 
-    public void create(Context ctx) {
-        requireStaffId(ctx); // TODO: pass to the service
-        var registration = ctx.bodyAsClass(DescriptorRegistration.class);
-        ctx.status(HttpStatus.CREATED).result("Successfully registered " + registration.name());
+    public void getOne(Context context) {
+        String barcode = context.pathParam("barcode");
+        Descriptor descriptor = descriptorService
+                .findByBarcode(barcode, requireOfficeId(context))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        context.json(new DescriptorDetails(barcode, descriptor.name(), descriptor.quantity()));
     }
 
-    // TODO: replace when database is connected
-    private static final Map<String, DescriptorDetails> DUMMY_DESCRIPTORS = Map.of(
-            "5056784902424", new DescriptorDetails("5056784902424", "Monster Rio Punch", 24),
-            "5060337502290", new DescriptorDetails("5060337502290", "Monster Ultra White", 12),
-            "5741000142899", new DescriptorDetails("5741000142899", "Booster 0 kcal", 15),
-            "5061013940870", new DescriptorDetails("5061013940870", "Monster Original Zero Sugar", 1000));
+    public void delete(Context context) {
+        requireStaffId(context);
+        String barcode = context.pathParam("barcode");
+        Descriptor deleted = descriptorService
+                .deregister(barcode, requireOfficeId(context))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        context.result("Deleted item type " + deleted.name());
+    }
 
-    // TODO: replace when database is connected
+    private static int requirePositiveAmount(Context context) {
+        StockChange change = context.bodyAsClass(StockChange.class);
+        if (change.amount() < 1) {
+            throw new BadRequestResponse("The amount must be at least 1");
+        }
+        return change.amount();
+    }
+
+    public void restock(Context context) {
+        String barcode = context.pathParam("barcode");
+        int amount = requirePositiveAmount(context);
+        Descriptor descriptor = descriptorService
+                .restock(barcode, requireOfficeId(context), amount)
+                .orElseThrow(() -> noSuchItemType(barcode));
+        context.result("Restocked " + descriptor.name());
+    }
+
+    public void writeOff(Context context) {
+        String barcode = context.pathParam("barcode");
+        int amount = requirePositiveAmount(context);
+        int officeId = requireOfficeId(context);
+        try {
+            Descriptor descriptor =
+                    descriptorService.writeOff(barcode, officeId, amount).orElseThrow(() -> noSuchItemType(barcode));
+            context.result("Wrote off " + descriptor.name());
+        } catch (QuantityException e) {
+            String name = barcode;
+            Optional<Descriptor> descriptor = descriptorService.findByBarcode(barcode, officeId);
+            if (descriptor.isPresent()) {
+                name = descriptor.get().name();
+            }
+            context.status(HttpStatus.CONFLICT).result("Not enough " + name + " in stock");
+        }
+    }
+
+    // TODO: replace when shelves come from the database
     private static final Map<String, List<String>> DUMMY_POSSIBLE_SHELVES = Map.of(
             "5056784902424", List.of("a1", "a2", "Kælderrum ved serverrummet, øverste hylde"),
             "5060337502290", List.of("b1"),
             "5741000142899", List.of("c1", "c2", "c3"));
 
-    // the item type's name for messages, or the barcode if it isn't known
-    private static String nameOf(String barcode) {
-        var descriptor = DUMMY_DESCRIPTORS.get(barcode);
-        return descriptor == null ? barcode : descriptor.name();
-    }
-
-    public void getOne(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        var descriptor = DUMMY_DESCRIPTORS.get(barcode);
-        if (descriptor == null) {
-            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
-        } else {
-            ctx.json(descriptor);
-        }
-    }
-
-    public void delete(Context ctx) {
-        requireStaffId(ctx);
-        var barcode = ctx.pathParam("barcode");
-        ctx.result("Deleted item type " + nameOf(barcode));
-    }
-
-    public void update(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        var patch = ctx.bodyAsClass(DescriptorPatch.class);
-        if (patch.change() < 0) {
-            ctx.result("Wrote off " + nameOf(barcode));
-        } else if (patch.change() > 0) {
-            ctx.result("Restocked " + nameOf(barcode));
-        } else {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Nothing to change");
-        }
-    }
-
-    public void getPossibleShelves(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        // TODO: descriptorService.getPossibleShelves(barcode); the service finds the
-        // item type from the barcode
-        if (!DUMMY_DESCRIPTORS.containsKey(barcode)) {
-            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
-        } else {
-            ctx.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
-        }
+    public void getPossibleShelves(Context context) {
+        String barcode = context.pathParam("barcode");
+        // TODO: descriptorService.getPossibleShelves(barcode)
+        descriptorService.findByBarcode(barcode, requireOfficeId(context)).orElseThrow(() -> noSuchItemType(barcode));
+        context.json(DUMMY_POSSIBLE_SHELVES.getOrDefault(barcode, List.of()));
     }
 
     // replaces the whole possible shelves list
-    public void setPossibleShelves(Context ctx) {
-        requireStaffId(ctx);
-        var barcode = ctx.pathParam("barcode");
-        var shelves = ctx.bodyAsClass(String[].class);
+    public void setPossibleShelves(Context context) {
+        requireStaffId(context);
+        String barcode = context.pathParam("barcode");
+        String[] shelves = context.bodyAsClass(String[].class);
         // TODO: descriptorService.setPossibleShelves(barcode, shelves), in one database
         // transaction
-        if (!DUMMY_DESCRIPTORS.containsKey(barcode)) {
-            ctx.status(HttpStatus.NOT_FOUND).result("No item type with barcode " + barcode);
-        } else {
-            ctx.result("Updated the possible shelves of " + nameOf(barcode));
-        }
+        Descriptor descriptor = descriptorService
+                .findByBarcode(barcode, requireOfficeId(context))
+                .orElseThrow(() -> noSuchItemType(barcode));
+        context.result("Updated the possible shelves of " + descriptor.name());
     }
 
     // adds one shelf to a descriptor's possible shelves list
-    public void addShelf(Context ctx) {
-        var barcode = ctx.pathParam("barcode");
-        var shelf = ctx.pathParam("shelf");
+    public void addShelf(Context context) {
+        String barcode = context.pathParam("barcode");
+        String shelf = context.pathParam("shelf");
         // TODO: descriptorService.addShelf(barcode, shelf)
-        ctx.result("Added shelf " + shelf + " to " + nameOf(barcode));
+        context.result("Added shelf " + shelf + " to " + barcode);
     }
 }

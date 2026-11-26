@@ -70,7 +70,8 @@ CREATE TABLE descriptors (
   -- For loanables, a template can be stored for unique fields, eg. serial number.
   info_template VARCHAR(500),
   -- Soft delete, null if not deleted
-  -- IMPORTANT: Soft delete of descriptors, has to soft delete its barcodes.
+  -- IMPORTANT: Soft delete of descriptors has to hard delete its barcodes,
+  -- so the barcodes can be reused.
   descriptor_deleted TIMESTAMPTZ,
   office_id INTEGER NOT NULL REFERENCES offices (office_id) ON DELETE CASCADE,
   -- Enables the composite foreign key in descriptor_barcodes.
