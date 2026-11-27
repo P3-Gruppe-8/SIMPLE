@@ -1,7 +1,7 @@
 // A form field whose value comes from either a barcode scan or manual typing.
 import { claimNextScan } from "./scanning.js";
 
-// with keep scanning, a typed barcode is looked up once typing pauses this long
+// with data-submit-on-pause, a typed barcode counts as a scan once typing pauses this long
 const TYPING_PAUSE_MS = 1000;
 
 export function setUpBarcodeField(field) {
@@ -20,6 +20,8 @@ export function setUpBarcodeField(field) {
     buttons.insertBefore(input, manualButton);
     // fields marked data-keep-scanning take every scan, not just the first
     const keepScanning = "keepScanning" in field.dataset;
+    // for lookups, where an early submit does no harm
+    const submitOnPause = "submitOnPause" in field.dataset;
     // a pattern lets this field's claim win over claims without one (see findClaim in scanning.js)
     const scanPattern = field.dataset.scanPattern
         ? new RegExp(field.dataset.scanPattern)
@@ -98,7 +100,7 @@ export function setUpBarcodeField(field) {
 
     scanButton.addEventListener("click", startAwaiting);
 
-    // with keep scanning, a typed barcode counts as a scan when Enter is pressed or typing pauses
+    // with keep scanning, a typed barcode counts as a scan when Enter is pressed
     input.addEventListener("keydown", (e) => {
         if (keepScanning && e.key === "Enter" && input.value) {
             clearTimeout(typingTimer); // already looked up, don't do it twice
@@ -106,7 +108,7 @@ export function setUpBarcodeField(field) {
         }
     });
     input.addEventListener("input", () => {
-        if (!keepScanning) return;
+        if (!keepScanning || !submitOnPause) return;
         clearTimeout(typingTimer);
         typingTimer = setTimeout(() => {
             if (input.value) {
