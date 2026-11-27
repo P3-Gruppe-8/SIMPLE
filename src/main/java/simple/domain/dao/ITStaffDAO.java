@@ -1,12 +1,19 @@
 package simple.domain.dao;
 
 import java.util.Optional;
+import java.util.ArrayList;
+
 import simple.domain.employee.ITStaff;
+import simple.domain.employee.ITStaffRegistration;
 
 public interface ITStaffDAO {
-    // public Optional<ITStaff> findById(int id);
+
+    public void create(ITStaffRegistration itStaffRegistration);
 
     public Optional<ITStaff> findByUsername(String username, int officeId);
 
-    // public void delete(int id);
+    public void softDelete(int id);
+
+    public ArrayList<ITStaff> findAll(int officeId);
+
 }
