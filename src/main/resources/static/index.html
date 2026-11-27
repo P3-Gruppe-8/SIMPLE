@@ -9,7 +9,7 @@
     </head>
     <body>
         <header>
-            <nav class="navbar">
+            <nav id="navbar" class="navbar">
                 <ol>
                     <li class="navbar-element">
                         <img src="images/nowaco-logo.png" id="logo" />
@@ -33,6 +33,14 @@
                     </li>
                 </ol>
             </nav>
+
+            <div id="alertHeader" class="alert-header invisible">
+                <img
+                    src="images/bell-solid-full.svg"
+                    class="alert-header-icon"
+                />
+                <p class="alert-header-label">Alerts</p>
+            </div>
         </header>
         <main>
             <!-- Debug menu: tablet setup and what the global keydown listener receives -->
@@ -251,9 +259,20 @@
                 </div>
 
                 <!-- Alert view -->
-                <div class="view" id="alertView">
-                    <div id="newAlerts" class="alert-row-new">New Alerts</div>
-                    <div id="oldAlerts" class="alert-row-old">Old Alerts</div>
+                <div class="view alert-view" id="alertView">
+                    <!-- New Alerts -->
+                    <div id="newAlertsHeader" class="new-alerts-header">
+                        <p id="newAlertsHeaderLabel" class="new-alerts-label">
+                            NEW
+                        </p>
+                    </div>
+                    <div id="newAlertsRow" class="alert-row-new"></div>
+
+                    <!-- Old Alerts -->
+                    <div id="oldAlertsHeader" class="old-alerts-header">
+                        <p class="new-alerts-label">OLD</p>
+                    </div>
+                    <div id="oldAlertsRow" class="alert-row-old"></div>
                 </div>
 
                 <!-- After pressing "more options" in supply mode -->

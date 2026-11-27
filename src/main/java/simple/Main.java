@@ -23,12 +23,19 @@ public class Main {
         // Applies pending database migrations before starting the server.
         db.migrate();
 
+        // Test af existsByUsername:
+
+        // ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
+        // System.out.println(itStaffService.existsByUsername("demo.anna", 1));
+        // System.out.println(itStaffService.existsByUsername("demo.victor", 1));
+
         // Test af getOverviewByOffice
         // InventoryService inventoryService = new InventoryService(new
         // JdbcInventory());
         // // Get alerts by office id test:
 
-        // AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new JdbcLoanAlertDAO());
+        // AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new
+        // JdbcLoanAlertDAO());
 
         // System.out.println("Stock alerts:");
         // alertService.getActiveByOfficeId(1).stockAlerts().forEach(System.out::println);
@@ -43,7 +50,8 @@ public class Main {
         // System.out.println(itStaffService.existsByUsername("demo.victor", 1));
 
         // // Test af getOverviewByOffice
-        // InventoryService inventoryService = new InventoryService(new JdbcInventory());
+        // InventoryService inventoryService = new InventoryService(new
+        // JdbcInventory());
 
         // Inventory inventory = inventoryService.getOverviewByOffice(1);
 
@@ -55,17 +63,19 @@ public class Main {
 
         // // Tests af findByBarcode og changeQuantity på descriptor
 
-        // JdbcDescriptorRepository jdbcDescriptorRepository = new JdbcDescriptorRepository();
+        // JdbcDescriptorRepository jdbcDescriptorRepository = new
+        // JdbcDescriptorRepository();
 
         // Optional<Descriptor> descriptor1 = jdbcDescriptorRepository
         // .findByBarcode("2001000000012", 1);
 
-        // System.out.println("Quantaty før ændring: " + descriptor1.orElseThrow().quantity());
+        // System.out.println("Quantaty før ændring: " +
+        // descriptor1.orElseThrow().quantity());
 
         // descriptor1 = jdbcDescriptorRepository.changeQuantity("2001000000012", 1, 1);
 
         // System.out.println(
-        //         "Quantaty efter ændring: " + descriptor1.orElseThrow().quantity());
+        // "Quantaty efter ændring: " + descriptor1.orElseThrow().quantity());
 
         // Use port from environment variables if available,
         // Azure supplies this port because it is what it opens

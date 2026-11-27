@@ -1,6 +1,7 @@
 // Mode switching and view history.
 import { checkStaff, writeOff } from "./api.js";
 import { endSession, isLoggedIn, startSession } from "./session.js";
+import { showAlertView } from "./alerts.js";
 import { showErrorToast, showToast } from "./toast.js";
 import { loadOffices } from "./debug.js";
 
@@ -126,6 +127,8 @@ export function previousView() {
     if (viewHistory.at(-1) === "alertView") {
         showById("alertButton");
         showById("modeSwitch");
+        hideById("alertHeader");
+        showById("navbar");
     }
     if (viewHistory.at(-1) === "debugView") {
         showById(currentMode);
@@ -136,12 +139,6 @@ export function previousView() {
     viewHistory.pop(); // the view we are leaving
     let previousViewId = viewHistory.pop(); // showView pushes it back on
     showView(previousViewId);
-}
-
-export function showAlertView(alertView) {
-    showView(alertView);
-    hideById("alertButton");
-    hideById("modeSwitch");
 }
 
 // the debug view lives outside the modes, so the current mode is hidden while it is open
