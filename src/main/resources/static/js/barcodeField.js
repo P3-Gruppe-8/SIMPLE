@@ -102,9 +102,12 @@ export function setUpBarcodeField(field) {
 
     // with keep scanning, a typed barcode counts as a scan when Enter is pressed
     input.addEventListener("keydown", (e) => {
-        if (keepScanning && e.key === "Enter" && input.value) {
-            clearTimeout(typingTimer); // already looked up, don't do it twice
-            field.dispatchEvent(new Event("scan"));
+        if (keepScanning && e.key === "Enter") {
+            e.preventDefault();
+            if (input.value) {
+                clearTimeout(typingTimer); // already looked up, don't do it twice
+                field.dispatchEvent(new Event("scan"));
+            }
         }
     });
     input.addEventListener("input", () => {
