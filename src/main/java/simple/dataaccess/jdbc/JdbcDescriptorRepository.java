@@ -90,7 +90,7 @@ public class JdbcDescriptorRepository implements DescriptorRepository {
             }
         } catch (SQLException e) {
             db.closeConnection(conn);
-            throw new DataAccessException("Failed to find descriptor by barcode: Unresponsive database", e);
+            throw new DataAccessException("Failed to find descriptor by barcode", e);
         }
     }
 

@@ -45,7 +45,7 @@ public class Server {
 
             config.routes.exception(DataAccessException.class, (e, context) -> {
                 log.error("Database error on {} {}", context.method(), context.path(), e);
-                context.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error, try again");
+                context.status(HttpStatus.SERVICE_UNAVAILABLE).result("Database error: " + e.getMessage());
             });
 
             config.routes.apiBuilder(() -> {
