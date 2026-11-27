@@ -43,7 +43,21 @@ export function setUpMultiStepDialog(dialog) {
 
     }
 
-    nextButton.addEventListener("click", () => { showStep(current + 1); })
+    function validateStep(index) {
+        const fields = steps[index].querySelectorAll("input, select, textarea");
+
+        for (const field of fields) {
+            if (!field.reportValidity()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    nextButton.addEventListener("click", () => {
+        if (!validateStep(current)) return;
+        showStep(current + 1);
+    })
 
     backButton.addEventListener("click", () => { showStep(current - 1); })
 
