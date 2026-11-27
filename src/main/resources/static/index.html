@@ -827,8 +827,16 @@
                     </div>
                 </div>
                 <div class="dialog-footer">
-                    <button type="submit" value="cancel" class="red raised">
+                    <button
+                        type="button"
+                        commandfor="staff-id-dialog"
+                        command="close"
+                        class="red raised"
+                    >
                         <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="staff-id-submit green raised">
+                        <span>Log In</span>
                     </button>
                 </div>
             </form>
