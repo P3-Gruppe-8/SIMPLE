@@ -508,17 +508,17 @@ button.alerts {
 }
 
 .info {
-    outline: 2px solid var(--alertsColorBorderInfo);
+    outline: 4px solid var(--alertsColorBorderInfo);
     background-color: var(--alertColorInfo);
 }
 
 .warning {
-    outline: 2px solid var(--alertsColorBorderWarning);
+    outline: 4px solid var(--alertsColorBorderWarning);
     background-color: var(--alertColorWarning);
 }
 
 .critical {
-    outline: 2px solid var(--alertsColorBorderCritical);
+    outline: 4px solid var(--alertsColorBorderCritical);
     background-color: var(--alertColorCritical);
 }
 
