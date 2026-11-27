@@ -2,20 +2,16 @@ package simple.dataaccess.jdbc;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import java.util.ArrayList;
-
+import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
-import simple.dataaccess.jdbc.rowMapping.DescriptorMap;
 import simple.dataaccess.jdbc.rowMapping.ITStaffMap;
-import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.dao.ITStaffDAO;
 import simple.domain.employee.ITStaff;
 import simple.domain.employee.ITStaffRegistration;
 import simple.domain.exception.AffectedRowsException;
-import simple.domain.exception.DataAccessException;
-import simple.domain.itemmanagement.Inventory;
 import simple.domain.exception.AlreadyExistsException;
+import simple.domain.exception.DataAccessException;
 
 public class JdbcITStaffDAO implements ITStaffDAO {
 
@@ -70,7 +66,6 @@ public class JdbcITStaffDAO implements ITStaffDAO {
             }
             throw new DataAccessException("Failed to create ITStaff", e);
         }
-
     }
 
     public void softDelete(int itStaffId) {
@@ -102,7 +97,6 @@ public class JdbcITStaffDAO implements ITStaffDAO {
         } catch (SQLException e) {
             throw new DataAccessException("Failed to delete ITStaff", e);
         }
-
     }
 
     public ArrayList<ITStaff> findAll(int officeId) {
@@ -133,5 +127,4 @@ public class JdbcITStaffDAO implements ITStaffDAO {
 
         return itStaffs;
     }
-
 }

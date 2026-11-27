@@ -1,10 +1,9 @@
 package simple.service;
 
 import java.util.ArrayList;
-
 import simple.domain.dao.ITStaffDAO;
-import simple.domain.employee.ITStaffRegistration;
 import simple.domain.employee.ITStaff;
+import simple.domain.employee.ITStaffRegistration;
 
 public class ITStaffService {
     private final ITStaffDAO itStaffDAO;
