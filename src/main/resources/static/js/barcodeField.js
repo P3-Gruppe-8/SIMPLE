@@ -12,12 +12,14 @@ export function setUpBarcodeField(field) {
     const manualButton = field.querySelector(".barcode-manual");
     const manualIcon = manualButton.querySelector("img");
     const input = field.querySelector("input");
+    // ipads have no enter key
+    const submitButton = field.querySelector(".barcode-submit");
     const idleLabel = scanLabel.textContent;
     const manualIconSrc = manualIcon.getAttribute("src");
     const manualLabel = manualButton.getAttribute("aria-label");
 
     // the input sits in the button row, taking the scan button's place when shown
-    buttons.insertBefore(input, manualButton);
+    buttons.insertBefore(input, submitButton ?? manualButton);
     // fields marked data-keep-scanning take every scan, not just the first
     const keepScanning = "keepScanning" in field.dataset;
     // for lookups, where an early submit does no harm
@@ -81,6 +83,7 @@ export function setUpBarcodeField(field) {
 
     function showManualEntry() {
         showInput();
+        submitButton?.classList.remove("invisible");
         input.focus();
     }
 
@@ -92,6 +95,7 @@ export function setUpBarcodeField(field) {
         input.value = "";
         input.disabled = false;
         input.classList.add("invisible");
+        submitButton?.classList.add("invisible");
         scanButton.classList.remove("invisible");
         manualIcon.src = manualIconSrc;
         manualButton.title = manualLabel;
@@ -100,15 +104,22 @@ export function setUpBarcodeField(field) {
 
     scanButton.addEventListener("click", startAwaiting);
 
-    // with keep scanning, a typed barcode counts as a scan when Enter is pressed
+    // with keep scanning, a typed barcode counts as a scan when Enter or the submit button is pressed
+    function submitTyped() {
+        if (input.value) {
+            clearTimeout(typingTimer); // already looked up, don't do it twice
+            field.dispatchEvent(new Event("scan"));
+        }
+    }
     input.addEventListener("keydown", (e) => {
         if (keepScanning && e.key === "Enter") {
             e.preventDefault();
-            if (input.value) {
-                clearTimeout(typingTimer); // already looked up, don't do it twice
-                field.dispatchEvent(new Event("scan"));
-            }
+            submitTyped();
         }
+    });
+    submitButton?.addEventListener("click", () => {
+        submitTyped();
+        input.focus(); // keeps the on-screen keyboard open for the next barcode
     });
     input.addEventListener("input", () => {
         if (!keepScanning || !submitOnPause) return;

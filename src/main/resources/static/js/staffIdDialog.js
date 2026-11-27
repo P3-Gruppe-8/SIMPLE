@@ -6,7 +6,6 @@ const dialog = document.getElementById("staff-id-dialog");
 const message = dialog.querySelector(".staff-id-message");
 const input = document.getElementById("staff-id-entry");
 const field = input.closest(".barcode-field");
-const form = dialog.querySelector("form");
 
 // shows `prompt` and waits for a staff ID. returns whether they logged in.
 export async function askForStaffId(prompt) {
@@ -30,18 +29,11 @@ export async function askForStaffId(prompt) {
         dialog.close();
     }
 
-    function onSubmit(e) {
-        e.preventDefault();
-        tryLogIn();
-    }
-
     field.addEventListener("scan", tryLogIn);
-    form.addEventListener("submit", onSubmit);
     dialog.showModal();
     await new Promise((resolve) =>
         dialog.addEventListener("close", resolve, { once: true }),
     );
     field.removeEventListener("scan", tryLogIn);
-    form.removeEventListener("submit", onSubmit);
     return loggedIn;
 }
