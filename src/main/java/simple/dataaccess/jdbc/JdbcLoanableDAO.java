@@ -57,7 +57,7 @@ public class JdbcLoanableDAO implements LoanableDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to find loanable by desciptor id: Unresponsive database", e);
+            throw new DataAccessException("Failed to find loanable by desciptor id", e);
         }
 
         return loanables;
