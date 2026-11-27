@@ -12,7 +12,10 @@ import { addBarcodeListener, disableEnterToSubmit } from "./scanning.js";
 import { setUpBarcodeField } from "./barcodeField.js";
 import { setUpShelfSelect } from "./shelfSelect.js";
 import { setUpSearchableList } from "./searchableList.js";
-import { setUpMultiStepDialog } from "./MultiStepDialog.js";
+import { setUpMultiStepDialog } from "./multiStepDialog.js";
+import { setUpFillableList } from "./fillableList.js";
+import { setUpFilledList } from "./filledList.js";
+import { setUpDatePicker } from "./datePicker.js";
 
 const loginIds = ["victor nummer 2", "leon da boss"];
 const consumableIds = [
@@ -29,6 +32,9 @@ document.querySelectorAll(".barcode-field").forEach(setUpBarcodeField);
 document.querySelectorAll(".shelf-select").forEach(setUpShelfSelect);
 document.querySelectorAll(".searchable-list").forEach(setUpSearchableList);
 document.querySelectorAll("dialog:has(.form-step)").forEach(setUpMultiStepDialog);
+document.querySelectorAll(".fillable-list").forEach(setUpFillableList);
+document.querySelectorAll(".filled-list").forEach(setUpFilledList);
+document.querySelectorAll(".date-picker").forEach(setUpDatePicker);
 
 // so a cancelled dialog doesn't show the old values next time it opens
 document.querySelectorAll("dialog").forEach((dialog) => {
