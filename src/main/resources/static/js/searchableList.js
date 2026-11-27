@@ -57,8 +57,9 @@ export function setUpSearchableList(element) {
 
     }
 
-    input.closest("dialog")?.addEventListener("toggle", (e) => {
-        reset();
-    });
+    input
+        .closest("dialog")?.addEventListener("toggle", (e) => {
+            reset();
+        });
 
 }
