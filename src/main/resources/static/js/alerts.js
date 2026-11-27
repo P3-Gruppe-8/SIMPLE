@@ -1,4 +1,5 @@
 // Alerts
+import { getAlerts } from "./api.js";
 import { hideById, showById, showView } from "./navigation.js";
 
 let showNewAlerts = false;
@@ -74,6 +75,21 @@ let dummyAlertArray = [
         activationTime: time + 800,
     },
 ];
+
+async function getActiveAlerts() {
+    let alerts = [];
+    try {
+        let JSONResponse = await getAlerts();
+        console.log(JSONResponse);
+        alerts = JSON.parse(JSONResponse);
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+    console.log(alerts[0], alerts[1], alerts[2]);
+}
+
+getActiveAlerts();
 
 currentAlertsArray = dummyAlertArray;
 

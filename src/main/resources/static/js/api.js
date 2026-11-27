@@ -89,3 +89,7 @@ export async function getOffices() {
 export async function checkStaff(username) {
     return await send("GET", "staff/" + encodeURIComponent(username));
 }
+
+export async function getAlerts() {
+    return await send("GET", "alerts/");
+}

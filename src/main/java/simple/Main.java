@@ -3,13 +3,17 @@ package simple;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.JdbcDescriptorRepository;
 import simple.dataaccess.jdbc.JdbcITStaffDAO;
+import simple.dataaccess.jdbc.JdbcLoanAlertDAO;
 import simple.dataaccess.jdbc.JdbcOfficeDAO;
 import simple.dataaccess.jdbc.JdbcShelfDAO;
+import simple.dataaccess.jdbc.JdbcStockAlertDAO;
+import simple.presentation.AlertController;
 import simple.presentation.DescriptorController;
 import simple.presentation.ITStaffController;
 import simple.presentation.OfficeController;
 import simple.presentation.Server;
 import simple.presentation.ShelfController;
+import simple.service.AlertService;
 import simple.service.DescriptorService;
 import simple.service.ITStaffService;
 import simple.service.OfficeService;
@@ -86,12 +90,14 @@ public class Main {
         ITStaffService itStaffService = new ITStaffService(new JdbcITStaffDAO());
         OfficeService officeService = new OfficeService(new JdbcOfficeDAO());
         ShelfService shelfService = new ShelfService(new JdbcShelfDAO());
+        AlertService alertService = new AlertService(new JdbcStockAlertDAO(), new JdbcLoanAlertDAO());
 
         Server.start(
                 port,
                 new DescriptorController(descriptorService),
                 new ITStaffController(itStaffService),
                 new OfficeController(officeService),
-                new ShelfController(shelfService));
+                new ShelfController(shelfService),
+                new AlertController(alertService));
     }
 }

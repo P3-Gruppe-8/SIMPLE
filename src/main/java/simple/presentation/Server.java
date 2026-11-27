@@ -1,14 +1,19 @@
 package simple.presentation;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
-
-import io.javalin.Javalin;
-import io.javalin.http.HttpStatus;
-import io.javalin.http.staticfiles.Location;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.javalin.Javalin;
+import static io.javalin.apibuilder.ApiBuilder.delete;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.put;
+import io.javalin.http.HttpStatus;
+import io.javalin.http.staticfiles.Location;
 import simple.Main;
 import simple.domain.exception.DataAccessException;
 
@@ -22,11 +27,12 @@ public class Server {
             DescriptorController descriptorController,
             ITStaffController itStaffController,
             OfficeController officeController,
-            ShelfController shelfController) {
+            ShelfController shelfController,
+            AlertController alertController) {
 
         Javalin app = Javalin.create(config -> {
-            config.requestLogger.http((context, ms) ->
-                    log.info("{} {} -> {} ({} ms)", context.method(), context.path(), context.statusCode(), ms));
+            config.requestLogger.http((context, ms) -> log.info("{} {} -> {} ({} ms)", context.method(), context.path(),
+                    context.statusCode(), ms));
             // When run from the repo, serve the source folder straight from disk for hot
             // reloads
             if (Files.isDirectory(Path.of(DEV_STATIC_DIR))) {
@@ -73,6 +79,9 @@ public class Server {
                 });
                 path("/offices", () -> {
                     get(officeController::getAll);
+                });
+                path("/alerts", () -> {
+                    get(alertController::getDummyAlerts);
                 });
             });
         });
