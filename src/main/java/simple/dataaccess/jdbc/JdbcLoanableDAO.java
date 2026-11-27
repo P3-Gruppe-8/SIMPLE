@@ -16,7 +16,7 @@ public class JdbcLoanableDAO implements LoanableDAO {
                 FROM loanables
                 JOIN descriptors ON descriptors.descriptor_id = loanables.descriptor_id
                 WHERE loanables.loanable_barcode = ?
-                loanables.loanable_deleted IS NULL
+                  AND loanables.loanable_deleted IS NULL
                 """;
 
         Databaseconnection db = new Databaseconnection();
