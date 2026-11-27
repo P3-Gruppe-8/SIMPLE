@@ -155,7 +155,8 @@ body {
 button {
     font-family: inherit;
     font-weight: inherit;
-    -webkit-tap-highlight-color: transparent; /* removes the weird highlight on android */
+    -webkit-tap-highlight-color: transparent;
+    /* removes the weird highlight on android */
     cursor: pointer;
 }
 
@@ -376,11 +377,13 @@ dialog[open] {
     flex: 1;
     flex-direction: column;
     gap: 24px;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .form-field {
     display: flex;
+    overflow-y: scroll;
+    max-height: 55cqh;
     flex-direction: column;
     gap: 8px;
 }
@@ -398,6 +401,47 @@ dialog[open] {
     min-width: 0;
     border: 3px solid var(--border);
     border-radius: 12px;
+}
+
+.searchable-list {
+    margin-bottom: 16px;
+}
+
+.search-result {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 16px clamp(8px, 4cqi, 20px);
+
+    height: 12dvh;
+    overflow-y: auto;
+
+    border: 3px solid var(--border);
+    border-radius: 10px;
+}
+
+.search-result li a {
+    display: block;
+    border-radius: 6px;
+    font-size: clamp(1rem, 7cqi, 2rem);
+    color: var(--black);
+    text-decoration: none;
+}
+
+.search-result li.selected a {
+    background-color: var(--light-blue);
+}
+
+.fillable-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+
+.fillable-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
 }
 
 .barcode-field {
@@ -423,7 +467,8 @@ dialog[open] {
     height: calc(var(--field-height) - var(--lip));
     margin-bottom: var(--lip);
     font-size: clamp(1rem, 8cqi, 2rem);
-    line-height: 1.1; /* long labels may wrap to two lines on narrow screens */
+    line-height: 1.1;
+    /* long labels may wrap to two lines on narrow screens */
     padding: 0 clamp(8px, 3cqi, 20px);
     border-radius: 12px;
     transition:
@@ -460,7 +505,8 @@ dialog[open] {
 }
 
 .form-field select {
-    appearance: none; /* remove out of place arrow */
+    appearance: none;
+    /* remove out of place arrow */
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -485,6 +531,13 @@ dialog h2 {
     text-align: center;
     margin-bottom: 1.2rem;
     margin-top: 1rem;
+}
+
+dialog h3 {
+    font-size: clamp(1.25rem, 10cqi, 3rem);
+    text-align: left;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 dialog p {
@@ -536,19 +589,22 @@ dialog form {
     padding: 16px clamp(8px, 4cqi, 20px);
     border: 3px solid var(--border);
     border-radius: 12px;
-    white-space: pre-line; /* the server's line breaks separate the details */
+    white-space: pre-line;
+    /* the server's line breaks separate the details */
 }
 
 .toasts {
     position: fixed;
     right: 1rem;
-    bottom: calc(11vh + 1rem); /* just above the bottombar */
+    bottom: calc(11vh + 1rem);
+    /* just above the bottombar */
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 1rem;
-    pointer-events: none; /* only the toasts themselves catch clicks */
+    pointer-events: none;
+    /* only the toasts themselves catch clicks */
 }
 
 .toast {
@@ -575,4 +631,59 @@ dialog form {
 .toast-message {
     margin: 0;
     overflow-wrap: anywhere;
+}
+
+.date-picker {
+    width: 60dvb;
+    height: 60svb;
+}
+
+.date-input {
+    font-size: clamp(2rem, 11cqi, 3.5rem);
+    border-width: 4px;
+    border-radius: 10px;
+    border-color: var(--black);
+    border-style: solid;
+    margin-bottom: 4dvh;
+}
+
+.date-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 100%;
+    align-items: center;
+}
+
+.date-arrows label {
+    font-size: clamp(1.5rem, 8cqi, 2.5rem);
+    margin-bottom: 1dvh;
+}
+
+.date-up,
+.date-down {
+    width: clamp(60px, 20vw, 100px);
+    height: clamp(60px, 20vw, 100px);
+    border-radius: 10px;
+    margin-bottom: 1dvh;
+}
+
+.date-up.date-up-day::before {
+    content: "+1";
+    font-size: 3rem;
+}
+
+.date-down.date-down-day::before {
+    content: "-1";
+    font-size: 3rem;
+}
+
+.date-up.date-up-week::before {
+    content: "+7";
+    font-size: 3rem;
+}
+
+.date-down.date-down-week::before {
+    content: "-7";
+    font-size: 3rem;
 }
