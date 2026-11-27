@@ -1,8 +1,7 @@
 package simple.domain.dao;
 
-import java.util.Optional;
 import java.util.ArrayList;
-
+import java.util.Optional;
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.itemmanagement.LoanableRegistration;
 

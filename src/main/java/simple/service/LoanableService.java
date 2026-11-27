@@ -1,8 +1,7 @@
 package simple.service;
 
-import java.util.Optional;
 import java.util.ArrayList;
-
+import java.util.Optional;
 import simple.domain.dao.LoanableDAO;
 import simple.domain.itemmanagement.Loanable;
 import simple.domain.itemmanagement.LoanableRegistration;
@@ -26,10 +25,8 @@ public class LoanableService {
 
         int expected = 1;
 
-
         for (Loanable loanable : loanables) {
-            if (loanable.unitNumber() == expected)
-                expected++;
+            if (loanable.unitNumber() == expected) expected++;
             else break;
         }
 

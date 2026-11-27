@@ -1,9 +1,8 @@
 package simple.dataaccess.jdbc;
 
 import java.sql.*;
-import java.util.Optional;
 import java.util.ArrayList;
-
+import java.util.Optional;
 import simple.dataaccess.config.Databaseconnection;
 import simple.dataaccess.jdbc.rowMapping.LoanableMap;
 import simple.domain.dao.LoanableDAO;
@@ -26,9 +25,9 @@ public class JdbcLoanableDAO implements LoanableDAO {
         Databaseconnection db = new Databaseconnection();
 
         try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql);) {
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setString(1, barcode);
-            try (ResultSet result = statement.executeQuery();) {
+            try (ResultSet result = statement.executeQuery(); ) {
                 return result.next() ? Optional.of(LoanableMap.mapRow(result)) : Optional.empty();
             }
         } catch (SQLException e) {
@@ -50,9 +49,9 @@ public class JdbcLoanableDAO implements LoanableDAO {
         ArrayList<Loanable> loanables = new ArrayList<>();
 
         try (Connection conn = db.getDbConnection();
-                PreparedStatement statement = conn.prepareStatement(sql);) {
+                PreparedStatement statement = conn.prepareStatement(sql); ) {
             statement.setInt(1, descriptorId);
-            try (ResultSet result = statement.executeQuery();) {
+            try (ResultSet result = statement.executeQuery(); ) {
                 while (result.next()) {
                     loanables.add(LoanableMap.mapRow(result));
                 }
@@ -62,7 +61,6 @@ public class JdbcLoanableDAO implements LoanableDAO {
         }
 
         return loanables;
-
     }
 
     public void create(LoanableRegistration loanableRegistration, int unitNumber) {
