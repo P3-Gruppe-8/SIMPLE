@@ -543,6 +543,10 @@ dialog.msgbox .dialog-footer span {
     font-size: clamp(1rem, 18cqw, 1.75rem);
 }
 
+#staff-id-dialog:has(#staff-id-entry.invisible) .staff-id-submit {
+    display: none;
+}
+
 dialog.msgbox h2 {
     font-size: 2.5rem;
     margin-bottom: 0;

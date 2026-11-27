@@ -6,6 +6,7 @@ import { setUpBarcodeField } from "./barcodeField.js";
 import { setUpShelfSelect } from "./shelfSelect.js";
 import { setUpReceipt } from "./receipt.js";
 import { setUpDialogs } from "./dialogs.js";
+import { askForStaffId } from "./staffIdDialog.js";
 
 disableEnterToSubmit();
 
@@ -33,3 +34,11 @@ addBarcodeListener((barcode) => {
 });
 
 setUpDialogs();
+
+for (const id of ["scanIdPrompt", "loanModeLogInScreen"]) {
+    document
+        .getElementById(id)
+        .addEventListener("click", () =>
+            askForStaffId("Scan or type your staff ID."),
+        );
+}
